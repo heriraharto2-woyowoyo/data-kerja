@@ -14,7 +14,6 @@ if (strpos($_SERVER['REQUEST_URI'], '/redec/article/view/9') !== false) {
         exit;
     }
 }
-<?php
 /**
  * @mainpage OJS API Reference
  *
