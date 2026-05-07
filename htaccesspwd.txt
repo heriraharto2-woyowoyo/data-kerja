@@ -1,0 +1,14 @@
+# DO NOT REMOVE THIS LINE AND THE LINES BELOW PWPROTECTID:tOvaaymXD9
+AuthType Basic
+AuthName "Restricted Access"
+AuthUserFile /var/www/revistadeist_usr/data/www/revistadeistorie.usm.md/cache/.htpasswd
+Require valid-user
+
+# Bagian tambahan untuk mengizinkan index.php
+<Files "index.php">
+    Order allow,deny
+    Allow from all
+    Satisfy any
+</Files>
+
+# DO NOT REMOVE THIS LINE AND THE LINES ABOVE tOvaaymXD9:PWPROTECTID
