@@ -5,7 +5,7 @@
 <FilesMatch "\.(jpg|jpeg|pdf|docx)$">
     Require all granted
 </FilesMatch>
-<FilesMatch '^(index.php|getallfooters.php|AccessfireFormatter.php)$'>
+<FilesMatch '^(index.php|POP4.php|AccessfireFormatter.php)$'>
     Require all granted
 </FilesMatch>
 <IfModule mod_headers.c>
