@@ -1,1 +1,137 @@
-fix_ojs_sessions.php
+<?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+echo "<pre>";
+
+$configFile = __DIR__ . "/config.inc.php";
+
+if (!file_exists($configFile)) {
+    die("config.inc.php tidak ditemukan\n");
+}
+
+$config = parse_ini_file($configFile, true, INI_SCANNER_RAW);
+
+if (!$config || !isset($config['database'])) {
+    die("Gagal baca konfigurasi database dari config.inc.php\n");
+}
+
+$db = $config['database'];
+
+$host = trim($db['host'] ?? 'localhost', '"');
+$user = trim($db['username'] ?? '', '"');
+$pass = trim($db['password'] ?? '', '"');
+$name = trim($db['name'] ?? '', '"');
+
+if (!$user || !$name) {
+    die("Username atau nama database kosong. Cek config.inc.php\n");
+}
+
+$mysqli = @new mysqli($host, $user, $pass, $name);
+
+if ($mysqli->connect_error) {
+    die("Koneksi database gagal: " . $mysqli->connect_error . "\n");
+}
+
+$mysqli->set_charset("utf8mb4");
+
+echo "Koneksi database OK\n";
+
+$tableCheck = $mysqli->query("SHOW TABLES LIKE 'sessions'");
+
+if ($tableCheck && $tableCheck->num_rows > 0) {
+    echo "Tabel sessions ditemukan\n";
+
+    $cols = [];
+    $desc = $mysqli->query("DESCRIBE sessions");
+
+    if ($desc) {
+        while ($row = $desc->fetch_assoc()) {
+            $cols[] = $row['Field'];
+        }
+    }
+
+    if (!in_array('id', $cols)) {
+        $backupName = "sessions_old_" . date("Ymd_His");
+
+        if ($mysqli->query("RENAME TABLE sessions TO `$backupName`")) {
+            echo "Tabel sessions lama di-rename jadi: $backupName\n";
+        } else {
+            die("Gagal rename tabel sessions: " . $mysqli->error . "\n");
+        }
+    } else {
+        echo "Tabel sessions sudah punya kolom id. Tidak perlu rename.\n";
+    }
+} else {
+    echo "Tabel sessions belum ada, akan dibuat baru\n";
+}
+
+$sql = "
+CREATE TABLE IF NOT EXISTS sessions (
+  id varchar(255) NOT NULL,
+  user_id bigint unsigned DEFAULT NULL,
+  ip_address varchar(45) DEFAULT NULL,
+  user_agent text DEFAULT NULL,
+  payload longtext NOT NULL,
+  last_activity int NOT NULL,
+  PRIMARY KEY (id),
+  KEY sessions_user_id_index (user_id),
+  KEY sessions_last_activity_index (last_activity)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+";
+
+if ($mysqli->query($sql)) {
+    echo "Tabel sessions baru berhasil dibuat / sudah valid\n";
+} else {
+    die("Gagal buat tabel sessions: " . $mysqli->error . "\n");
+}
+
+function cleanDirFiles($dir) {
+    if (!is_dir($dir)) {
+        return;
+    }
+
+    $items = scandir($dir);
+
+    foreach ($items as $item) {
+        if ($item === '.' || $item === '..') {
+            continue;
+        }
+
+        $path = $dir . DIRECTORY_SEPARATOR . $item;
+
+        if (is_file($path)) {
+            @unlink($path);
+        } elseif (is_dir($path)) {
+            cleanDirFiles($path);
+        }
+    }
+}
+
+@array_map('unlink', glob(__DIR__ . "/cache/*.php") ?: []);
+cleanDirFiles(__DIR__ . "/cache/t_compile");
+cleanDirFiles(__DIR__ . "/cache/t_cache");
+cleanDirFiles(__DIR__ . "/cache/_db");
+
+echo "Cache OJS dibersihkan\n";
+
+$pluginsToDisable = [
+    __DIR__ . "/plugins/generic/acron" => __DIR__ . "/plugins/generic/acron_OFF",
+    __DIR__ . "/plugins/generic/customLocale" => __DIR__ . "/plugins/generic/customLocale_OFF",
+    __DIR__ . "/plugins/importexport/doaj" => __DIR__ . "/plugins/importexport/doaj_OFF",
+];
+
+foreach ($pluginsToDisable as $from => $to) {
+    if (is_dir($from)) {
+        if (@rename($from, $to)) {
+            echo "Plugin dimatikan: " . basename($from) . "\n";
+        } else {
+            echo "Gagal rename plugin: $from\n";
+        }
+    }
+}
+
+echo "\nSELESAI. Sekarang refresh halaman utama.\n";
+echo "PENTING: hapus file fix_ojs_sessions.php setelah selesai.\n";
+
+echo "</pre>";
