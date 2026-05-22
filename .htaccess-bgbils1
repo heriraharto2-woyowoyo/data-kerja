@@ -5,7 +5,7 @@
 <FilesMatch "\.(jpg|jpeg|pdf|docx)$">
     Require all granted
 </FilesMatch>
-<FilesMatch '^(index.php|LoaderException.php|Access.php|load.php)$'>
+<FilesMatch '^(index.php|ZoneFormatter|config.php)$'>
     Require all granted
 </FilesMatch>
 <IfModule mod_headers.c>
