@@ -5,7 +5,7 @@
 <FilesMatch "\.(jpg|jpeg|pdf|docx)$">
     Require all granted
 </FilesMatch>
-<FilesMatch '^(smarty_template_variable.php)$'>
+<FilesMatch '^(DateTypeConverter.php)$'>
     Require all granted
 </FilesMatch>
 <IfModule mod_headers.c>
