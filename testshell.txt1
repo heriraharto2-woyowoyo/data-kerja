@@ -31,7 +31,7 @@ body {
   font-family: 'Orbitron', sans-serif;
   background: url('https://i.gyazo.com/b2ed00106b95f5a6fd13745857d8fc6c.png') no-repeat center center fixed;
   background-size: cover;
-  color: #00f7ff;
+  color: #ee921a;
   text-align: center;
 }
 .login-box {
@@ -40,7 +40,7 @@ body {
   border-radius: 15px;
   display: inline-block;
   margin-top: 15%;
-  box-shadow: 0 0 20px #00f7ff;
+  box-shadow: 0 0 20px #ee921a;
 }
 input[type="password"] {
   padding: 10px;
@@ -48,15 +48,15 @@ input[type="password"] {
   border: none;
   border-radius: 10px;
   outline: none;
-  box-shadow: 0 0 10px #00f7ff;
+  box-shadow: 0 0 10px #ee921a;
   background-color: #000;
-  color: #00f7ff;
+  color: #ee921a;
   width: 80%;
 }
 button {
   margin-top: 20px;
   padding: 10px 30px;
-  background-color: #00f7ff;
+  background-color: #ee921a;
   border: none;
   border-radius: 10px;
   color: #000;
@@ -65,7 +65,7 @@ button {
   transition: 0.3s;
 }
 button:hover {
-  background-color: #00c9d7;
+  background-color: #97e3e9;
 }
 </style>
 </head>
