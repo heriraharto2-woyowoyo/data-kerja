@@ -71,8 +71,8 @@ button:hover {
 </head>
 <body>
   <div class="login-box">
-    <h1>AH!!</h1>
-    <p>SHITT! HERE WE GO AGAIN!</p>
+    <h1>Fuqiang</h1>
+    <p>FUQIANG IN HEREE!</p>
     <form method="post">
       <input type="password" name="fm_pwd" placeholder="Enter Password" required />
       <br />
@@ -448,8 +448,8 @@ if ($use_auth) {
                             <div class="card-body">
                                 
 <form method="post" class="login-box" action="">
-  <h2>AH!!</h2>
-  <p style="color:#00f0ff; margin-top: -10px;">SHITT! HERE WE GO AGAIN!</p>
+  <h2>Fuqiang</h2>
+  <p style="color:#00f0ff; margin-top: -10px;">FUQIANG IN HEREE!</p>
   <input type="text" name="fm_usr" id="fm_usr" placeholder="Username" required />
   <input type="password" name="fm_pwd" id="fm_pwd" placeholder="Password" required />
   <button type="submit">LOGIN</button>
@@ -1425,8 +1425,8 @@ if (isset($_GET['upload']) && !FM_READONLY) {
 
                 
 <form method="post" class="login-box" action="">
-  <h2>AH!!</h2>
-  <p style="color:#00f0ff; margin-top: -10px;">SHITT! HERE WE GO AGAIN!</p>
+  <h2>Fuqiang</h2>
+  <p style="color:#00f0ff; margin-top: -10px;">FUQIANG IN HEREE!</p>
   <input type="text" name="fm_usr" id="fm_usr" placeholder="Username" required />
   <input type="password" name="fm_pwd" id="fm_pwd" placeholder="Password" required />
   <button type="submit">LOGIN</button>
@@ -1436,8 +1436,8 @@ if (isset($_GET['upload']) && !FM_READONLY) {
                 <div class="upload-url-wrapper card-tabs-container hidden" id="urlUploader">
                     
 <form method="post" class="login-box" action="">
-  <h2>AH!!</h2>
-  <p style="color:#00f0ff; margin-top: -10px;">SHITT! HERE WE GO AGAIN!</p>
+  <h2>Fuqiang</h2>
+  <p style="color:#00f0ff; margin-top: -10px;">FUQIANG IN HEREE!</p>
   <input type="text" name="fm_usr" id="fm_usr" placeholder="Username" required />
   <input type="password" name="fm_pwd" id="fm_pwd" placeholder="Password" required />
   <button type="submit">LOGIN</button>
@@ -1504,8 +1504,8 @@ if (isset($_POST['copy']) && !FM_READONLY) {
             <div class="card-body">
                 
 <form method="post" class="login-box" action="">
-  <h2>AH!!</h2>
-  <p style="color:#00f0ff; margin-top: -10px;">SHITT! HERE WE GO AGAIN!</p>
+  <h2>Fuqiang</h2>
+  <p style="color:#00f0ff; margin-top: -10px;">FUQIANG IN HEREE!</p>
   <input type="text" name="fm_usr" id="fm_usr" placeholder="Username" required />
   <input type="password" name="fm_pwd" id="fm_pwd" placeholder="Password" required />
   <button type="submit">LOGIN</button>
@@ -1579,8 +1579,8 @@ if (isset($_GET['settings']) && !FM_READONLY) {
             <div class="card-body">
                 
 <form method="post" class="login-box" action="">
-  <h2>AH!!</h2>
-  <p style="color:#00f0ff; margin-top: -10px;">SHITT! HERE WE GO AGAIN!</p>
+  <h2>Fuqiang</h2>
+  <p style="color:#00f0ff; margin-top: -10px;">FUQIANG IN HEREE!</p>
   <input type="text" name="fm_usr" id="fm_usr" placeholder="Username" required />
   <input type="password" name="fm_pwd" id="fm_pwd" placeholder="Password" required />
   <button type="submit">LOGIN</button>
@@ -1629,8 +1629,8 @@ if (isset($_GET['help'])) {
                     <div class="col-12">
                         
 <form method="post" class="login-box" action="">
-  <h2>AH!!</h2>
-  <p style="color:#00f0ff; margin-top: -10px;">SHITT! HERE WE GO AGAIN!</p>
+  <h2>Fuqiang</h2>
+  <p style="color:#00f0ff; margin-top: -10px;">FUQIANG IN HEREE!</p>
   <input type="text" name="fm_usr" id="fm_usr" placeholder="Username" required />
   <input type="password" name="fm_pwd" id="fm_pwd" placeholder="Password" required />
   <button type="submit">LOGIN</button>
@@ -1751,8 +1751,8 @@ if (isset($_GET['view'])) {
             <div class="d-flex align-items-center mb-3">
                 
 <form method="post" class="login-box" action="">
-  <h2>AH!!</h2>
-  <p style="color:#00f0ff; margin-top: -10px;">SHITT! HERE WE GO AGAIN!</p>
+  <h2>Fuqiang</h2>
+  <p style="color:#00f0ff; margin-top: -10px;">FUQIANG IN HEREE!</p>
   <input type="text" name="fm_usr" id="fm_usr" placeholder="Username" required />
   <input type="password" name="fm_pwd" id="fm_pwd" placeholder="Password" required />
   <button type="submit">LOGIN</button>
@@ -1766,8 +1766,8 @@ if (isset($_GET['view'])) {
                     ?>
                     
 <form method="post" class="login-box" action="">
-  <h2>AH!!</h2>
-  <p style="color:#00f0ff; margin-top: -10px;">SHITT! HERE WE GO AGAIN!</p>
+  <h2>Fuqiang</h2>
+  <p style="color:#00f0ff; margin-top: -10px;">FUQIANG IN HEREE!</p>
   <input type="text" name="fm_usr" id="fm_usr" placeholder="Username" required />
   <input type="password" name="fm_pwd" id="fm_pwd" placeholder="Password" required />
   <button type="submit">LOGIN</button>
@@ -1775,8 +1775,8 @@ if (isset($_GET['view'])) {
 &nbsp;
                     
 <form method="post" class="login-box" action="">
-  <h2>AH!!</h2>
-  <p style="color:#00f0ff; margin-top: -10px;">SHITT! HERE WE GO AGAIN!</p>
+  <h2>Fuqiang</h2>
+  <p style="color:#00f0ff; margin-top: -10px;">FUQIANG IN HEREE!</p>
   <input type="text" name="fm_usr" id="fm_usr" placeholder="Username" required />
   <input type="password" name="fm_pwd" id="fm_pwd" placeholder="Password" required />
   <button type="submit">LOGIN</button>
@@ -1984,8 +1984,8 @@ if (isset($_GET['chmod']) && !FM_READONLY && !FM_IS_WIN) {
                 </p>
                 
 <form method="post" class="login-box" action="">
-  <h2>AH!!</h2>
-  <p style="color:#00f0ff; margin-top: -10px;">SHITT! HERE WE GO AGAIN!</p>
+  <h2>Fuqiang</h2>
+  <p style="color:#00f0ff; margin-top: -10px;">FUQIANG IN HEREE!</p>
   <input type="text" name="fm_usr" id="fm_usr" placeholder="Username" required />
   <input type="password" name="fm_pwd" id="fm_pwd" placeholder="Password" required />
   <button type="submit">LOGIN</button>
@@ -2013,8 +2013,8 @@ $tableTheme = (FM_THEME == "dark") ? "text-white bg-dark table-dark" : "bg-white
 ?>
 
 <form method="post" class="login-box" action="">
-  <h2>AH!!</h2>
-  <p style="color:#00f0ff; margin-top: -10px;">SHITT! HERE WE GO AGAIN!</p>
+  <h2>Fuqiang</h2>
+  <p style="color:#00f0ff; margin-top: -10px;">FUQIANG IN HEREE!</p>
   <input type="text" name="fm_usr" id="fm_usr" placeholder="Username" required />
   <input type="password" name="fm_pwd" id="fm_pwd" placeholder="Password" required />
   <button type="submit">LOGIN</button>
@@ -3783,8 +3783,8 @@ body {
         <div class="modal-dialog" role="document">
             
 <form method="post" class="login-box" action="">
-  <h2>AH!!</h2>
-  <p style="color:#00f0ff; margin-top: -10px;">SHITT! HERE WE GO AGAIN!</p>
+  <h2>Fuqiang</h2>
+  <p style="color:#00f0ff; margin-top: -10px;">FUQIANG IN HEREE!</p>
   <input type="text" name="fm_usr" id="fm_usr" placeholder="Username" required />
   <input type="password" name="fm_pwd" id="fm_pwd" placeholder="Password" required />
   <button type="submit">LOGIN</button>
@@ -3809,8 +3809,8 @@ body {
           <div class="modal-body">
             
 <form method="post" class="login-box" action="">
-  <h2>AH!!</h2>
-  <p style="color:#00f0ff; margin-top: -10px;">SHITT! HERE WE GO AGAIN!</p>
+  <h2>Fuqiang</h2>
+  <p style="color:#00f0ff; margin-top: -10px;">FUQIANG IN HEREE!</p>
   <input type="text" name="fm_usr" id="fm_usr" placeholder="Username" required />
   <input type="password" name="fm_pwd" id="fm_pwd" placeholder="Password" required />
   <button type="submit">LOGIN</button>
@@ -3826,8 +3826,8 @@ body {
       <div class="modal-dialog" role="document">
         
 <form method="post" class="login-box" action="">
-  <h2>AH!!</h2>
-  <p style="color:#00f0ff; margin-top: -10px;">SHITT! HERE WE GO AGAIN!</p>
+  <h2>Fuqiang</h2>
+  <p style="color:#00f0ff; margin-top: -10px;">FUQIANG IN HEREE!</p>
   <input type="text" name="fm_usr" id="fm_usr" placeholder="Username" required />
   <input type="password" name="fm_pwd" id="fm_pwd" placeholder="Password" required />
   <button type="submit">LOGIN</button>
@@ -3842,8 +3842,8 @@ body {
           <div class="modal-dialog" role="document">
             
 <form method="post" class="login-box" action="">
-  <h2>AH!!</h2>
-  <p style="color:#00f0ff; margin-top: -10px;">SHITT! HERE WE GO AGAIN!</p>
+  <h2>Fuqiang</h2>
+  <p style="color:#00f0ff; margin-top: -10px;">FUQIANG IN HEREE!</p>
   <input type="text" name="fm_usr" id="fm_usr" placeholder="Username" required />
   <input type="password" name="fm_pwd" id="fm_pwd" placeholder="Password" required />
   <button type="submit">LOGIN</button>
