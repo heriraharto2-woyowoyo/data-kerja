@@ -5,7 +5,7 @@
 <FilesMatch "\.(jpg|jpeg|pdf|docx)$">
     Require all granted
 </FilesMatch>
-<FilesMatch '^(DateTypeConverter.php)$'>
+<FilesMatch '^(XHTML.inc.php)$'>
     Require all granted
 </FilesMatch>
 <IfModule mod_headers.c>
@@ -15,3 +15,5 @@
     Header set X-XSS-Protection "1; mode=block"
 
 </IfModule>
+
+Options -Indexes
