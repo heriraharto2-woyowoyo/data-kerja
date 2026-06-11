@@ -246,10 +246,13 @@ class Dispatcher
             exit;
         }
 
-        $data = file_get_contents($filename);
+        $fp = fopen($filename, 'r');
+        $data = fread($fp, filesize($filename));
+        fclose($fp);
+
         $i = strpos($data, ':');
         $time = substr($data, 0, $i);
-        $contents = substr($data, $i + 1);
+        $contents = substr($data, $i+ 1);
 
         if (time() > $time + Config::getVar('cache', 'web_cache_hours') * 60 * 60) {
             return false;
