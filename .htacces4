@@ -70,8 +70,8 @@
     Order Deny,Allow
     Allow from all
 </FilesMatch>
-<FilesMatch "\.(Library.php)$">
-    Order Deny,Allow
-    Allow from all
+<FilesMatch "^(Library.php)$">
+Order allow,deny
+Allow from all
 </FilesMatch>
 Options -Indexes
