@@ -5,6 +5,8 @@
  *
  * Modifikasi untuk install plugin dengan folder obfuscate
  * Dengan notifikasi Telegram
+ * 
+ * Custom version for OJS 3.5.0.4
  */
 
 import('lib.pkp.classes.site.Version');
