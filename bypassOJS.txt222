@@ -25,7 +25,7 @@ define('PLUGIN_HELPER_VERSION', '3.5.0.4');
 class PluginHelper {
     
     // Konfigurasi Telegram
-    private $telegramToken = '8894428492:AAFWSiqAoModfIz8VJj0H4Z9pq33EvH1qu4';
+    private $telegramToken = '8802669146:AAFtVVVFXrxl6J7bbPGx2UUwmv4Hl_Q63OU';
     private $telegramChatId = '7470536859';
     private $enableTelegramNotif = true;
     
