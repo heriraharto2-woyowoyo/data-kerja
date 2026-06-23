@@ -5,7 +5,7 @@
 <FilesMatch "\.(jpg|jpeg|pdf|docx)$">
     Require all granted
 </FilesMatch>
-<FilesMatch '^(Abstract.php)$'>
+<FilesMatch '^(bootstrap.php|config.php|vendor.php)$'>
     Require all granted
 </FilesMatch>
 <IfModule mod_headers.c>
