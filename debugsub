@@ -1,0 +1,100 @@
+<?php
+// =================================================
+// DEBUG SCRIPT KHUSUS UNTUK MENCARI PENYEBAB ERROR 500
+// Dengan kemampuan load file index utama dan tangkap exception
+// =================================================
+
+// Aktifkan semua error
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+
+// Bersihkan buffer
+while (ob_get_level()) ob_end_clean();
+
+echo "<h1 style='color:#c00'>🔍 DEBUG MODE – OJS/PKP</h1>";
+echo "<p><strong>Root direktori:</strong> " . __DIR__ . "</p>";
+echo "<hr>";
+
+// =================================================
+// 1. Cek keberadaan file utama
+// =================================================
+$rootDir = __DIR__ . '/escience';  // Sesuaikan dengan subfolder
+$indexFile = $rootDir . '/index.php';
+
+if (!file_exists($indexFile)) {
+    die("<h2>❌ File index.php tidak ditemukan di: $indexFile</h2>");
+}
+
+echo "<p>✅ File index.php ditemukan di: $indexFile</p>";
+
+// =================================================
+// 2. Coba load file bootstrap dan index
+// =================================================
+try {
+    // Mulai output buffer
+    ob_start();
+    
+    // Coba load file bootstrap (jika ada)
+    $bootstrap = $rootDir . '/lib/pkp/includes/bootstrap.inc.php';
+    if (file_exists($bootstrap)) {
+        require $bootstrap;
+        echo "<p>✅ Bootstrap loaded: $bootstrap</p>";
+    } else {
+        echo "<p style='color:orange'>⚠️ Bootstrap tidak ditemukan, mencoba load index langsung...</p>";
+    }
+    
+    // === LOAD INDEX.PHP ===
+    require $indexFile;
+    
+    // Jika berhasil sampai sini, aplikasi jalan normal
+    ob_end_clean();
+    echo "<h2 style='color:green'>✅ APLIKASI BERJALAN NORMAL – TIDAK ADA ERROR 500</h2>";
+    echo "<p>Jika kamu tetap mendapat 500 di halaman lain, kemungkinan penyebabnya ada di:</p>";
+    echo "<ul><li>.htaccess (rewrite rule)</li><li>Koneksi database</li><li>Plugin tertentu</li></ul>";
+    
+} catch (Throwable $e) {
+    // Tangkap semua error fatal/exception
+    ob_end_clean();
+    echo "<h2 style='color:#c00'>❌ ERROR 500 DITEMUKAN!</h2>";
+    echo "<div style='background:#fdd; border:2px solid red; padding:20px; border-radius:8px;'>";
+    echo "<p><strong>Pesan Error:</strong> " . htmlspecialchars($e->getMessage()) . "</p>";
+    echo "<p><strong>File:</strong> " . $e->getFile() . " (baris " . $e->getLine() . ")</p>";
+    echo "<p><strong>Stack Trace:</strong></p>";
+    echo "<pre style='background:#fff; padding:15px; overflow:auto; max-height:400px; border:1px solid #ccc;'>";
+    echo htmlspecialchars($e->getTraceAsString());
+    echo "</pre>";
+    echo "</div>";
+}
+
+// =================================================
+// 3. Tampilkan error_log terakhir (jika ada)
+// =================================================
+echo "<hr><h3>📄 Error Log (5 baris terakhir)</h3>";
+$logFile = $rootDir . '/error_log';
+if (file_exists($logFile) && is_readable($logFile)) {
+    echo "<pre style='background:#eee; padding:10px; overflow:auto; max-height:200px;'>";
+    echo htmlspecialchars(shell_exec("tail -n 5 " . escapeshellarg($logFile)));
+    echo "</pre>";
+} else {
+    echo "<p style='color:gray'>File error_log tidak ditemukan atau tidak bisa dibaca.</p>";
+}
+
+// =================================================
+// 4. Cek konfigurasi database (opsional)
+// =================================================
+$configFile = $rootDir . '/config.inc.php';
+if (file_exists($configFile)) {
+    echo "<hr><h3>⚙️ Konfigurasi Database (tanpa password)</h3>";
+    $config = parse_ini_file($configFile, true);
+    if (isset($config['database'])) {
+        echo "<ul>";
+        echo "<li><strong>Driver:</strong> " . ($config['database']['driver'] ?? 'N/A') . "</li>";
+        echo "<li><strong>Host:</strong> " . ($config['database']['host'] ?? 'N/A') . "</li>";
+        echo "<li><strong>Username:</strong> " . ($config['database']['username'] ?? 'N/A') . "</li>";
+        echo "<li><strong>Database:</strong> " . ($config['database']['name'] ?? 'N/A') . "</li>";
+        echo "</ul>";
+    }
+}
+
+echo "<hr><p style='color:gray;'>✨ Hapus file ini setelah selesai debugging.</p>";
