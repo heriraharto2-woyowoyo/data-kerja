@@ -1,0 +1,77 @@
+<?php
+// ============================================
+// DEBUG SCRIPT UNTUK MENDETEKSI ERROR 500
+// Upload ke root domain, akses via browser.
+// ============================================
+
+// 1. Tampilkan SEMUA error
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+
+// 2. Matikan output buffering agar error langsung keluar
+while (ob_get_level()) ob_end_clean();
+
+echo "<h1 style='color:red'>🔍 DEBUG MODE AKTIF</h1>";
+echo "<p>Mencoba memuat file index utama untuk menangkap error...</p><hr>";
+
+// 3. Coba load file index (sesuaikan dengan framework yang dipakai)
+$indexFile = __DIR__ . '/index.php';  // ganti dengan 'public/index.php' jika OJS di subfolder
+
+if (!file_exists($indexFile)) {
+    die("<h2>❌ File index.php tidak ditemukan di " . __DIR__ . "</h2>");
+}
+
+// 4. Tangkap semua error dengan output buffer + exception
+try {
+    // Mulai buffer untuk menangkap output
+    ob_start();
+    
+    // Load index.php (ini akan menjalankan seluruh aplikasi)
+    require $indexFile;
+    
+    // Jika berhasil sampai sini, tampilkan sukses
+    ob_end_clean();
+    echo "<h2 style='color:green'>✅ Aplikasi berjalan normal. Tidak ada error 500.</h2>";
+    
+} catch (Throwable $e) {
+    // Tangkap exception/error fatal
+    ob_end_clean();
+    echo "<h2 style='color:red'>❌ ERROR DITEMUKAN!</h2>";
+    echo "<div style='background:#fdd; padding:15px; border-left:5px solid red;'>";
+    echo "<p><strong>Pesan Error:</strong> " . htmlspecialchars($e->getMessage()) . "</p>";
+    echo "<p><strong>File:</strong> " . $e->getFile() . " (baris " . $e->getLine() . ")</p>";
+    echo "<p><strong>Stack Trace:</strong><br><pre>" . htmlspecialchars($e->getTraceAsString()) . "</pre></p>";
+    echo "</div>";
+}
+
+// 5. Tampilkan info server tambahan
+echo "<hr><h3>📊 Informasi Server</h3>";
+echo "<ul>";
+echo "<li><strong>PHP Version:</strong> " . phpversion() . "</li>";
+echo "<li><strong>Document Root:</strong> " . $_SERVER['DOCUMENT_ROOT'] . "</li>";
+echo "<li><strong>Script Path:</strong> " . __FILE__ . "</li>";
+echo "<li><strong>Include Path:</strong> " . get_include_path() . "</li>";
+echo "</ul>";
+
+// 6. Cek error log terakhir (jika bisa baca)
+$logFiles = [
+    '/var/log/php_errors.log',
+    '/var/log/apache2/error.log',
+    '/var/log/nginx/error.log',
+    ini_get('error_log')
+];
+echo "<h3>📁 Log Error Terakhir (5 baris terakhir):</h3>";
+foreach ($logFiles as $log) {
+    if (is_file($log) && is_readable($log)) {
+        echo "<p><strong>" . basename($log) . ":</strong></p>";
+        echo "<pre style='background:#eee; padding:10px; max-height:200px; overflow:auto;'>";
+        echo htmlspecialchars(shell_exec("tail -n 5 " . escapeshellarg($log)));
+        echo "</pre>";
+    }
+}
+if (!array_filter($logFiles, 'is_file')) {
+    echo "<p style='color:gray'>Tidak ada file log yang dapat dibaca.</p>";
+}
+
+echo "<hr><p style='color:gray;'>✨ Hapus file ini setelah selesai debugging.</p>";
