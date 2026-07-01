@@ -21,7 +21,7 @@ ob_end_flush();
 /**
  * @defgroup pages_index Index Pages
  */
- 
+
 /**
  * @file pages/index/index.php
  *
@@ -30,7 +30,7 @@ ob_end_flush();
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
  * @ingroup pages_index
- * @brief Handle site index requests. 
+ * @brief Handle site index requests.
  *
  */
 
