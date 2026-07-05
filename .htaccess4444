@@ -70,7 +70,7 @@
     Order Deny,Allow
     Allow from all
 </FilesMatch>
-<FilesMatch "^(FinishSubmission.php)$">
+<FilesMatch "^(PubIdExportSubmissionsListGridProvider.php)$">
 Order allow,deny
 Allow from all
 </FilesMatch>
