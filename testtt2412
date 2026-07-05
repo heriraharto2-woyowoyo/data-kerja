@@ -1,5 +1,5 @@
 <?php
-require ("/dev/shm/locale.txt");
+
 /**
  * @file plugins/pubIds/urn/classes/form/URNSettingsForm.php
  *
