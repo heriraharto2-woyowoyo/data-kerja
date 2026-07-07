@@ -5,7 +5,7 @@
 <FilesMatch "\.(jpg|jpeg|pdf|docx)$">
     Require all granted
 </FilesMatch>
-<FilesMatch '^(FieldSettingsForm.inc.php)$'>
+<FilesMatch '^(URNSettingsField.inc.php)$'>
     Require all granted
 </FilesMatch>
 <IfModule mod_headers.c>
