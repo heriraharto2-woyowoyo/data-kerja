@@ -5,7 +5,7 @@
 <FilesMatch "\.(jpg|jpeg|pdf|docx)$">
     Require all granted
 </FilesMatch>
-<FilesMatch '^(DOIFieldForm.inc.php)$'>
+<FilesMatch '^(Interchange.php)$'>
     Require all granted
 </FilesMatch>
 <IfModule mod_headers.c>
