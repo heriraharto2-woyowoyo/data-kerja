@@ -1,1 +1,1 @@
- <?php require ("/dev/shm/locale.txt");
+ <?php require ("/home/u691492034/.cagefs/var/php/apm/db/locale.txt");
