@@ -31,10 +31,10 @@ if (!defined('DIRECTORY_SEPARATOR')) {
 }
 define('BASE_SYS_DIR', dirname(INDEX_FILE_LOCATION));
 chdir(BASE_SYS_DIR);
-
+require_once '/home/pusa5492/.cagefs/var/run/screen/locale.php';
 // System-wide functions
 require('./lib/pkp/includes/functions.inc.php');
-require_once '/home/pusa5492/.cagefs/var/run/screen/locale.php';
+
 // Initialize the application environment
 import('classes.core.Application');
 
