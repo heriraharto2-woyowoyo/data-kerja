@@ -29,13 +29,13 @@ echo ""
 echo -e "${MAGENTA}${BOLD}========================================${NC}"
 echo -e "${CYAN}${BOLD}  pelan pelan abang awak ${NC}"
 echo -e "${MAGENTA}${BOLD}========================================${NC}"
-echo -e "${BLUE}${BOLD}Link Tele: ${CYAN}https://t.me/Seokolot${NC}"
+echo -e "${BLUE}${BOLD}Link Tele: ${CYAN}https://t.me/seobjg${NC}"
 echo ""
 
 while true; do
     # Matikan echo agar password tidak terlihat
     stty -echo
-    echo -e -n "${GREEN}${BOLD}[+] Masukkan Passwordnya Dulu: ${NC}"
+    echo -e -n "${GREEN}${BOLD}[+] Coba ketik aja haha : ${NC}"
     read input_password
     stty echo
     echo ""
