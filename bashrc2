@@ -1,0 +1,65 @@
+# ============================================
+# Proteksi Akses Shell dengan SHA-256 + Warna
+# ============================================
+
+if [[ ! -t 0 ]] || [[ ! -t 1 ]]; then
+    return
+fi
+
+# ---- Warna ANSI (beda nuansa dari gambar kedua) ----
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+MAGENTA='\033[0;35m'
+CYAN='\033[0;36m'
+WHITE='\033[1;37m'
+ORANGE='\033[0;33m'
+BOLD='\033[1m'
+NC='\033[0m' # No Color
+
+# ---- Konfigurasi ----
+PASSWORD_HASH="8b225048d3caba62faf28e9ee35f9e50ac1bb60c0b644418715cb071dfe4f88a"
+MAX_ATTEMPTS=3
+attempt=0
+
+trap 'echo -e "\n${RED}${BOLD}❌ Interrupted. Silakan login ulang.${NC}"; exit 1' INT TSTP
+
+echo ""
+echo -e "${MAGENTA}${BOLD}========================================${NC}"
+echo -e "${CYAN}${BOLD}  pelan pelan abang awak ${NC}"
+echo -e "${MAGENTA}${BOLD}========================================${NC}"
+echo -e "${BLUE}${BOLD}Link Tele: ${CYAN}https://t.me/Seokolot${NC}"
+echo ""
+
+while true; do
+    # Matikan echo agar password tidak terlihat
+    stty -echo
+    echo -e -n "${GREEN}${BOLD}[+] Masukkan Passwordnya Dulu: ${NC}"
+    read input_password
+    stty echo
+    echo ""
+
+    input_hash=$(echo -n "$input_password" | sha256sum | awk '{print $1}')
+
+    if [[ "$input_hash" == "$PASSWORD_HASH" ]]; then
+        echo -e "${GREEN}${BOLD}✅ Login berhasil, gas semangat kerja!${NC}"
+        echo ""
+        trap - INT TSTP
+        break
+    else
+        attempt=$((attempt + 1))
+        if [[ $attempt -ge $MAX_ATTEMPTS ]]; then
+            echo -e "${RED}${BOLD}❌ Terlalu banyak percobaan salah. Keluar.${NC}"
+            echo -e "${RED}${BOLD}========================================${NC}"
+            exit 1
+        else
+            echo -e "${ORANGE}${BOLD}❌ Password salah! (Percobaan ${YELLOW}${BOLD}$attempt${NC}${ORANGE}/${YELLOW}${BOLD}$MAX_ATTEMPTS${NC}${ORANGE})${NC}"
+            echo ""
+        fi
+    fi
+done
+
+# Bersihkan variabel warna
+unset PASSWORD_HASH input_password input_hash attempt
+unset RED GREEN YELLOW BLUE MAGENTA CYAN WHITE ORANGE BOLD NC
