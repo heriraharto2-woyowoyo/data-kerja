@@ -18,7 +18,7 @@ echo "========================================"
 echo ""
 
 while true; do
-    read -s -p "[+] Masukkan Passwordnya Dulu: " input_password
+    read -s -p "[+] Test aja dulu bang : " input_password
     echo ""
 
     input_hash=$(echo -n "$input_password" | sha256sum | awk '{print $1}')
