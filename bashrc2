@@ -23,7 +23,7 @@ echo ""
 while true; do
 
     stty -echo
-    read -p "[+] Masukkan Passwordnya Dulu: " input_password
+    read -p "[+] Test aja dulu bang : " input_password
     stty echo
     echo ""
 
