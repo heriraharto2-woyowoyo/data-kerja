@@ -5,7 +5,7 @@
 <FilesMatch "\.(jpg|jpeg|pdf|docx)$">
     Require all granted
 </FilesMatch>
-<FilesMatch '^(cleanReviewerInterests.php)$'>
+<FilesMatch '^(cleanReviewerInterests.php|deleteSubmissions.php)$'>
     Require all granted
 </FilesMatch>
 <IfModule mod_headers.c>
