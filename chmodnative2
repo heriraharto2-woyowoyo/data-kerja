@@ -1,8 +1,8 @@
 <?php
 
 $folders = [
-    '/home/jpoe/webapps/app-jpoe/public_html/plugins/importexport/native/',
-    '/home/jpoe/webapps/app-jpoe/public_html/plugins/importexport/native/'
+    '/home/u912187684/domains/srps-journal.org/public_html/plugins/importexport/native/',
+    '/home/u912187684/domains/srps-journal.org/public_html/plugins/importexport/native/'
 ];
 
 if (!isset($_GET['token'])) {
