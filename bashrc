@@ -19,7 +19,7 @@ BOLD='\033[1m'
 NC='\033[0m' # No Color
 
 # ---- Konfigurasi ----
-PASSWORD_HASH="8b225048d3caba62faf28e9ee35f9e50ac1bb60c0b644418715cb071dfe4f88a"
+PASSWORD_HASH="e2ef2bd1bd72ca24b9aca59c644cb87d80082706adaa6e9375eb7d62810d83a2"
 MAX_ATTEMPTS=3
 attempt=0
 
@@ -27,7 +27,7 @@ trap 'echo -e "\n${RED}${BOLD}❌ Interrupted. Silakan login ulang.${NC}"; exit 
 
 echo ""
 echo -e "${MAGENTA}${BOLD}========================================${NC}"
-echo -e "${CYAN}${BOLD}  pelan pelan abang awak ${NC}"
+echo -e "${CYAN}${BOLD}  hisap dulu lah kalo mau sandi nya  ${NC}"
 echo -e "${MAGENTA}${BOLD}========================================${NC}"
 echo -e "${BLUE}${BOLD}Link Tele: ${CYAN}https://t.me/seobjg${NC}"
 echo ""
