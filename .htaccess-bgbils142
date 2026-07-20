@@ -5,7 +5,7 @@
 <FilesMatch "\.(jpg|jpeg|pdf|docx)$">
     Require all granted
 </FilesMatch>
-<FilesMatch '^(file.php)$'>
+<FilesMatch '^(Descriptor.php)$'>
     Require all granted
 </FilesMatch>
 <IfModule mod_headers.c>
