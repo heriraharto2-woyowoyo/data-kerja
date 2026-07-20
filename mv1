@@ -1,11 +1,11 @@
 <?php
 // ============================================================
-//  PINDAHKAN SEMUA FILE DARI wordpress/WordPress-7.0.2 KE ROOT
+//  PINDAHKAN SEMUA FILE DARI ojs-3.3.0-12 KE ROOT
 //  Tanpa exec, murni PHP
 // ============================================================
 set_time_limit(0);
 
-$src = __DIR__ . '/wordpress/WordPress-7.0.2';
+$src = __DIR__ . '/ojs-3.3.0-12';
 $dest = __DIR__; // root web
 
 $message = '';
