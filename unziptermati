@@ -1,0 +1,93 @@
+<?php
+// ============================================================
+//  DOWNLOAD & EKSTRAK WORDPRESS 7.0.2 (Hanya ZipArchive)
+//  Tanpa exec / shell / system
+// ============================================================
+set_time_limit(0);
+ini_set('memory_limit', '512M');
+
+$message = '';
+$targetDir = __DIR__; // langsung di direktori script ini
+
+if (isset($_POST['download'])) {
+    // URL ZIP WordPress 7.0.2 dari GitHub
+    $url = 'https://github.com/WordPress/WordPress/archive/refs/tags/7.0.2.zip';
+    $zipName = '7.0.2.zip';
+    $zipPath = $targetDir . '/' . $zipName;
+
+    // --- 1. Download file dengan CURL ---
+    $ch = curl_init($url);
+    $fp = fopen($zipPath, 'w+');
+    curl_setopt($ch, CURLOPT_FILE, $fp);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 300);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    fclose($fp);    
+
+    if ($httpCode !== 200 || !file_exists($zipPath) || filesize($zipPath) < 1000) {
+        $message = "❌ Gagal download (HTTP $httpCode). Coba manual.";
+        @unlink($zipPath);
+    } else {
+        $message = "✅ Download berhasil: " . number_format(filesize($zipPath)) . " bytes<br>";
+
+        // --- 2. Ekstrak dengan ZipArchive (tanpa exec) ---
+        $extractTo = $targetDir . '/wordpress'; // folder tujuan
+        if (!is_dir($extractTo)) mkdir($extractTo, 0777, true);
+
+        if (class_exists('ZipArchive')) {
+            $zip = new ZipArchive();
+            $open = $zip->open($zipPath);
+            if ($open === true) {
+                $res = $zip->extractTo($extractTo);
+                $zip->close();
+                if ($res) {
+                    // Hitung jumlah file yang berhasil diekstrak
+                    $count = 0;
+                    foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($extractTo, FilesystemIterator::SKIP_DOTS)) as $f) {
+                        if ($f->isFile()) $count++;
+                    }
+                    $message .= "✅ Berhasil ekstrak ke folder 'wordpress' ($count file).";
+                    // Hapus ZIP jika dicentang
+                    if (isset($_POST['delete_zip']) && unlink($zipPath)) {
+                        $message .= " 🗑️ File ZIP dihapus.";
+                    }
+                } else {
+                    $message .= "❌ Ekstrak gagal (ZipArchive extractTo error).";
+                }
+            } else {
+                // Tampilkan error spesifik dari ZipArchive
+                $err = '';
+                switch ($open) {
+                    case ZipArchive::ER_NOENT: $err = 'File tidak ditemukan.'; break;
+                    case ZipArchive::ER_NOZIP: $err = 'Bukan file ZIP (corrupt atau format salah).'; break;
+                    case ZipArchive::ER_OPEN: $err = 'Gagal membuka file.'; break;
+                    case ZipArchive::ER_READ: $err = 'Gagal membaca file.'; break;
+                    case ZipArchive::ER_SEEK: $err = 'Gagal seek.'; break;
+                    default: $err = "Kode error: $open";
+                }
+                $message .= "❌ ZipArchive gagal: $err";
+            }
+        } else {
+            $message .= "❌ Ekstensi ZipArchive tidak tersedia di server.";
+        }
+    }
+}
+?>
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>Install WordPress 7.0.2</title></head>
+<body style="font-family:Arial;padding:20px;">
+<h2>📥 Download & Install WordPress 7.0.2</h2>
+<?php if ($message) echo '<div style="background:#dff0d8;padding:15px;border-radius:5px;margin-bottom:20px;">'.$message.'</div>'; ?>
+<form method="post">
+    <p>Klik tombol di bawah untuk mendownload WordPress 7.0.2 dari GitHub dan mengekstrak ke folder <strong>wordpress</strong> di direktori saat ini.</p>
+    <input type="checkbox" name="delete_zip" id="del" checked> <label for="del">Hapus file ZIP setelah ekstrak</label><br><br>
+    <input type="submit" name="download" value="Download & Ekstrak" style="background:#27ae60;color:#fff;padding:12px 30px;border:none;border-radius:5px;font-size:16px;cursor:pointer;">
+</form>
+<hr>
+<p><strong>Catatan:</strong> Proses ini murni menggunakan PHP (CURL + ZipArchive), tanpa perlu akses terminal.</p>
+</body>
+</html>
