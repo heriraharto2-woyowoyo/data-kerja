@@ -1,0 +1,77 @@
+<?php
+// ============================================================
+//  UBAH CHMOD SEMUA FILE & FOLDER KE 0555 (RECURSIVE)
+//  Tanpa exec, murni PHP
+// ============================================================
+set_time_limit(0);
+ini_set('memory_limit', '512M');
+
+$baseDir = isset($_POST['dir']) ? trim($_POST['dir']) : __DIR__;
+$baseDir = realpath($baseDir) ?: $baseDir;
+if (!is_dir($baseDir)) {
+    $message = "❌ Direktori tidak valid: " . htmlspecialchars($baseDir);
+    $baseDir = __DIR__;
+} else {
+    $message = '';
+}
+
+if (isset($_POST['change'])) {
+    $count = 0;
+    $errors = [];
+    $iterator = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator($baseDir, RecursiveDirectoryIterator::SKIP_DOTS),
+        RecursiveIteratorIterator::SELF_FIRST
+    );
+    foreach ($iterator as $item) {
+        $path = $item->getPathname();
+        // Set permission ke 0555 (octal)
+        if (@chmod($path, 0555)) {
+            $count++;
+        } else {
+            $errors[] = $path;
+        }
+    }
+    $message = "✅ Berhasil mengubah permission $count file/folder ke 0555.";
+    if (!empty($errors)) {
+        $message .= "<br>⚠️ Gagal mengubah pada " . count($errors) . " file/folder (mungkin bukan pemilik atau permission tidak diizinkan).";
+    }
+}
+?>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>CHMOD 0555</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #f4f7fc; }
+        .container { max-width: 800px; margin: auto; background: #fff; padding: 25px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h2 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        .message { background: #dff0d8; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .message.error { background: #f2dede; border-color: #a94442; }
+        input[type="text"] { width: 80%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+        input[type="submit"] { background: #f39c12; color: #fff; padding: 12px 30px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; }
+        input[type="submit"]:hover { background: #d68910; }
+        code { background: #eee; padding: 2px 6px; border-radius: 3px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>🔐 Ubah Permission ke 0555 (Rekursif)</h2>
+    <?php if ($message): ?>
+        <div class="message <?= strpos($message, '❌') !== false ? 'error' : '' ?>">
+            <?= $message ?>
+        </div>
+    <?php endif; ?>
+    <form method="post">
+        <p>
+            <label>Direktori target:</label><br>
+            <input type="text" name="dir" value="<?= htmlspecialchars($baseDir) ?>">
+        </p>
+        <p><input type="submit" name="change" value="Ubah Semua ke 0555"></p>
+    </form>
+    <p style="font-size: 14px; color: #666;">
+        <strong>Catatan:</strong> Permission <code>0555</code> = read & execute untuk semua (tanpa write). Cocok untuk keamanan. Proses berjalan rekursif ke semua subdirektori.
+    </p>
+</div>
+</body>
+</html>
