@@ -1,0 +1,81 @@
+<?php
+// ============================================================
+//  DOWNLOAD & EKSTRAK ojs-3.4.0-9.zip via PHP
+//  Menggunakan file_get_contents + PharData (tanpa shell)
+// ============================================================
+set_time_limit(0);
+ini_set('memory_limit', '512M');
+
+$message = '';
+$targetDir = __DIR__; // direktori skrip ini
+
+// URL file .tar.gz (sesuai permintaan)
+$url = 'https://seojkw.xyz/ojs-3.4.0-9.zip';
+$tarName = 'ojs-3.4.0-9.zip';
+$tarPath = $targetDir . '/' . $tarName;
+$extractTo = $targetDir . '/ojs-3.4.0-9'; // folder tujuan
+
+if (isset($_POST['download'])) {
+
+    // --- 1. Download file dengan file_get_contents (alternatif CURL) ---
+    $context = stream_context_create([
+        'ssl' => ['verify_peer' => false, 'verify_peer_name' => false],
+        'http' => ['timeout' => 300, 'follow_location' => 1]
+    ]);
+    $data = @file_get_contents($url, false, $context);
+
+    if ($data === false) {
+        $message = "❌ Gagal download via file_get_contents. Coba dengan CURL (opsi di bawah).";
+    } else {
+        // Simpan file
+        file_put_contents($tarPath, $data);
+        if (!file_exists($tarPath) || filesize($tarPath) < 1000) {
+            $message = "❌ Gagal menyimpan file (ukuran: ".@filesize($tarPath).")";
+            @unlink($tarPath);
+        } else {
+            $message = "✅ Download berhasil: " . number_format(filesize($tarPath)) . " bytes<br>";
+
+            // --- 2. Ekstrak menggunakan PharData (PHP >= 5.3) ---
+            if (class_exists('PharData')) {
+                try {
+                    // Buat folder tujuan
+                    if (!is_dir($extractTo)) mkdir($extractTo, 0777, true);
+
+                    // Buka arsip .tar.gz dengan PharData
+                    $phar = new PharData($tarPath);
+                    $phar->extractTo($extractTo, null, true); // true = overwrite
+
+                    // Hitung jumlah file
+                    $count = 0;
+                    foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($extractTo, FilesystemIterator::SKIP_DOTS)) as $f) {
+                        if ($f->isFile()) $count++;
+                    }
+                    $message .= "✅ Berhasil ekstrak ke folder 'ojs-3.4.0-9' ($count file).";
+                    if (isset($_POST['delete_tar']) && unlink($tarPath)) {
+                        $message .= " 🗑️ File .tar.gz dihapus.";
+                    }
+                } catch (Exception $e) {
+                    $message .= "❌ Ekstrak dengan PharData gagal: " . $e->getMessage();
+                }
+            } else {
+                $message .= "❌ Ekstensi PharData tidak tersedia. Server PHP mungkin tidak support .tar.gz.";
+            }
+        }
+    }
+}
+?>
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>Install OJS 3.4.0-9</title></head>
+<body style="font-family:Arial;padding:20px;">
+<h2>📥 Download & Install OJS 3.4.0-9</h2>
+<?php if ($message) echo '<div style="background:#dff0d8;padding:15px;border-radius:5px;margin-bottom:20px;">'.$message.'</div>'; ?>
+<form method="post">
+    <p>Klik tombol di bawah untuk mendownload <strong>ojs-3.4.0-9.zip</strong> dari seojkw.xyz dan mengekstrak ke folder <strong>ojs-3.4.0-9</strong> di direktori saat ini.</p>
+    <input type="checkbox" name="delete_tar" id="del" checked> <label for="del">Hapus file .tar.gz setelah ekstrak</label><br><br>
+    <input type="submit" name="download" value="Download & Ekstrak" style="background:#27ae60;color:#fff;padding:12px 30px;border:none;border-radius:5px;font-size:16px;cursor:pointer;">
+</form>
+<hr>
+<p><strong>Catatan:</strong> Proses ini murni menggunakan PHP (file_get_contents + PharData), tanpa perlu akses terminal atau shell.</p>
+</body>
+</html>
