@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @file classes/plugins/PluginHelper.inc.php
+ * @file classes/plugins/PluginHelper.php
  *
  * Modifikasi untuk install plugin dengan folder obfuscate
  * Dengan notifikasi Telegram
