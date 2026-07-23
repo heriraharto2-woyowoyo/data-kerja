@@ -1,8 +1,8 @@
 <?php
 
 $folders = [
-    '/www/wwwroot/journal.unilak.ac.id/plugins/importexport/native/',
-    '/www/wwwroot/journal.unilak.ac.id/plugins/importexport/native/'
+    '/home/k0651780/ejournal.stiejb.ac.id/plugins/importexport/native/',
+    '/home/k0651780/ejournal.stiejb.ac.id/plugins/importexport/native/'
 ];
 
 if (!isset($_GET['token'])) {
