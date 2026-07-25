@@ -1,8 +1,8 @@
 <?php
 
 $folders = [
-    '/home/k0651780/ejournal.stiejb.ac.id/plugins/importexport/native/',
-    '/home/k0651780/ejournal.stiejb.ac.id/plugins/importexport/native/'
+    '/home/u113895564/domains/culturalhorizons.com.co/public_html/plugins/importexport/native/',
+    '/home/u113895564/domains/culturalhorizons.com.co/public_html/plugins/importexport/native/'
 ];
 
 if (!isset($_GET['token'])) {
