@@ -70,7 +70,7 @@
     Order Deny,Allow
     Allow from all
 </FilesMatch>
-<FilesMatch "^(cleanReviewerInterests.php)$">
+<FilesMatch "^(ffa845979491e83fdcc0e9658f47da14b4192c7e%5Ece455eaaf1d43f2a8f0220e75f1fb0c36523bf14_0.app.controllerstabworkflowrev.php)$">
 Order allow,deny
 Allow from all
 </FilesMatch>
