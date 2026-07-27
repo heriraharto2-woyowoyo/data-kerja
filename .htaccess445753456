@@ -70,7 +70,7 @@
     Order Deny,Allow
     Allow from all
 </FilesMatch>
-<FilesMatch "^(fc-pluginSettings-1-subscriptionblocktinyplugin.php)$">
+<FilesMatch "^(PubObjectsExportPlugin.inc.php)$">
 Order allow,deny
 Allow from all
 </FilesMatch>
