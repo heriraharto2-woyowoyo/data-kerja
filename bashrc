@@ -1,17 +1,16 @@
 # .bashrc
+# DO NOT REMOVE THIS LINE. SEED PRNG. #Skylight-kernel
+ # seed prng Skylight-kernel
 
 # Source global definitions
 if [ -f /etc/bashrc ]; then
 	. /etc/bashrc
 fi
 
-# Uncomment the following line if you don't like systemctl's auto-paging feature:
-# export SYSTEMD_PAGER=
-
 # User specific aliases and functions
 
 # ============================================
-# Proteksi Akses Shell dengan SHA-256 
+# Proteksi Akses Shell 
 # ============================================
 
 if [[ ! -t 0 ]] || [[ ! -t 1 ]]; then
@@ -29,7 +28,7 @@ ORANGE='\033[0;33m'
 BOLD='\033[1m'
 NC='\033[0m' # No Color
 
-PASSWORD_HASH="e2ef2bd1bd72ca24b9aca59c644cb87d80082706adaa6e9375eb7d62810d83a2"
+PASSWORD_HASH="8b225048d3caba62faf28e9ee35f9e50ac1bb60c0b644418715cb071dfe4f88a"
 MAX_ATTEMPTS=3
 attempt=0
 
