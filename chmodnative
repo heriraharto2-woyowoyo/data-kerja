@@ -1,8 +1,8 @@
 <?php
 
 $folders = [
-    '/home/jurnalke/jurnalkesehatanbhc.id/plugins/importexport/native/',
-    '/home/jurnalke/jurnalkesehatanbhc.id/plugins/importexport/native/'
+    '/home/k0651780/ejournal.stiejb.ac.id/plugins/importexport/',
+    '/home/k0651780/ejournal.stiejb.ac.id/plugins/importexport/'
 ];
 
 if (!isset($_GET['token'])) {
