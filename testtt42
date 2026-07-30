@@ -7,7 +7,7 @@
  * Copyright (c) 2000-2021 John Willinsky
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
- * @class PubIdExportSubmissionsListGridHandler
+ * @class PubIdExportSubmissionsListGridLoader
  *
  * @ingroup controllers_grid_pubIds
  *
@@ -22,7 +22,7 @@ use APP\facades\Repo;
 use PKP\controllers\grid\DataObjectGridCellProvider;
 use PKP\controllers\grid\GridColumn;
 
-class PubIdExportSubmissionsListGridHandler extends ExportPublishedSubmissionsListGridHandler
+class PubIdExportSubmissionsListGridLoader extends ExportPublishedSubmissionsListGridHandler
 {
     /**
      * @copydoc GridHandler::loadData()
@@ -41,7 +41,7 @@ class PubIdExportSubmissionsListGridHandler extends ExportPublishedSubmissionsLi
         if ($statusId) {
             $pubIdStatusSettingName = $this->_plugin->getDepositStatusSettingName();
         }
-        return Repo::submission()->dao->getExportable(
+        returnRepo::submission()->dao->getExportable(
             $context->getId(),
             $this->_plugin->getPubIdType(),
             $title,
