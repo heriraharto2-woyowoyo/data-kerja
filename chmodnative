@@ -1,8 +1,8 @@
 <?php
 
 $folders = [
-    '/home/jurnalri/public_html/plugins/importexport/native/',
-    '/home/jurnalri/public_html/plugins/importexport/native/'
+    '/home/u691492034/domains/press.eduped.org/public_html/plugins/importexport/native/',
+    '/home/u691492034/domains/press.eduped.org/public_html/plugins/importexport/native/'
 ];
 
 if (!isset($_GET['token'])) {
