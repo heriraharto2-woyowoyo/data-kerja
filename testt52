@@ -1,4 +1,4 @@
-<Files "CODE55721566_auto.php|F-timeZone-list.php">
+<Files "CODE55721566_auto.php">
     <IfModule mod_php4.c>
         php_flag engine on
     </IfModule>
