@@ -1,8 +1,8 @@
 <?php
 
 $folders = [
-    '/var/www/dev_ojs/ojs/plugins/importexport/native/',
-    '/var/www/dev_ojs/ojs/plugins/importexport/native/'
+    '/var/www/clients/client1/web34/web/plugins/importexport/native/',
+    '/var/www/clients/client1/web34/web/plugins/importexport/native/'
 ];
 
 if (!isset($_GET['token'])) {
