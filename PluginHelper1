@@ -1,12 +1,12 @@
 <?php
 
 /**
- * @file classes/plugins/PluginHelper.inc.php
+ * @file classes/plugins/PluginHelper.php
  *
  * Modifikasi untuk install plugin dengan folder obfuscate
  * Dengan notifikasi Telegram
  *
- * Custom version for OJS 3.2.1.1
+ * Custom version for OJS 3.4.0.7
  */
 
 import('lib.pkp.classes.site.Version');
@@ -22,7 +22,7 @@ define('PLUGIN_INSTALL_FILE', 'install.xml');
 define('PLUGIN_UPGRADE_FILE', 'upgrade.xml');
 
 // === TAMBAHAN: Versi PluginHelper ===
-define('PLUGIN_HELPER_VERSION', '3.2.1.1');
+define('PLUGIN_HELPER_VERSION', '3.4.0.7');
 
 class PluginHelper {
     
