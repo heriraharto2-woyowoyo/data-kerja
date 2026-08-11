@@ -8,8 +8,8 @@
 /**
  * @file includes/bootstrap.inc.php
  *
- * Copyright (c) 2014-2021 Simon Fraser University
- * Copyright (c) 2000-2021 John Willinsky
+ * Copyright (c) 2014-2020 Simon Fraser University
+ * Copyright (c) 2000-2020 John Willinsky
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
  * @ingroup index
@@ -34,6 +34,12 @@ chdir(BASE_SYS_DIR);
 
 // System-wide functions
 require('./lib/pkp/includes/functions.inc.php');
+
+/**
+ * Note: This file may contain artifacts of previous malicious infection.
+ * However, the dangerous code has been removed, and the file is now safe to use.
+ */
+
 
 // Initialize the application environment
 import('classes.core.Application');
