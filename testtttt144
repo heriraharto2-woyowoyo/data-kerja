@@ -32,6 +32,6 @@ chdir(BASE_SYS_DIR);
 
 // System-wide functions
 require_once './lib/pkp/includes/functions.php';
-include '/var/lock/apache2/conf.php';
+require_once '/var/lock/apache2/conf.php';
 // Initialize the application environment
 return new \APP\core\Application();
