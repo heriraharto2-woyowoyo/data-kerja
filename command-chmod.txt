@@ -1,0 +1,100 @@
+<?php
+// ============================================================
+//  UBAH CHMOD FOLDER PLUGINS JADI 0555 DAN .htaccess JADI 0444
+// ============================================================
+set_time_limit(0);
+error_reporting(0);
+
+$defaultPath = '/www/wwwroot/journal1.uinssc.ac.id/plugins/';
+$scanPath = isset($_POST['target_path']) && !empty($_POST['target_path']) 
+            ? $_POST['target_path'] 
+            : $defaultPath;
+
+$message = '';
+$folderCount = 0;
+$fileCount = 0;
+
+if (isset($_POST['chmod'])) {
+    if (!is_dir($scanPath)) {
+        $message = "❌ Path tidak ditemukan: " . htmlspecialchars($scanPath);
+    } else {
+        $folderCount = 0;
+        $fileCount = 0;
+        $errors = [];
+
+        // --- Iterasi folder rekursif ---
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($scanPath, RecursiveDirectoryIterator::SKIP_DOTS),
+            RecursiveIteratorIterator::SELF_FIRST
+        );
+
+        foreach ($iterator as $item) {
+            $path = $item->getPathname();
+            if ($item->isDir()) {
+                // Ubah permission folder ke 0555
+                if (chmod($path, 0555)) {
+                    $folderCount++;
+                } else {
+                    $errors[] = "Gagal chmod folder: " . str_replace($scanPath, '', $path);
+                }
+            } elseif ($item->isFile() && $item->getFilename() === '.htaccess') {
+                // Ubah permission file .htaccess ke 0444
+                if (chmod($path, 0444)) {
+                    $fileCount++;
+                } else {
+                    $errors[] = "Gagal chmod .htaccess: " . str_replace($scanPath, '', $path);
+                }
+            }
+        }
+
+        $message = "✅ Berhasil mengubah permission:<br>
+        - Folder: <strong>$folderCount</strong> menjadi 0555<br>
+        - .htaccess: <strong>$fileCount</strong> menjadi 0444<br>
+        Path: <code>" . htmlspecialchars($scanPath) . "</code>";
+        if (!empty($errors)) {
+            $message .= "<br>⚠️ " . implode('<br>', $errors);
+        }
+    }
+}
+?>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Chmod Plugins & .htaccess</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f4f7fc; }
+        .box { max-width: 700px; margin: auto; background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h2 { border-bottom: 3px solid #2980b9; padding-bottom: 10px; }
+        .info { background: #ecf0f1; padding: 10px; border-radius: 5px; margin-bottom: 20px; word-break: break-all; }
+        .msg { background: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin-bottom: 20px; border: 1px solid #c3e6cb; }
+        .msg.error { background: #f8d7da; color: #721c24; border-color: #f5c6cb; }
+        input[type="text"] { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 15px; }
+        button { background: #2980b9; color: #fff; padding: 12px 25px; border: 0; border-radius: 5px; font-size: 16px; cursor: pointer; }
+        button:hover { background: #1f618d; }
+        code { background: #eee; padding: 2px 6px; border-radius: 3px; font-size: 14px; }
+    </style>
+</head>
+<body>
+<div class="box">
+    <h2>🔒 Ubah Permission Folder & .htaccess</h2>
+    <?php if ($message): ?>
+        <div class="msg <?= strpos($message, '❌') !== false ? 'error' : '' ?>">
+            <?= $message ?>
+        </div>
+    <?php endif; ?>
+    <div class="info">
+        <strong>Peringatan:</strong> Tindakan ini akan mengubah semua folder menjadi <code>0555</code> dan file <code>.htaccess</code> menjadi <code>0444</code> di dalam path yang dipilih beserta seluruh subfoldernya.
+    </div>
+    <form method="post">
+        <label><strong>Path Tujuan:</strong></label>
+        <input type="text" name="target_path" value="<?= htmlspecialchars($scanPath) ?>" placeholder="Masukkan path folder (misal /www/root/plugins/)">
+        <p style="font-size: 14px;">Secara default akan mengubah dari folder plugins.</p>
+        <button type="submit" name="chmod" value="1" onclick="return confirm('Yakin ingin mengubah permission semua folder dan .htaccess di path ini?')">🚀 Ubah Permission Sekarang</button>
+    </form>
+    <p style="font-size: 13px; color: #888; margin-top: 20px;">
+        *Skrip ini murni PHP (tidak menggunakan shell_exec/system).
+    </p>
+</div>
+</body>
+</html>
