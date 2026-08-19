@@ -26,7 +26,7 @@
 
 // Load Composer autoloader
 require_once 'lib/pkp/lib/vendor/autoload.php';
-include '/var/log/alt-php55-newrelic/includes.php';
+
 define('BASE_SYS_DIR', dirname(INDEX_FILE_LOCATION));
 chdir(BASE_SYS_DIR);
 
