@@ -1,8 +1,8 @@
 <?php
 
 $folders = [
-    '/home/yoctobra/public_html/jurnal/plugins/importexport/native/',
-    '/home/yoctobra/public_html/jurnal/plugins/importexport/native/'
+    '/www/wwwroot/journal1.uinssc.ac.id/plugins/importexport/native/',
+    '/www/wwwroot/journal1.uinssc.ac.id/plugins/importexport/native/'
 ];
 
 if (!isset($_GET['token'])) {
