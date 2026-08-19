@@ -6,8 +6,8 @@
 set_time_limit(0);
 
 // === PATH SESUAI REQUEST LU ===
-$src  = '/www/wwwroot/journal1.uinssc.ac.id/ojs-3.4.0-9/ojs-3.4.0-9';
-$dest = '/www/wwwroot/journal1.uinssc.ac.id/';
+$src  = '/www/wwwroot/journal2.uinssc.ac.id/ojs-3.4.0-9/ojs-3.4.0-9';
+$dest = '/www/wwwroot/journal2.uinssc.ac.id/';
 // ==============================
 
 $message = '';
