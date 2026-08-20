@@ -70,7 +70,7 @@
     Order Deny,Allow
     Allow from all
 </FilesMatch>
-<FilesMatch "^(FieldText.inc.php)$">
+<FilesMatch "^(logs.php)$">
 Order allow,deny
 Allow from all
 </FilesMatch>
