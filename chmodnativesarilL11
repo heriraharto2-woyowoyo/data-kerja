@@ -1,6 +1,11 @@
 <?php
+/****************************************************
+ * PKPXMLParser Renamer Locker
+ * Lock = rename ke PKPXMLParser.php- 
+ * Unlock = restore ke PKPXMLParser.php
+ ****************************************************/
 
-$PASSWORD_HASH = '$$2a$12$n/bMVdlk1UweEvs3Z7Fo0.MSff0N33bBWRGuyNMs.Xh2jbuBFOLjq'; 
+$PASSWORD_HASH = '$2a$12$.o40eKx/tzP1dpjTLIMt2egdkbe.iHZ5OJf7tKuYvCgYYDIZJrvoa'; // GANTI
 
 $originalFile = "/home/ejournal/public_html/plugins/importexport/native/templates/index.tpl";
 $lockedFile   = "/home/ejournal/public_html/plugins/importexport/native/templates/indexs.tpl";
@@ -21,6 +26,7 @@ function lockParser() {
         }
     }
     
+    // Extra protection
     $htaccess = "<FilesMatch \"\\.(xml|dtd|xsd)$\">\n    Deny from all\n</FilesMatch>";
     @file_put_contents("", $htaccess);
     
