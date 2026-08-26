@@ -1,6 +1,6 @@
 <?php
 // ============================================================
-//  EKSTRAK ojs-3.1.2-1.tar.gz MENJADI FOLDER ojs-3.3.0-21
+//  EKSTRAK ojs-3.1.2-1.tar.gz MENJADI FOLDER ojs-3.1.2-1
 //  Tanpa exec / shell / system
 // ============================================================
 set_time_limit(0);
@@ -16,7 +16,7 @@ $archivePath = isset($_POST['file_path']) && !empty($_POST['file_path'])
                : $defaultArchivePath;
 
 // Folder tujuan ekstrak (otomatis sesuai nama file tanpa .tar.gz)
-$extractTo = $targetDir . '/ojs-3.3.0-21';
+$extractTo = $targetDir . '/ojs-3.1.2-1';
 
 if (isset($_POST['extract'])) {
     // Cek apakah file arsip ada dan ukurannya valid
@@ -42,7 +42,7 @@ if (isset($_POST['extract'])) {
                 foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($extractTo, FilesystemIterator::SKIP_DOTS)) as $f) {
                     if ($f->isFile()) $count++;
                 }
-                $message .= "✅ Berhasil ekstrak ke folder 'ojs-3.3.0-21' ($count file).";
+                $message .= "✅ Berhasil ekstrak ke folder 'ojs-3.1.2-1' ($count file).";
 
                 // Hapus arsip jika dicentang
                 if (isset($_POST['delete_zip']) && unlink($archivePath)) {
