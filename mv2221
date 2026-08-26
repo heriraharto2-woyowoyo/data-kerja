@@ -6,8 +6,8 @@
 set_time_limit(0);
 
 // === PATH SESUAI REQUEST LU ===
-$src  = '/home/ejournal/public_html/ojs-3.3.0-21/ojs-3.3.0-21';
-$dest = '/home/ejournal/public_html/';
+$src  = '/home/u336528771/domains/ijbrd.com/public_html/ojs-3.3.0-21/ojs-3.1.2-1';
+$dest = '/home/u336528771/domains/ijbrd.com/public_html/';
 // ==============================
 
 $message = '';
@@ -60,8 +60,8 @@ if (isset($_POST['move'])) {
                 @unlink($item->getPathname());
             }
         }
-        @rmdir($src); // hapus folder ojs-3.4.0-9 (yang dalam)
-        @rmdir(dirname($src)); // hapus folder ojs-3.4.0-9 (yang luar) jika sudah kosong
+        @rmdir($src); // hapus folder ojs-3.3.0-21 (yang dalam)
+        @rmdir(dirname($src)); // hapus folder ojs-3.3.0-21 (yang luar) jika sudah kosong
 
         $message = "✅ Berhasil memindahkan $count file ke document root.";
         if (!empty($errors)) {
@@ -105,7 +105,7 @@ if (isset($_POST['move'])) {
         <input type="submit" name="move" value="Pindahkan Semua File">
     </form>
     <p style="margin-top: 20px; font-size: 14px; color: #666;">
-        <strong>Catatan:</strong> Skrip ini akan memindahkan semua isi folder <code>ojs-3.4.0-9</code> langsung ke document root. Setelah berhasil, folder backup akan otomatis dihapus.
+        <strong>Catatan:</strong> Skrip ini akan memindahkan semua isi folder <code>ojs-3.3.0-21</code> langsung ke document root. Setelah berhasil, folder backup akan otomatis dihapus.
     </p>
 </div>
 </body>
