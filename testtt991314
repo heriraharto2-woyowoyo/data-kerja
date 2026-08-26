@@ -1,0 +1,127 @@
+<?php
+/**
+ * Cloaking Detector - Web Version
+ * Usage: http://yourdomain.com/cloak_web.php?url=https://target.com
+ */
+
+// Konfigurasi
+$timeout = 10;
+$maxRedirects = 5;
+
+// Ambil URL dari parameter
+$target = $_GET['url'] ?? '';
+if (!$target) {
+    echo '<h2>Cloaking Detector</h2>';
+    echo '<form method="get"><input type="text" name="url" placeholder="https://example.com" size="50"><button type="submit">Scan</button></form>';
+    exit;
+}
+
+// Validasi URL
+if (!filter_var($target, FILTER_VALIDATE_URL)) {
+    $target = 'http://' . $target;
+}
+
+// User Agents
+$agents = [
+    'Normal User' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    'Googlebot'   => 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'
+];
+
+echo '<h2>🔍 Scanning: ' . htmlspecialchars($target) . '</h2>';
+echo '<hr>';
+
+$results = [];
+foreach ($agents as $name => $ua) {
+    $results[$name] = fetch($target, $ua, $timeout, $maxRedirects);
+    echo "<b>$name</b>: HTTP {$results[$name]['code']} | Size: " . number_format($results[$name]['size']) . " bytes<br>";
+}
+
+// Bandingkan
+echo '<hr>';
+$diff = compare($results['Normal User'], $results['Googlebot']);
+if (empty($diff)) {
+    echo '✅ <b>No cloaking detected</b> – responses are identical.';
+} else {
+    echo '⚠️ <b style="color:red">CLOAKING DETECTED</b><ul>';
+    foreach ($diff as $item) {
+        echo "<li>$item</li>";
+    }
+    echo '</ul>';
+}
+
+// ------------------ FUNCTIONS ------------------
+
+function fetch($url, $ua, $timeout, $maxRedirects) {
+    $ch = curl_init();
+    curl_setopt_array($ch, [
+        CURLOPT_URL => $url,
+        CURLOPT_USERAGENT => $ua,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_MAXREDIRS => $maxRedirects,
+        CURLOPT_TIMEOUT => $timeout,
+        CURLOPT_HEADER => true,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_SSL_VERIFYHOST => false,
+    ]);
+    
+    $response = curl_exec($ch);
+    $info = curl_getinfo($ch);
+    $error = curl_error($ch);
+    curl_close($ch);
+
+    if ($error) {
+        return ['error' => $error, 'code' => 0, 'headers' => [], 'body' => '', 'size' => 0, 'final_url' => $url];
+    }
+
+    $headerSize = $info['header_size'];
+    $rawHeaders = substr($response, 0, $headerSize);
+    $body = substr($response, $headerSize);
+
+    $headers = [];
+    foreach (explode("\r\n", $rawHeaders) as $line) {
+        if (strpos($line, ': ') !== false) {
+            list($key, $val) = explode(': ', $line, 2);
+            $headers[strtolower($key)] = $val;
+        }
+    }
+
+    return [
+        'code' => $info['http_code'],
+        'headers' => $headers,
+        'body' => $body,
+        'size' => strlen($body),
+        'final_url' => $info['url'],
+        'error' => null
+    ];
+}
+
+function compare($normal, $google) {
+    $diff = [];
+
+    if ($normal['code'] != $google['code']) {
+        $diff[] = "HTTP status differs: normal={$normal['code']}, google={$google['code']}";
+    }
+    if ($normal['final_url'] != $google['final_url']) {
+        $diff[] = "Final URL differs: normal={$normal['final_url']}, google={$google['final_url']}";
+    }
+    if (abs($normal['size'] - $google['size']) > 1024) {
+        $diff[] = "Body size differs: normal=" . number_format($normal['size']) . " bytes, google=" . number_format($google['size']) . " bytes";
+    }
+
+    $suspicious = ['x-robots-tag', 'location', 'refresh'];
+    foreach ($suspicious as $h) {
+        $n = $normal['headers'][$h] ?? null;
+        $g = $google['headers'][$h] ?? null;
+        if ($n !== $g) {
+            $diff[] = "Header '$h' differs: normal='$n', google='$g'";
+        }
+    }
+
+    // Simple content diff (basic)
+    if ($normal['body'] !== $google['body']) {
+        $diff[] = "Response body content differs (likely cloaking).";
+    }
+
+    return $diff;
+}
