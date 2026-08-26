@@ -6,8 +6,8 @@
 set_time_limit(0);
 
 // === PATH SESUAI REQUEST LU ===
-$src  = '/home/u336528771/domains/ijbrd.com/public_html/ojs-3.3.0-21/ojs-3.1.2-1';
-$dest = '/home/u336528771/domains/ijbrd.com/public_html/';
+$src  = '/home/u336528771/domains/thefikr.org/public_html/ojs-3.1.2-1/ojs-3.1.2-1';
+$dest = '/home/u336528771/domains/thefikr.org/public_html/';
 // ==============================
 
 $message = '';
