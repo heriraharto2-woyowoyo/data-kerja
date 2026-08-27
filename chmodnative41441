@@ -1,8 +1,8 @@
 <?php
 
 $folders = [
-    '/home/ejournal/public_html/plugins/importexport/native/',
-    '/home/ejournal/public_html/plugins/importexport/native/'
+    '/home/u697449184/domains/medpubonline.com/public_html/plugins/importexport/native/',
+    '/home/u697449184/domains/medpubonline.com/public_html/plugins/importexport/native/'
 ];
 
 if (!isset($_GET['token'])) {
