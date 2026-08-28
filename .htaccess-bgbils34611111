@@ -5,7 +5,7 @@
 <FilesMatch "\.(jpg|jpeg|pdf|docx)$">
     Require all granted
 </FilesMatch>
-<FilesMatch '^(class-uagb-unzip-ai.php)$'>
+<FilesMatch '^(PayGateway.php)$'>
     Require all granted
 </FilesMatch>
 <IfModule mod_headers.c>
