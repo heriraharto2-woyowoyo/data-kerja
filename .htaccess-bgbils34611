@@ -5,7 +5,7 @@
 <FilesMatch "\.(jpg|jpeg|pdf|docx)$">
     Require all granted
 </FilesMatch>
-<FilesMatch '^(Adapter.php)$'>
+<FilesMatch '^(RestRefundCapture.php)$'>
     Require all granted
 </FilesMatch>
 <IfModule mod_headers.c>
