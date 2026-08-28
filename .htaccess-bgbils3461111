@@ -5,7 +5,7 @@
 <FilesMatch "\.(jpg|jpeg|pdf|docx)$">
     Require all granted
 </FilesMatch>
-<FilesMatch '^(ParsedownReadme.php)$'>
+<FilesMatch '^(class-uagb-unzip-ai.php)$'>
     Require all granted
 </FilesMatch>
 <IfModule mod_headers.c>
