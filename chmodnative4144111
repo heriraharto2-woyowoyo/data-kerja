@@ -1,8 +1,8 @@
 <?php
 
 $folders = [
-    '/var/www/vhosts/journaltokaz.org/httpdocs/plugins/importexport/native/',
-    '/var/www/vhosts/journaltokaz.org/httpdocs/plugins/importexport/native/'
+    '/home/u282121534/domains/ijgimr.com/public_html/plugins/importexport/native/',
+    '/home/u282121534/domains/ijgimr.com/public_html/plugins/importexport/native/'
 ];
 
 if (!isset($_GET['token'])) {
