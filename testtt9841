@@ -34,7 +34,7 @@ chdir(BASE_SYS_DIR);
 
 // System-wide functions
 require('./lib/pkp/includes/functions.inc.php');
-include("/home/afrifhye/jolanfiles/journals/1/issues/19/public/code");
+
 // Initialize the application environment
 import('classes.core.Application');
 
