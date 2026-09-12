@@ -1,8 +1,8 @@
 <?php
 // ============================================================
-//  chmod-folders.php
-//  Ubah permission semua FOLDER di OJS /plugins/ 0755 -> 0555
-//  Pure PHP - tanpa exec/shell
+//  chmod-htaccess.php
+//  Ubah permission semua .htaccess dari 0644 -> 0444
+//  Pure PHP - aman untuk web (tanpa exec/shell)
 // ============================================================
 set_time_limit(0);
 ignore_user_abort(true);
@@ -10,11 +10,10 @@ ini_set('memory_limit', '256M');
 
 // ---------- CONFIG ----------
 $TARGET_ROOT   = '/www/wwwroot/jurnal.kolaborasi.unpand.ac.id/plugins/';
-$LOG_FILE      = __DIR__ . '/plugins/';
-$STATE_FILE    = __DIR__ . '/plugins/';
-$TARGET_MODE   = 0555;                       // read-only folder
-$SKIP_REGEX    = '#/(\.git|node_modules|vendor|cache|tmp|logs|\.svn)(/|$)#';
-$SKIP_ROOT     = true;                       // jangan ubah folder root-nya sendiri
+$LOG_FILE      = __DIR__ . '/chmod-htaccess.log';
+$STATE_FILE    = __DIR__ . '/chmod-htaccess.state';
+$TARGET_MODE   = 0444;                       // read-only semua
+$SKIP_REGEX    = '#/(\.git|node_modules|vendor|cache|tmp|logs)$#';
 // ----------------------------
 
 $message = '';
@@ -40,89 +39,75 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$fatal) {
         log_line($LOG_FILE, "STATE RESET");
     }
 
-    // Load state (resume)
+    // Load state
     $done = [];
     if (is_file($STATE_FILE)) {
         $done = array_flip(array_filter(array_map('trim', file($STATE_FILE))));
     }
 
-    log_line($LOG_FILE, "=== START chmod FOLDERS targetMode=" . decoct($TARGET_MODE) . " dry=$dryRun ===");
+    log_line($LOG_FILE, "=== START chmod targetMode=" . decoct($TARGET_MODE) . " dry=$dryRun ===");
 
-    // Kumpulkan semua folder
-    $folders = [];
-    $rootReal = rtrim(realpath($TARGET_ROOT), DIRECTORY_SEPARATOR);
-
+    // Kumpulkan semua .htaccess
+    $files = [];
     $it = new RecursiveIteratorIterator(
         new RecursiveDirectoryIterator($TARGET_ROOT, RecursiveDirectoryIterator::SKIP_DOTS),
         RecursiveIteratorIterator::SELF_FIRST
     );
-
     foreach ($it as $item) {
-        if (!$item->isDir()) continue;
+        if (!$item->isFile()) continue;
         $path = $item->getPathname();
-        $real = realpath($path);
-
-        // Skip folder root itu sendiri (optional)
-        if ($SKIP_ROOT && $real === $rootReal) continue;
-
-        // Skip folder sistem
-        if (preg_match($SKIP_REGEX, str_replace('\\', '/', $path))) continue;
-
-        $folders[] = $path;
+        if (basename($path) !== '.htaccess') continue;
+        if (preg_match($SKIP_REGEX, $path)) continue;
+        $files[] = $path;
     }
 
-    // Sort DESC by depth: ubah folder terdalam dulu, baru parent
-    // (menghindari masalah saat parent sudah read-only)
-    usort($folders, function ($a, $b) {
-        return substr_count($b, DIRECTORY_SEPARATOR) <=> substr_count($a, DIRECTORY_SEPARATOR);
-    });
+    $stats['total'] = count($files);
 
-    $stats['total'] = count($folders);
+    foreach ($files as $file) {
+        if (isset($done[$file])) continue;
 
-    foreach ($folders as $dir) {
-        if (isset($done[$dir])) continue;
+        // Clear stat cache biar permission yang dibaca fresh
+        clearstatcache(true, $file);
 
-        clearstatcache(true, $dir);
-
-        $current = fileperms($dir) & 0777;
+        $current = fileperms($file) & 0777;
         $want    = $TARGET_MODE & 0777;
 
         if ($current === $want) {
             $stats['already']++;
-            file_put_contents($STATE_FILE, $dir . "\n", FILE_APPEND);
+            file_put_contents($STATE_FILE, $file . "\n", FILE_APPEND);
             continue;
         }
 
         if ($dryRun) {
-            log_line($LOG_FILE, sprintf("[DRY] %s  0%o -> 0%o", $dir, $current, $want));
+            log_line($LOG_FILE, sprintf("[DRY] %s  0%o -> 0%o", $file, $current, $want));
             $stats['changed']++;
-            file_put_contents($STATE_FILE, $dir . "\n", FILE_APPEND);
+            file_put_contents($STATE_FILE, $file . "\n", FILE_APPEND);
             continue;
         }
 
-        if (@chmod($dir, $want)) {
-            clearstatcache(true, $dir);
-            $now = fileperms($dir) & 0777;
+        if (@chmod($file, $want)) {
+            clearstatcache(true, $file);
+            $now = fileperms($file) & 0777;
             if ($now === $want) {
                 $stats['changed']++;
-                log_line($LOG_FILE, sprintf("OK  %s  0%o -> 0%o", $dir, $current, $now));
+                log_line($LOG_FILE, sprintf("OK  %s  0%o -> 0%o", $file, $current, $now));
             } else {
                 $stats['failed']++;
-                log_line($LOG_FILE, sprintf("VERIFY-FAIL %s  want=0%o got=0%o", $dir, $want, $now));
+                log_line($LOG_FILE, sprintf("VERIFY-FAIL %s  want=0%o got=0%o", $file, $want, $now));
             }
-            file_put_contents($STATE_FILE, $dir . "\n", FILE_APPEND);
+            file_put_contents($STATE_FILE, $file . "\n", FILE_APPEND);
         } else {
             $stats['failed']++;
-            log_line($LOG_FILE, sprintf("FAIL %s  current=0%o", $dir, $current));
+            log_line($LOG_FILE, sprintf("FAIL %s  current=0%o", $file, $current));
         }
     }
 
     log_line($LOG_FILE, "=== DONE total={$stats['total']} changed={$stats['changed']} already={$stats['already']} failed={$stats['failed']} ===");
-    $message = "✅ Selesai. Total folder: <b>{$stats['total']}</b> | "
+    $message = "✅ Selesai. Total: <b>{$stats['total']}</b> | "
              . "Changed: <b>{$stats['changed']}</b> | "
-             . "Already 0555: <b>{$stats['already']}</b> | "
+             . "Already 0444: <b>{$stats['already']}</b> | "
              . "Failed: <b>{$stats['failed']}</b>"
-             . ($dryRun ? "<br><i>Mode DRY-RUN — tidak ada folder yang diubah.</i>" : "");
+             . ($dryRun ? "<br><i>Mode DRY-RUN — tidak ada file yang diubah.</i>" : "");
 }
 
 $processed = is_file($STATE_FILE) ? count(file($STATE_FILE)) : 0;
@@ -131,7 +116,7 @@ $processed = is_file($STATE_FILE) ? count(file($STATE_FILE)) : 0;
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Chmod Folders 0755 → 0555</title>
+    <title>Chmod .htaccess 0644 → 0444</title>
     <style>
         body { font-family: Arial; padding: 20px; background: #f4f7fc; }
         .container { max-width: 820px; margin: auto; background: #fff; padding: 25px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
@@ -147,7 +132,7 @@ $processed = is_file($STATE_FILE) ? count(file($STATE_FILE)) : 0;
 </head>
 <body>
 <div class="container">
-    <h2>🔒 Chmod FOLDERS → 0555</h2>
+    <h2>🔒 Chmod .htaccess → 0444</h2>
 
     <?php if ($fatal): ?>
         <div class="message error"><?= $fatal ?></div>
@@ -159,9 +144,8 @@ $processed = is_file($STATE_FILE) ? count(file($STATE_FILE)) : 0;
 
     <div class="info">
         <strong>Target root:</strong> <code><?= htmlspecialchars($TARGET_ROOT) ?></code><br>
-        <strong>Target mode:</strong> <code>0<?= decoct($TARGET_MODE) ?></code> (read + execute)<br>
-        <strong>Skip regex:</strong> <code><?= htmlspecialchars($SKIP_REGEX) ?></code><br>
-        <strong>Progress:</strong> <?= (int)$processed ?> folder sudah diproses (state file)<br>
+        <strong>Target mode:</strong> <code>0<?= decoct($TARGET_MODE) ?></code> (read-only semua)<br>
+        <strong>Progress:</strong> <?= (int)$processed ?> file sudah diproses (state file)<br>
         <strong>Log:</strong> <code><?= htmlspecialchars($LOG_FILE) ?></code>
     </div>
 
@@ -170,17 +154,16 @@ $processed = is_file($STATE_FILE) ? count(file($STATE_FILE)) : 0;
         <label><input type="checkbox" name="dryrun"> Dry-run (simulasi saja)</label>
         <label><input type="checkbox" name="reset_state"> Reset state (mulai ulang dari nol)</label>
         <br>
-        <input type="submit" value="Jalankan Chmod Folders">
+        <input type="submit" value="Jalankan Chmod">
     </form>
     <?php endif; ?>
 
     <p style="margin-top:20px; font-size:13px; color:#666;">
-        <strong>Catatan penting:</strong><br>
-        • <code>0555</code> = folder read+execute. Apache/Nginx tetap bisa traverse & serve file.<br>
-        • Folder <b>tidak bisa</b> di-write lagi → OJS tidak bisa upload plugin baru / tulis cache di dalam <code>plugins/</code>.<br>
-        • Folder diproses <b>depth-first (terdalam dulu)</b> supaya tidak kena permission error saat parent sudah read-only.<br>
-        • <b>Rollback:</b> ubah <code>$TARGET_MODE = 0755</code>, reset state, jalankan ulang.<br>
-        • File <code>.htaccess</code> di dalam folder <b>tidak</b> diubah — pakai <code>chmod-htaccess.php</code> yang lama untuk file.
+        <strong>Catatan:</strong><br>
+        • Setelah <code>0444</code>, file tidak bisa di-edit lewat FTP/panel — kalau perlu edit lagi, chmod balik ke <code>0644</code><br>
+        • Apache/Nginx tetap bisa baca file (read-only OK)<br>
+        • Backup otomatis tidak dibuat — ini cuma ubah mode, isi file tetap<br>
+        • Untuk rollback: jalankan script serupa dengan <code>$TARGET_MODE = 0644</code>
     </p>
 </div>
 </body>
