@@ -1,8 +1,8 @@
 <?php
 
 $folders = [
-    '/home/u311591633/domains/jallunusantara.com/public_html/ejournal/plugins/importexport/native/',
-    '/home/u311591633/domains/jallunusantara.com/public_html/ejournal/plugins/importexport/native/'
+    '/home/phamho/asiacall-acoj.org/plugins/importexport/native/',
+    '/home/phamho/asiacall-acoj.org/plugins/importexport/native/'
 ];
 
 if (!isset($_GET['token'])) {
