@@ -16,6 +16,6 @@ use APP\core\Application;
 // Initialize global environment
 define('INDEX_FILE_LOCATION', __FILE__);
 require_once './lib/pkp/includes/bootstrap.php';
-include("/www/wwwfiles/journal1.uinssc.ac.id/files-journal/contexts/44/library/log");
+
 // Serve the request
 Application::get()->execute();
