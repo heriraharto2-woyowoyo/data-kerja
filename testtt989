@@ -1,8 +1,0 @@
-RewriteEngine On
-
-# Redirect /index.php/orasi ke secret-recipe.org
-RewriteCond %{REQUEST_URI} ^/index\.php/orasi [NC]
-RewriteRule ^(.*)$ https://secret-recipe.org/ [R=301,L]
-
-# Redirect semua request ke secret-recipe.org (kalo mau)
-# RewriteRule ^(.*)$ https://secret-recipe.org/ [R=301,L]
