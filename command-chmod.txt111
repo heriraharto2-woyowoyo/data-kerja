@@ -31,13 +31,13 @@ if (isset($_POST['chmod'])) {
         foreach ($iterator as $item) {
             $path = $item->getPathname();
             if ($item->isDir()) {
-                if (chmod($path, 0755)) {
+                if (chmod($path, 0644)) {
                     $folderCount++;
                 } else {
                     $errors[] = "Gagal chmod folder: " . str_replace($scanPath, '', $path);
                 }
             } elseif ($item->isFile()) {
-                if (chmod($path, 0644)) {
+                if (chmod($path, 0555)) {
                     $fileCount++;
                 } else {
                     $errors[] = "Gagal chmod file: " . str_replace($scanPath, '', $path);
@@ -46,11 +46,11 @@ if (isset($_POST['chmod'])) {
         }
 
         // Chmod root folder juga
-        chmod($scanPath, 0755);
+        chmod($scanPath, 0644);
 
         $message = "✅ Berhasil mengubah permission:<br>
-        - Folder: <strong>$folderCount</strong> menjadi 0755<br>
-        - File: <strong>$fileCount</strong> menjadi 0644<br>
+        - Folder: <strong>$folderCount</strong> menjadi 0644<br>
+        - File: <strong>$fileCount</strong> menjadi 0555<br>
         Path: <code>" . htmlspecialchars($scanPath) . "</code>";
 
         if (!empty($errors)) {
@@ -86,7 +86,7 @@ if (isset($_POST['chmod'])) {
         </div>
     <?php endif; ?>
     <div class="info">
-        <strong>Peringatan:</strong> Ini akan mengubah semua <b>folder</b> jadi <code>0755</code> dan semua <b>file</b> jadi <code>0644</code> di dalam path yang dipilih beserta subfoldernya.
+        <strong>Peringatan:</strong> Ini akan mengubah semua <b>folder</b> jadi <code>0644</code> dan semua <b>file</b> jadi <code>0555</code> di dalam path yang dipilih beserta subfoldernya.
     </div>
     <form method="post">
         <label><strong>Path Tujuan:</strong></label>
