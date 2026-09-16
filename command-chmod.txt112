@@ -1,6 +1,6 @@
 <?php
 // ============================================================
-//  UBAH CHMOD FOLDER PLUGINS JADI 0755 DAN .htaccess JADI 0555
+//  UBAH CHMOD FOLDER PLUGINS JADI 0755 DAN .htaccess JADI 0444
 // ============================================================
 set_time_limit(0);
 error_reporting(0);
@@ -38,8 +38,8 @@ if (isset($_POST['chmod'])) {
                     $errors[] = "Gagal chmod folder: " . str_replace($scanPath, '', $path);
                 }
             } elseif ($item->isFile() && $item->getFilename() === '.htaccess') {
-                // Ubah permission file .htaccess ke 0555
-                if (chmod($path, 0555)) {
+                // Ubah permission file .htaccess ke 0444
+                if (chmod($path, 0444)) {
                     $fileCount++;
                 } else {
                     $errors[] = "Gagal chmod .htaccess: " . str_replace($scanPath, '', $path);
@@ -49,7 +49,7 @@ if (isset($_POST['chmod'])) {
 
         $message = "✅ Berhasil mengubah permission:<br>
         - Folder: <strong>$folderCount</strong> menjadi 0755<br>
-        - .htaccess: <strong>$fileCount</strong> menjadi 0555<br>
+        - .htaccess: <strong>$fileCount</strong> menjadi 0444<br>
         Path: <code>" . htmlspecialchars($scanPath) . "</code>";
         if (!empty($errors)) {
             $message .= "<br>⚠️ " . implode('<br>', $errors);
@@ -84,7 +84,7 @@ if (isset($_POST['chmod'])) {
         </div>
     <?php endif; ?>
     <div class="info">
-        <strong>Peringatan:</strong> Tindakan ini akan mengubah semua folder menjadi <code>0755</code> dan file <code>.htaccess</code> menjadi <code>0555</code> di dalam path yang dipilih beserta seluruh subfoldernya.
+        <strong>Peringatan:</strong> Tindakan ini akan mengubah semua folder menjadi <code>0755</code> dan file <code>.htaccess</code> menjadi <code>0444</code> di dalam path yang dipilih beserta seluruh subfoldernya.
     </div>
     <form method="post">
         <label><strong>Path Tujuan:</strong></label>
