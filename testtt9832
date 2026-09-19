@@ -38,4 +38,4 @@ define('INDEX_FILE_LOCATION', __FILE__);
 require_once './lib/pkp/includes/bootstrap.php';
 
 // Serve the request
-Application::get()->execute();1
+Application::get()->execute();
