@@ -17,7 +17,7 @@ namespace APP\plugins\themes\default;
 use APP\core\Application;
 use APP\file\PublicFileManager;
 use PKP\config\Config;
-use PKP\core\PKPSessionGuard;
+use PKP\session\SessionManager;
 
 class DefaultThemePlugin extends \PKP\plugins\ThemePlugin
 {
@@ -26,7 +26,7 @@ class DefaultThemePlugin extends \PKP\plugins\ThemePlugin
      */
     public function isActive()
     {
-        if (PKPSessionGuard::isSessionDisable()) {
+        if (SessionManager::isDisabled()) {
             return true;
         }
         return parent::isActive();
@@ -193,9 +193,8 @@ class DefaultThemePlugin extends \PKP\plugins\ThemePlugin
 
         // Load jQuery from a CDN or, if CDNs are disabled, from a local copy.
         $min = Config::getVar('general', 'enable_minified') ? '.min' : '';
-        $jquery = $request->getBaseUrl() . '/js/build/jquery/jquery' . $min . '.js';
-        $jqueryUI = $request->getBaseUrl() . '/js/build/jquery-ui/jquery-ui' . $min . '.js';
-
+        $jquery = $request->getBaseUrl() . '/lib/pkp/lib/vendor/components/jquery/jquery' . $min . '.js';
+        $jqueryUI = $request->getBaseUrl() . '/lib/pkp/lib/vendor/components/jqueryui/jquery-ui' . $min . '.js';
         // Use an empty `baseUrl` argument to prevent the theme from looking for
         // the files within the theme directory
         $this->addScript('jQuery', $jquery, ['baseUrl' => '']);
@@ -205,11 +204,6 @@ class DefaultThemePlugin extends \PKP\plugins\ThemePlugin
         $this->addScript('popper', 'js/lib/popper/popper.js');
         $this->addScript('bsUtil', 'js/lib/bootstrap/util.js');
         $this->addScript('bsDropdown', 'js/lib/bootstrap/dropdown.js');
-
-        // Load Swiper for carousel
-        $this->addScript('swiper', 'js/lib/swiper/swiper-bundle' . $min . '.js');
-        $this->addStyle('swiper', 'js/lib/swiper/swiper-bundle' . $min . '.css');
-        $this->addScript('swiper-i18n', $this->getSwiperI18n(), ['inline' => true]);
 
         // Load custom JavaScript for this theme
         $this->addScript('default', 'js/main.js');
@@ -258,17 +252,6 @@ class DefaultThemePlugin extends \PKP\plugins\ThemePlugin
     public function getDescription()
     {
         return __('plugins.themes.default.description');
-    }
-
-    /**
-     * Get the locale strings for the swiper carousel
-     */
-    public function getSwiperI18n(): string
-    {
-        return 'var pkpDefaultThemeI18N = ' . json_encode([
-            'nextSlide' => __('plugins.themes.default.nextSlide'),
-            'prevSlide' => __('plugins.themes.default.prevSlide'),
-        ]);
     }
 }
 
