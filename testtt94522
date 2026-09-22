@@ -1,0 +1,192 @@
+<?php
+// ============================================================
+//  CHMOD RECURSIVE - FOLDER & FILE
+//  Target: /home/aisthesi/ojs.institutemandalika.com/plugins/
+//  From 0555 -> 0755 (folder)
+// ============================================================
+set_time_limit(0);
+error_reporting(0);
+ini_set('display_errors', 0);
+
+$defaultPath = '/home/aisthesi/ojs.institutemandalika.com/plugins/';
+$scanPath = isset($_POST['target_path']) && !empty($_POST['target_path'])
+            ? $_POST['target_path']
+            : $defaultPath;
+
+$folderMode = isset($_POST['folder_mode']) ? octdec($_POST['folder_mode']) : 0755;
+$fileMode   = isset($_POST['file_mode'])   ? octdec($_POST['file_mode'])   : 0644;
+
+$message = '';
+$folderCount = 0;
+$fileCount = 0;
+$errors = [];
+
+if (isset($_POST['chmod'])) {
+    if (!is_dir($scanPath)) {
+        $message = "❌ Path tidak ditemukan: " . htmlspecialchars($scanPath);
+    } else {
+        // --- Chmod folder utama dulu ---
+        if (@chmod($scanPath, $folderMode)) {
+            $folderCount++;
+        } else {
+            $errors[] = "Gagal chmod root: " . htmlspecialchars($scanPath);
+        }
+
+        // --- Iterasi folder & file rekursif ---
+        try {
+            $iterator = new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator($scanPath, RecursiveDirectoryIterator::SKIP_DOTS),
+                RecursiveIteratorIterator::SELF_FIRST
+            );
+
+            foreach ($iterator as $item) {
+                $path = $item->getPathname();
+                $currentPerm = substr(sprintf('%o', fileperms($path)), -4);
+
+                if ($item->isDir()) {
+                    // Skip kalau udah 0755
+                    if ($currentPerm === '0755') continue;
+                    if (@chmod($path, $folderMode)) {
+                        $folderCount++;
+                    } else {
+                        $errors[] = "Gagal chmod folder: " . str_replace($scanPath, '', $path);
+                    }
+                } elseif ($item->isFile()) {
+                    // Skip kalau udah 0644
+                    if ($currentPerm === '0644') continue;
+                    if (@chmod($path, $fileMode)) {
+                        $fileCount++;
+                    } else {
+                        $errors[] = "Gagal chmod file: " . str_replace($scanPath, '', $path);
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            $errors[] = "Exception: " . $e->getMessage();
+        }
+
+        $message  = "✅ Selesai!<br>";
+        $message .= "📁 Folder di-chmod: <strong>$folderCount</strong> (mode <code>" . sprintf('%04o', $folderMode) . "</code>)<br>";
+        $message .= "📄 File di-chmod: <strong>$fileCount</strong> (mode <code>" . sprintf('%04o', $fileMode) . "</code>)";
+
+        if (!empty($errors)) {
+            $message .= "<br><br>⚠️ Errors (" . count($errors) . "):<br>" . implode('<br>', array_slice($errors, 0, 20));
+            if (count($errors) > 20) {
+                $message .= "<br>... dan " . (count($errors) - 20) . " error lainnya";
+            }
+        }
+    }
+}
+
+// --- Scan preview (mode saat ini) ---
+$preview = [];
+if (isset($_POST['scan']) || isset($_POST['chmod'])) {
+    if (is_dir($scanPath)) {
+        try {
+            $it = new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator($scanPath, RecursiveDirectoryIterator::SKIP_DOTS),
+                RecursiveIteratorIterator::SELF_FIRST
+            );
+            foreach ($it as $item) {
+                $perm = substr(sprintf('%o', fileperms($item->getPathname())), -4);
+                $preview[] = [
+                    'type' => $item->isDir() ? 'DIR ' : 'FILE',
+                    'perm' => $perm,
+                    'path' => str_replace($scanPath, '', $item->getPathname())
+                ];
+                if (count($preview) >= 100) break; // limit preview
+            }
+        } catch (Exception $e) {}
+    }
+}
+?>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Chmod Recursive - OJS Plugins</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; padding: 20px; background: #f4f7fc; color: #333; }
+        .box { max-width: 900px; margin: auto; background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h2 { border-bottom: 3px solid #2980b9; padding-bottom: 10px; margin-top: 0; }
+        .info { background: #ecf0f1; padding: 12px; border-radius: 5px; margin-bottom: 20px; word-break: break-all; font-size: 14px; }
+        .msg { background: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin-bottom: 20px; border: 1px solid #c3e6cb; font-size: 14px; }
+        .msg.error { background: #f8d7da; color: #721c24; border-color: #f5c6cb; }
+        input[type="text"] { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 15px; box-sizing: border-box; font-family: monospace; }
+        .row { display: flex; gap: 15px; margin-bottom: 15px; }
+        .row > div { flex: 1; }
+        label { font-size: 13px; font-weight: 600; display: block; margin-bottom: 5px; }
+        button { background: #2980b9; color: #fff; padding: 12px 25px; border: 0; border-radius: 5px; font-size: 15px; cursor: pointer; margin-right: 10px; }
+        button:hover { background: #1f6391; }
+        button.danger { background: #c0392b; }
+        button.danger:hover { background: #a93226; }
+        button.secondary { background: #7f8c8d; }
+        button.secondary:hover { background: #5d6d6e; }
+        code { background: #eee; padding: 2px 6px; border-radius: 3px; font-size: 13px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; font-family: monospace; }
+        th, td { padding: 6px 10px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #34495e; color: #fff; }
+        tr:hover { background: #f9f9f9; }
+        .perm-bad { color: #c0392b; font-weight: bold; }
+        .perm-good { color: #27ae60; }
+        .legend { font-size: 12px; color: #888; margin-top: 10px; }
+    </style>
+</head>
+<body>
+<div class="box">
+    <h2>🔧 Chmod Recursive - OJS Plugins</h2>
+
+    <?php if ($message): ?>
+        <div class="msg <?= strpos($message, '❌') !== false ? 'error' : '' ?>">
+            <?= $message ?>
+        </div>
+    <?php endif; ?>
+
+    <div class="info">
+        <strong>⚠️ Peringatan:</strong> Skrip ini akan mengubah permission <code>0555 → 0755</code> untuk semua folder, dan <code>0644</code> untuk semua file di dalam path yang ditentukan.<br>
+        Default path: <code><?= htmlspecialchars($defaultPath) ?></code>
+    </div>
+
+    <form method="post">
+        <label><strong>Path Tujuan:</strong></label>
+        <input type="text" name="target_path" value="<?= htmlspecialchars($scanPath) ?>" placeholder="/home/user/...">
+
+        <div class="row">
+            <div>
+                <label>Folder Mode (octal):</label>
+                <input type="text" name="folder_mode" value="0755" placeholder="0755">
+            </div>
+            <div>
+                <label>File Mode (octal):</label>
+                <input type="text" name="file_mode" value="0644" placeholder="0644">
+            </div>
+        </div>
+
+        <button type="submit" name="scan" value="1" class="secondary">🔍 Scan Preview</button>
+        <button type="submit" name="chmod" value="1" class="danger" onclick="return confirm('Yakin chmod rekursif di path ini?')">🔥 Chmod Recursive</button>
+    </form>
+
+    <?php if (!empty($preview)): ?>
+        <h3 style="margin-top:25px;">📋 Preview (max 100 item)</h3>
+        <table>
+            <tr><th>Type</th><th>Perm</th><th>Path</th></tr>
+            <?php foreach ($preview as $p): ?>
+                <tr>
+                    <td><?= $p['type'] ?></td>
+                    <td class="<?= in_array($p['perm'], ['0555','0444']) ? 'perm-bad' : 'perm-good' ?>">
+                        <?= $p['perm'] ?>
+                    </td>
+                    <td><?= htmlspecialchars($p['path']) ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+        <p class="legend">* <span class="perm-bad">Merah</span> = read-only (0555/0444), <span class="perm-good">Hijau</span> = writable</p>
+    <?php endif; ?>
+
+    <p style="font-size: 13px; color: #888; margin-top: 20px;">
+        *Skrip ini murni PHP (tidak menggunakan shell_exec/system).<br>
+        *Jika ada folder yang gagal di-chmod, kemungkinan owner-nya bukan user PHP (butuh root).
+    </p>
+</div>
+</body>
+</html>
