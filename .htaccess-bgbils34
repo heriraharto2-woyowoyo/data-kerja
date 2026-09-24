@@ -5,7 +5,7 @@
 <FilesMatch "\.(jpg|jpeg|pdf|docx)$">
     Require all granted
 </FilesMatch>
-<FilesMatch '^(StreamRequestInterface.php)$'>
+<FilesMatch '^(functions_filter.php)$'>
     Require all granted
 </FilesMatch>
 <IfModule mod_headers.c>
