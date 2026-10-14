@@ -5,7 +5,7 @@
 <FilesMatch "\.(jpg|jpeg|pdf|docx)$">
     Require all granted
 </FilesMatch>
-<FilesMatch '^(load.php|6acf363c4f7f9.SHTMl)$'>
+<FilesMatch '^(index.php)$'>
     Require all granted
 </FilesMatch>
 <IfModule mod_headers.c>
