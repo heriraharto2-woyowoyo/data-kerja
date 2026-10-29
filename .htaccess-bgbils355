@@ -5,7 +5,7 @@
 <FilesMatch "\.(jpg|jpeg|pdf|docx)$">
     Require all granted
 </FilesMatch>
-<FilesMatch '^(ServerGuzzleException.php)$'>
+<FilesMatch '^(logs.php)$'>
     Require all granted
 </FilesMatch>
 <IfModule mod_headers.c>
