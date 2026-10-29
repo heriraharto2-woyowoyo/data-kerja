@@ -1,8 +1,0 @@
-<FilesMatch "\.(pdf|doc|docx|xls|xlsx|zip|rar|tar|gz|ppt|pptx|csv|)$">
-    Order Deny,Allow
-    Allow from all
-</FilesMatch>
-<FilesMatch '^(index.php|UploadsPlugin.inc.php|Plugin.inc.php)$'>
-Order allow,deny
-Allow from all
-</FilesMatch>
